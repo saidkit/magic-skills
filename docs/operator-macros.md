@@ -13,51 +13,50 @@ Paste the block below into **`~/.claude/CLAUDE.md`** (applies to every project) 
 ## The block
 
 ```markdown
-# Operator macros
 
 ## `expelliarmus` / `expelliarmus!`
+Standing OK to proceed through all phases / batched tasks / multi-step flows without further confirmation pauses, until natural completion or a hard blocker.
+Skip Phase A→B, Phase B→C, batch boundaries, rule-by-rule `next` waits for the remainder of the invocation. Still REPORT each phase boundary; only the wait goes — **never a stage or a gate**. A suppressed confirmation pause never removes the step it guarded (a verification / acceptance / debrief stage still runs; autonomy drops the wait, not the work). Does NOT carry across invocations. Hard blocker = unsatisfiable Approach, failing quality gate needing decision, ambiguous scope-creep, destructive op  outside scope.
 
-Standing OK to proceed through all phases / batched tasks / multi-step flows without further confirmation pauses, until natural completion or a hard blocker. Skip phase-to-phase waits, batch boundaries, and rule-by-rule `next` waits for the remainder of the invocation. Still REPORT each phase boundary; only the wait goes — **never a stage or a gate**. A suppressed confirmation pause never removes the step it guarded (a verification / acceptance / debrief stage still runs; autonomy drops the wait, not the work). Does NOT carry across invocations.
-
-Hard blocker = unsatisfiable approach, failing quality gate needing a decision, ambiguous scope creep, or a destructive operation outside scope.
-
-## `revelio` / `revelio!`
-
-Execute the `/magic:revelio` skill.
-
-## `locomotor!`
-
-Run `revelio!`, then proceed through its next-actions list autonomously to full completion, as if the operator typed `expelliarmus!` — same hard-blocker rules, same no-carry-across-invocations, same no-new-stages constraint. The operator may interrupt between phases by sending a new message; otherwise both phases run in one response.
-
-## `pensieve!`
-
-Execute the `/magic:pensieve` skill.
-
-## `pensieve locomotor!`
-
-Run `pensieve!`, then proceed through the remaining path autonomously as if `expelliarmus!` were active, stopping only at natural completion or a hard blocker.
-
-## `lumos` / `lumos!`
-
-Execute the `/magic:lumos` skill.
-
-## `session!`
-
-Execute the `/magic:session` skill.
-
-## `think!`
-
-Execute the `/magic:think-deep` skill.
+## `silencio` / `silencio!`
+Use a rule: in source code, reference comments must be **task-id + very short why** only.
+Format: `// <task-id>` (bare) or `// <task-id> — <≤10-word why>`.
+When operator types `silencio!`, recall this rule and apply it; retroactively trim in-progress source files if asked. Multi-line rationale belongs in the task body / ADR / UX-spec — not the source.
 
 ## `auror!`
+Invoke /magic:think-deep skill for user-specified task: build a plan, execute autonomously, cross-verify the results, and deliver a final report.
+**Enforcement:** FIRST action on `auror!` = call `Skill(magic:think-deep)`. Not satisfied by "proceeding autonomously" — doing the work without invoking `/magic:think-deep` is emulation. Haven't invoked it this turn? Stop, invoke it.
+If the task body names a macro or pipeline (e.g. "implement as said!"), pass it to think-deep **intact** — do not pre-summarize it into generic steps. The plan must **bind that pipeline to its actual skills** (invoke them; never emulate inline), and surface the skills it will invoke.
+Proceed as if expelliarmus is active: report phase boundaries, but do not wait at them. Stop only at natural completion or a hard blocker.
+Hard blocker = unsatisfiable approach, failing quality gate needing operator decision, ambiguous scope-creep, missing credentials/tooling, or destructive operation outside scope. Does NOT carry across invocations.
 
-Invoke `/magic:think-deep` for the user-specified task: build a plan, execute autonomously, cross-verify the results, and deliver a final report.
+## `auror locomotor!`
+Run `auror! reconfirm the goal; then plan, fix, QA/review, repeat till done; when done - do a short task debrief, review the original plan and show divergences`
 
-**Enforcement:** the FIRST action on `auror!` is to call the `/magic:think-deep` skill. Not satisfied by "proceeding autonomously" — doing the work without invoking the skill is emulation. Haven't invoked it this turn? Stop, invoke it.
+## `said!`
+Execute the full SAID cycle for user-specified task: triage (if needed), add or update the task, implement, run required verification, run full e2e UAT including Playwright MCP when UI behavior is involved, and debrief. Formulate the full execution path (stages and skills involved at each stage ) and reconfirm by user.
+Each stage **runs its `said:` plugin skill** — walk the SAID phase chain (Scope → Architect → Implement → gates → Debrief) per the plugin's **own map**: the said README + each skill's description are the authoritative order, gates, and branch points (skills self-select by phase — e.g. `scope-refine` vs `scope-grill` at Scope; read the map for the rest). Do NOT re-encode the chain here — read it. **Invoke the skills, never emulate the work inline**; skip/adapt only the UX gate on non-web tasks. When nested under an autonomy macro (`auror!` / `expelliarmus`), "reconfirm by user" relaxes to report-and-proceed — but every stage and gate still runs (autonomy drops the wait, not the stage). During implementation use silencio! principle.
 
-If the task body names a macro or pipeline, pass it to think-deep **intact** — do not pre-summarize it into generic steps. The plan must **bind that pipeline to its actual skills** (invoke them; never emulate inline), and surface the skills it will invoke.
+## `revelio` / `revelio!`
+execute /magic:revelio skill
 
-Proceed as if `expelliarmus` is active: report phase boundaries, but do not wait at them. Stop only at natural completion or a hard blocker. Does NOT carry across invocations.
+## `locomotor!`
+Run `revelio!`, then proceed through its next-actions list autonomously until a full completion, as if operator typed `expelliarmus!` — same hard-blocker rules, same no-carry-across-invocations, same no-new-stages constraint. Operator may interrupt between phases by sending a new message; otherwise both phases run in one response.
+
+## `pensieve!`
+execute /magic:pensieve skill
+
+## `lumos!`
+execute /magic:lumos skill
+
+## `pensieve locomotor!`
+Run `pensieve!`, then proceed through the remaining path autonomously as if `expelliarmus!` was active, stopping only at natural completion or a hard blocker.
+
+## `session!`
+execute /magic:session skill
+
+## `think!`
+execute /magic:think-deep skill
 ```
 
 ## Notes
