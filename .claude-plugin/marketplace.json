@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "magickit",
+  "owner": {
+    "name": "Viktor Shpak",
+    "url": "https://saidkit.dev"
+  },
+  "description": "MagicKit — operator macros for Claude Code. Small, stack-agnostic skills that control context, scope and handoff mid-session.",
+  "version": "0.1.0",
+  "plugins": [
+    {
+      "name": "magic",
+      "source": "./plugins/magic",
+      "version": "0.1.0",
+      "description": "Operator macros: revelio (context refresh), pensieve (scope/status audit), lumos (precedent search), session (handoff), think-deep (structured task orchestrator). Five skills that keep a long session honest about what it knows, what it already decided, and what it still owes you.",
+      "author": {
+        "name": "Viktor Shpak",
+        "url": "https://saidkit.dev"
+      },
+      "homepage": "https://saidkit.dev",
+      "license": "MIT",
+      "category": "workflow",
+      "tags": [
+        "operator-macros",
+        "context-management",
+        "handoff",
+        "decision-record",
+        "task-orchestration",
+        "saidkit"
+      ]
+    }
+  ]
+}
