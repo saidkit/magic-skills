@@ -101,6 +101,13 @@ Content:
 - If task requires research/tools — note which tools in step description
 - **Plan self-check:** if the task named a pipeline/skill and it is absent from your 
   `via:` bindings, the plan is wrong — rebind before executing.
+- **Loop-shaped `via:` bindings.** If a `via:` names a skill whose contract is a re-entrant 
+  loop — it reconstructs state, acts, then re-enters until its own stop condition — the step 
+  reads **"drive X to its stop condition via repeated invocation"**, never "invoke X". 
+  Invoking a loop once demotes it to a subroutine and silently discards every rule it would 
+  have enforced on later passes; the plan's own steps then become the only enforcement, and a 
+  step that quietly fails to run leaves none. Such a plan MUST also carry a **final step** 
+  that re-invokes the skill and records its stop-condition output verbatim.
 
 ## Phase 2: Execute
 
@@ -141,6 +148,10 @@ The self-check is NOT optional. It is NOT decorative. For each step, check:
 - **Consistency:** Does this step's output contradict previous steps?
 - **Traceability:** Can every claim be traced to a source (data, tool output, reasoning)?
 - **Bloat check:** Is there unnecessary content? Remove it.
+- **Checkbox integrity:** a step may not be marked `[x]` while its Results entry reads 
+  pending / blocked / not started / deferred. If the two disagree, the checkbox is wrong — 
+  untick it and say so in chat. A plan that lies about its own completion is worse than no 
+  plan, because everything downstream trusts it.
 
 If self-check finds nothing wrong — that's suspicious. Look harder. At minimum, 
 identify one thing that COULD be improved even if it's acceptable as-is.

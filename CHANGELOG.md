@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.2.0 — 2026-08-03
+
+`magic:think-deep` gains two rules, both from a live post-mortem in which a plan silently
+dropped a verification stage and then reported the work complete.
+
+**Added — loop-shaped `via:` bindings (Phase 1).** When a `via:` names a skill whose contract
+is a re-entrant loop, the step must read *"drive X to its stop condition via repeated
+invocation"*, not *"invoke X"*, and the plan must carry a final step that re-invokes it and
+records its stop-condition output verbatim. Invoking a loop once demotes it to a subroutine:
+every rule it would have enforced on later passes becomes unreachable, the plan's own steps
+become the only enforcement, and a step that quietly fails to run leaves none.
+
+**Added — checkbox integrity (Phase 2 self-check).** A step may not be marked `[x]` while its
+Results entry reads pending / blocked / not started. The observed failure was exactly this —
+all steps ticked, Results reading *"pending steps 5–6"*, and nothing detecting the
+contradiction for two sessions.
+
+**`docs/operator-macros.md`** — two `flow!` changes. It now instructs **driving `said:flow` to
+its stop condition** rather than invoking it once. And its opening line no longer names one
+project's directories (`FE / BE / shared engine`) — those were *mounts*, not lanes. It states
+the test instead: **spans two or more task logs; a lane is not a repo or a mount**, and one
+feature may touch several mounts and stay single-lane. The enforcement clause also now names
+`Skill(said:flow)` rather than the retired pre-plugin skill id. Pairs with `said` 0.2.0.
+
 ## 0.1.0 — 2026-07-27
 
 Initial release. Five skills migrated from personal `~/.claude/skills/` into the `magic` plugin under the `magickit` marketplace.
