@@ -31,20 +31,22 @@ Proceed as if expelliarmus is active: report phase boundaries, but do not wait a
 Hard blocker = unsatisfiable approach, failing quality gate needing operator decision, ambiguous scope-creep, missing credentials/tooling, or destructive operation outside scope. Does NOT carry across invocations.
 
 ## `auror locomotor!`
-Run `auror! reconfirm the goal; then plan, fix, QA/review, repeat till done; when done - do a short task debrief, review the original plan and show divergences`
+One standalone task, start to finish: plan it, implement it, check your steps as you go, then give a short summary of what was done.
+Run `auror! plan the task, implement it, checking each step, then summarize what was done.`
+Single task only — never combine with `said!` or `flow!` (write `auror! said!` / `auror! flow!` for those, so each pipeline keeps its own stages in charge). Add no plan or protocol file beyond the one `auror!` already creates.
 
 ## `said!`
 Execute the full SAID cycle for user-specified task: triage (if needed), add or update the task, implement, run required verification, run full e2e UAT including Playwright MCP when UI behavior is involved, and debrief. Formulate the full execution path (stages and skills involved at each stage ) and reconfirm by user.
 Each stage **runs its `said:` plugin skill** — walk the SAID phase chain (Scope → Architect → Implement → gates → Debrief) per the plugin's **own map**: the said README + each skill's description are the authoritative order, gates, and branch points (skills self-select by phase — e.g. `scope-refine` vs `scope-grill` at Scope; read the map for the rest). Do NOT re-encode the chain here — read it. **Invoke the skills, never emulate the work inline**; skip/adapt only the UX gate on non-web tasks. When nested under an autonomy macro (`auror!` / `expelliarmus`), "reconfirm by user" relaxes to report-and-proceed — but every stage and gate still runs (autonomy drops the wait, not the stage). During implementation use silencio! principle.
 
 ## `flow!`
-Multi-lane feature — spans **two or more task logs**. A lane owns its own spec, task log, working dir and ADRs; a lane is **not** a repo or a mount — one feature may touch several mounts and stay single-lane. Single-lane → `said!`. Never nest the two.
+Multi-lane feature — spans **two or more lanes**, each carrying its own SAID artifacts; count declared lanes, **not task logs** (a lane still at Scope/Architect has no task log yet but is a full lane). A lane owns its own spec, task log, working dir and ADRs; a lane is **not** a repo or a mount — one feature may touch several mounts and stay single-lane. Single-lane → `said!`. Never nest the two.
 **Enforcement:** FIRST action = `Skill(said:flow)` + feature id. Sequencing lanes without invoking it = emulation. Not invoked this turn? Stop, invoke.
 Skill owns: lane sequencing · crossing classification · handover scoping · fork-vs-rotate · gates · stop conditions. Read there. Never restate or override here.
 Never pre-decide the lane split. Never instruct it to hold tasks pending a reply.
 `silencio!` during implementation. e2e UAT + Playwright MCP: feature-level, after all lanes close.
 Under `auror!` / `expelliarmus`: report replaces wait; every stage and gate still runs.
-**Drive the skill to its stop condition** — re-invoke until it emits `feature closed: yes`. A single invocation is a subroutine call, not the loop, and every rule the loop would enforce on later passes is lost.
+**Drive the skill to its stop condition** — re-invoke until it emits `feature closed: yes`. A single invocation is a subroutine call, not the loop, and every rule the loop would enforce on later passes is lost. Under `auror!` this binds think-deep specifically: schedule `said:flow` as a **re-entrant** step (think-deep's loop-shaped `via:` rule) and re-invoke it every pass until `feature closed: yes` — a planner that ticks one `/said:flow` step done has run one pass of an N-pass loop, not the loop. This is the INIT-28 demotion; do not repeat it.
 
 ## `revelio` / `revelio!`
 execute /magic:revelio skill
