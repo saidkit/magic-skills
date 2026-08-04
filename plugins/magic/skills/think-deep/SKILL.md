@@ -24,7 +24,6 @@ named capability would do is the primary failure this skill prevents.
 **Language rule:** Always respond in the user's language. Detect the language of 
 the user's message that invoked /magic:think-deep and use it for ALL output: phase 
 confirmations, step results, self-checks, protocol file, final deliverable. 
-If user writes in Russian — everything in Russian. If English — English.
 
 ## Phase 0: Understand
 
@@ -137,7 +136,7 @@ For EACH step, in order:
    - Write results summary for this step
    - If step list changed (new steps discovered, steps merged) — update list
 
-5. **Output to chat:** brief step result + updated remaining steps.
+5. **Output to chat:** brief step result (at most 3 sentences — what the step found, and anything that changed the plan) + updated remaining steps.
 
 ### Self-check rules
 
