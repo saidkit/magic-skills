@@ -47,8 +47,11 @@ protocol file, and the deliverable.
    repeated invocation"**, never "invoke X"; the plan carries a **final step** that re-invokes X
    and records its stop-condition output verbatim. Invoking a loop once demotes it to a
    subroutine and drops every rule it enforces on later passes.
-3. **Protocol file.** `<protocol-dir>` = project working dir (`docs/working/<feature>/`,
-   `notes/`, `planning/`) else session scratchpad; never a hardcoded path.
+3. **Protocol file.** Default `<protocol-dir>` = the **session scratchpad / temp dir** — the
+   protocol is a transient single-run scaffold (it dies with the run; keep the project repo clean).
+   Write it into a project working dir (`docs/working/<feature>/`, `notes/`, `planning/`) ONLY on
+   operator request, or when the run's deliverable itself is a durable plan. Never a hardcoded
+   path; state the resolved path in chat.
    ```
    Path: <protocol-dir>/think-deep-protocol.md
 

@@ -21,8 +21,12 @@ it runs nested inside another skill's agent.
 iteration scoped to the failed criteria (cap 3, or stop on no-progress); a reached cap escalates
 with the residual gap rather than self-certifying or silently quitting.
 
-**Changed — body tightened** to imperative directives (199 → 124 lines); the prime-directive
+**Changed — body tightened** to imperative directives (199 → 127 lines); the prime-directive
 example no longer names a sibling plugin (`said`) — think-deep carries no cross-plugin dependency.
+
+**Changed — protocol file defaults to the session scratchpad** (was: project working dir preferred).
+The execution protocol is a transient single-run scaffold; keeping it out of the repo avoids litter,
+accidental commits, and stale files. Promote it to a project working dir only on operator request.
 
 **`guides/operator-macros.md`** — `auror!` / `think!` / `auror locomotor!` now name the acceptance
 loop think-deep carries (Phase-3 gate on `Done-when` → Phase-4 converge/escalate) instead of leaving
