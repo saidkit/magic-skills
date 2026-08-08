@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.2.3 — 2026-08-08
+
+`magic:think-deep` closes the loop. It verified each step against the *plan* but never the whole
+deliverable against the *goal* — so a perfectly-executed wrong plan reported done, and the terminal
+review self-graded, leaving the operator to verify by hand.
+
+**Added — `Done-when` contract (Phase 0).** The task's acceptance criteria are captured up front as
+checkable predicates (executable where possible, else tagged *judgment*). They seed the per-step
+self-checks and are the oracle the gate tests against. No `Done-when`, no gate.
+
+**Added — acceptance gate (Phase 3), independent and depth-safe.** The deliverable is verified
+against every `Done-when` by *evidence*, not self-assessment: executable criteria are re-run (tool
+output is the verdict), judgment criteria get a fresh-pass review. Spawning a reviewer subagent is
+optional and top-level-only — a skill running as a subagent must not spawn (nested-spawn errors) or
+invoke a verification skill that itself spawns; it verifies inline. This keeps think-deep safe when
+it runs nested inside another skill's agent.
+
+**Added — converge or escalate (Phase 4).** All-pass closes; any fail re-enters Phase 1 as a repair
+iteration scoped to the failed criteria (cap 3, or stop on no-progress); a reached cap escalates
+with the residual gap rather than self-certifying or silently quitting.
+
+**Changed — body tightened** to imperative directives (199 → 124 lines); the prime-directive
+example no longer names a sibling plugin (`said`) — think-deep carries no cross-plugin dependency.
+
 ## 0.2.0 — 2026-08-03
 
 `magic:think-deep` gains two rules, both from a live post-mortem in which a plan silently

@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "magic",
   "displayName": "MagicKit operator macros",
-  "version": "0.2.2",
-  "description": "Operator macros for Claude Code: revelio (context refresh), pensieve (scope/status audit), lumos (precedent/decision-record search), session (new-session handoff), think-deep (structured task orchestrator with per-step self-check). Stack-agnostic; pairs with the operator-macro block in guides/operator-macros.md.",
+  "version": "0.2.3",
+  "description": "Operator macros for Claude Code: revelio (context refresh), pensieve (scope/status audit), lumos (precedent/decision-record search), session (new-session handoff), think-deep (structured task orchestrator with per-step self-check + acceptance-gate loop). Stack-agnostic; pairs with the operator-macro block in guides/operator-macros.md.",
   "author": {
     "name": "Viktor Shpak",
     "url": "https://saidkit.dev"
