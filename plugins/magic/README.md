@@ -32,7 +32,7 @@ Pairs with the `think!` macro (plain invocation) and `auror!` (invoke, then run 
 
 ## Design notes
 
-**`revelio` and `pensieve` stop by contract.** They are diagnostics. The operator reads the output and decides. To chain straight into execution, use the `locomotor!` / `pensieve locomotor!` macros from [operator-macros.md](../../docs/operator-macros.md).
+**`revelio` and `pensieve` stop by contract.** They are diagnostics. The operator reads the output and decides. To chain straight into execution, use the `locomotor!` / `pensieve locomotor!` macros from [operator-macros.md](../../guides/operator-macros.md).
 
 **Nothing carries across invocations.** No skill here makes subsequent turns "automatically refreshed" or "automatically precedent-checked". Each invocation is a fresh sweep scoped to the message that triggered it.
 

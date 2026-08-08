@@ -7,7 +7,7 @@ This repo is a Claude Code **plugin marketplace of one**. It ships prompts, not 
 - `.claude-plugin/marketplace.json` — marketplace `magickit`. Its `name` must stay distinct from every other marketplace the author publishes (`saidkit`, for said-skills): Claude Code registers **one marketplace per name**, and a duplicate name silently replaces the earlier registration for the user.
 - `plugins/magic/` — the plugin. `skills/` sits at the **plugin root**, never inside `.claude-plugin/`.
 - Skill directory names are the invocation names. `skills/revelio/SKILL.md` → `/magic:revelio`. Renaming a directory is a breaking change for anyone's `CLAUDE.md` macros.
-- `docs/operator-macros.md` — the paste-in `CLAUDE.md` block. A plugin cannot write to a user's `CLAUDE.md`, so any macro the skills reference in their bodies must be defined here or the skill ships inert.
+- `guides/operator-macros.md` — the paste-in `CLAUDE.md` block. A plugin cannot write to a user's `CLAUDE.md`, so any macro the skills reference in their bodies must be defined here or the skill ships inert.
 
 ## Editing skills
 

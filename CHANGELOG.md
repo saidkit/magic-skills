@@ -17,7 +17,7 @@ Results entry reads pending / blocked / not started. The observed failure was ex
 all steps ticked, Results reading *"pending steps 5–6"*, and nothing detecting the
 contradiction for two sessions.
 
-**`docs/operator-macros.md`** — two `flow!` changes. It now instructs **driving `said:flow` to
+**`guides/operator-macros.md`** — two `flow!` changes. It now instructs **driving `said:flow` to
 its stop condition** rather than invoking it once. And its opening line no longer names one
 project's directories (`FE / BE / shared engine`) — those were *mounts*, not lanes. It states
 the test instead: **spans two or more task logs; a lane is not a repo or a mount**, and one
@@ -37,5 +37,5 @@ Initial release. Five skills migrated from personal `~/.claude/skills/` into the
 Migration notes:
 
 - Skills are now namespaced by the plugin: `/magic-revelio` → `/magic:revelio`, `/think-deep` → `/magic:think-deep`, and so on. Update any `CLAUDE.md` macros that referenced the old names.
-- `docs/operator-macros.md` ships the `CLAUDE.md` macro block (`revelio!`, `pensieve!`, `lumos!`, `session!`, `think!`, `auror!`, `expelliarmus`, `locomotor!`) that the skills were designed against — previously personal-config-only, now part of the distribution.
+- `guides/operator-macros.md` ships the `CLAUDE.md` macro block (`revelio!`, `pensieve!`, `lumos!`, `session!`, `think!`, `auror!`, `expelliarmus`, `locomotor!`) that the skills were designed against — previously personal-config-only, now part of the distribution.
 - `think-deep` wrote its execution protocol to a hardcoded `/home/claude/think-deep-protocol.md`. That path only exists in a Linux sandbox; the ported skill resolves a `<protocol-dir>` at runtime (project working dir, else session scratch) and reports the resolved path in chat.

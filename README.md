@@ -27,7 +27,7 @@ Or in an active session: `/plugin marketplace add saidkit/magic-skills` → `/pl
 
 The plugin is half the kit. The other half is a block of **operator macros** you paste into your `CLAUDE.md` — they give you `revelio!` / `pensieve!` / `lumos!` / `session!` as inline shorthand, and define the autonomy verbs (`expelliarmus`, `locomotor!`) that the skills refer to.
 
-**→ [docs/operator-macros.md](docs/operator-macros.md)** — copy the block, paste into `~/.claude/CLAUDE.md`.
+**→ [guides/operator-macros.md](guides/operator-macros.md)** — copy the block, paste into `~/.claude/CLAUDE.md`.
 
 Skipping this is fine; you just invoke the skills by their full `/magic:<name>` form and lose the `locomotor!` chaining.
 
@@ -61,7 +61,7 @@ magic-skills/                            (marketplace-of-one)
 │   ├── .claude-plugin/plugin.json
 │   ├── skills/                          revelio · pensieve · lumos · session · think-deep
 │   └── README.md
-├── docs/operator-macros.md              the paste-in CLAUDE.md block
+├── guides/operator-macros.md            the paste-in CLAUDE.md block
 ├── LICENSE                              MIT
 └── README.md
 ```
