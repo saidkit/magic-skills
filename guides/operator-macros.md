@@ -33,8 +33,8 @@ Hard blocker = unsatisfiable approach, failing quality gate needing operator dec
 
 ## `auror locomotor` / `auror locomotor!`
 One standalone task run as a **goal**: the requested scope + quality gates are the completion condition. Run `auror!` with them stated as think-deep's `Done-when`.
-think-deep's **Phase-4** drives it — turning each QA/review finding into the next repair cycle (re-plan · fix · re-verify) until every gate passes (converge) or a hard blocker is hit (escalate — never self-certify, never silently quit). `auror locomotor!` supplies the completion condition and scopes it to one task; it adds no second loop.
-Single task only — never combine with `said!` or `flow!` (write `auror! said!` / `auror! flow!`; each pipeline keeps its own stages in charge). The prompt-level equivalent of a `/goal` run. Does NOT carry across invocations.
+think-deep's **Phase-4** drives it — turning each QA/review finding into the next repair cycle (re-plan -> fix -> re-verify) until every gate passes (converge) or a hard blocker is hit (escalate — never self-certify, never silently quit). `auror locomotor!` supplies the completion condition and scopes it to one task; it adds no second loop.
+Single task only — never combine with `said!` or `flow!`. The prompt-level equivalent of a `/goal` run. Does NOT carry across invocations.
 
 ## `said!`
 Execute the full SAID cycle for user-specified task: triage (if needed), add or update the task, implement, run required verification, run full e2e UAT including Playwright MCP when UI behavior is involved, and debrief. **First action: resolve the ordered stage sequence from the SAID map and emit it as an explicit checklist for this task** (do not restate the chain from memory — read it), then reconfirm by user.
@@ -69,7 +69,7 @@ Run `pensieve!`, then proceed through the remaining path autonomously as if `exp
 execute /magic:session skill
 
 ## `think!`
-execute /magic:think-deep skill — the **interactive** form (keeps think-deep's Phase-0 confirm; `auror!` is the autonomous form). think-deep captures the task's acceptance criteria as its `Done-when` and loops on them (Phase-3 gate → Phase-4 converge/escalate); pass any explicit success conditions in the task.
+execute /magic:think-deep skill — the **interactive** form (keeps think-deep's Phase-0 confirm). think-deep captures the task's acceptance criteria as its `Done-when` and loops on them (Phase-3 gate → Phase-4 converge/escalate); pass any explicit success conditions in the task.
 ```
 
 ## Notes
