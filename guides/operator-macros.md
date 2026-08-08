@@ -25,6 +25,7 @@ When operator types `silencio!`, recall this rule and apply it; retroactively tr
 
 ## `auror!`
 Invoke /magic:think-deep skill for user-specified task: build a plan, execute autonomously, cross-verify the results, and deliver a final report.
+The loop is think-deep's, not auror's: "cross-verify" = its Phase-3 acceptance gate against the task's `Done-when`; "natural completion" = Phase-4 all-pass; the repair loop hitting its cap without convergence is a hard blocker (escalate — never self-certify). auror! adds autonomy + the report, never a second loop.
 **Enforcement:** FIRST action on `auror!` = call `Skill(magic:think-deep)`. Not satisfied by "proceeding autonomously" — doing the work without invoking `/magic:think-deep` is emulation. Haven't invoked it this turn? Stop, invoke it.
 If the task body names a macro or pipeline (e.g. "implement as said!"), pass it to think-deep **intact** — do not pre-summarize it into generic steps. The plan must **bind that pipeline to its actual skills** (invoke them; never emulate inline), and surface the skills it will invoke.
 Proceed as if expelliarmus is active: report phase boundaries, but do not wait at them. Stop only at natural completion or a hard blocker.
@@ -34,6 +35,7 @@ Hard blocker = unsatisfiable approach, failing quality gate needing operator dec
 One standalone task, start to finish: plan it, implement it, check your steps as you go, then give a short summary of what was done.
 Run `auror! plan the task, implement it, checking each step, then summarize what was done.`
 Single task only — never combine with `said!` or `flow!` (write `auror! said!` / `auror! flow!` for those, so each pipeline keeps its own stages in charge). Add no plan or protocol file beyond the one `auror!` already creates.
+This is the canonical **single-goal closed loop** — think-deep's `Done-when` gate + Phase-4 converge/escalate drive it to satisfaction; auror locomotor! only scopes that to one task and a short summary (no loop of its own).
 
 ## `said!`
 Execute the full SAID cycle for user-specified task: triage (if needed), add or update the task, implement, run required verification, run full e2e UAT including Playwright MCP when UI behavior is involved, and debrief. **First action: resolve the ordered stage sequence from the SAID map and emit it as an explicit checklist for this task** (do not restate the chain from memory — read it), then reconfirm by user.
@@ -68,7 +70,7 @@ Run `pensieve!`, then proceed through the remaining path autonomously as if `exp
 execute /magic:session skill
 
 ## `think!`
-execute /magic:think-deep skill
+execute /magic:think-deep skill — the **interactive** form (keeps think-deep's Phase-0 confirm; `auror!` is the autonomous form). think-deep captures the task's acceptance criteria as its `Done-when` and loops on them (Phase-3 gate → Phase-4 converge/escalate); pass any explicit success conditions in the task.
 ```
 
 ## Notes

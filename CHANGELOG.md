@@ -24,6 +24,10 @@ with the residual gap rather than self-certifying or silently quitting.
 **Changed — body tightened** to imperative directives (199 → 124 lines); the prime-directive
 example no longer names a sibling plugin (`said`) — think-deep carries no cross-plugin dependency.
 
+**`guides/operator-macros.md`** — `auror!` / `think!` / `auror locomotor!` now name the acceptance
+loop think-deep carries (Phase-3 gate on `Done-when` → Phase-4 converge/escalate) instead of leaving
+it implicit; the loop stays in the skill only, never duplicated into the macros.
+
 ## 0.2.0 — 2026-08-03
 
 `magic:think-deep` gains two rules, both from a live post-mortem in which a plan silently
