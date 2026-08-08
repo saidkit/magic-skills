@@ -31,11 +31,10 @@ If the task body names a macro or pipeline (e.g. "implement as said!"), pass it 
 Proceed as if expelliarmus is active: report phase boundaries, but do not wait at them. Stop only at natural completion or a hard blocker.
 Hard blocker = unsatisfiable approach, failing quality gate needing operator decision, ambiguous scope-creep, missing credentials/tooling, or destructive operation outside scope. Does NOT carry across invocations.
 
-## `auror locomotor!`
-One standalone task, start to finish: plan it, implement it, check your steps as you go, then give a short summary of what was done.
-Run `auror! plan the task, implement it, checking each step, then summarize what was done.`
-Single task only — never combine with `said!` or `flow!` (write `auror! said!` / `auror! flow!` for those, so each pipeline keeps its own stages in charge). Add no plan or protocol file beyond the one `auror!` already creates.
-This is the canonical **single-goal closed loop** — think-deep's `Done-when` gate + Phase-4 converge/escalate drive it to satisfaction; auror locomotor! only scopes that to one task and a short summary (no loop of its own).
+## `auror locomotor` / `auror locomotor!`
+One standalone task run as a **goal**: the requested scope + quality gates are the completion condition. Run `auror!` with them stated as think-deep's `Done-when`.
+think-deep's **Phase-4** drives it — turning each QA/review finding into the next repair cycle (re-plan · fix · re-verify) until every gate passes (converge) or a hard blocker is hit (escalate — never self-certify, never silently quit). `auror locomotor!` supplies the completion condition and scopes it to one task; it adds no second loop.
+Single task only — never combine with `said!` or `flow!` (write `auror! said!` / `auror! flow!`; each pipeline keeps its own stages in charge). The prompt-level equivalent of a `/goal` run. Does NOT carry across invocations.
 
 ## `said!`
 Execute the full SAID cycle for user-specified task: triage (if needed), add or update the task, implement, run required verification, run full e2e UAT including Playwright MCP when UI behavior is involved, and debrief. **First action: resolve the ordered stage sequence from the SAID map and emit it as an explicit checklist for this task** (do not restate the chain from memory — read it), then reconfirm by user.

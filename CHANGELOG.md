@@ -26,7 +26,7 @@ example no longer names a sibling plugin (`said`) — think-deep carries no cros
 
 **`guides/operator-macros.md`** — `auror!` / `think!` / `auror locomotor!` now name the acceptance
 loop think-deep carries (Phase-3 gate on `Done-when` → Phase-4 converge/escalate) instead of leaving
-it implicit; the loop stays in the skill only, never duplicated into the macros.
+it implicit; the loop stays in the skill only, never duplicated into the macros. `auror locomotor!` is reframed as a **goal-run** — the requested scope + quality gates become the `Done-when` and Phase-4 drives to satisfaction (the prompt-level equivalent of a `/goal` run).
 
 ## 0.2.0 — 2026-08-03
 
