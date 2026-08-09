@@ -2,4 +2,5 @@
 *.log
 node_modules/
 .claude/settings.local.json
-docs/
+# /docs — the private ../magic-skills-docs companion symlink (a trailing-slash `docs/` won't match a symlink)
+/docs
