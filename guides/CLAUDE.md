@@ -21,25 +21,16 @@ think-deep's **Phase-4** drives it — turning each QA/review finding into the n
 Single task only — never combine with `said!` or `flow!`. The prompt-level equivalent of a `/goal` run. Does NOT carry across invocations.
 
 ## `said!`
-Execute the full SAID cycle for user-specified task: triage (if needed), add or update the task, implement, run required verification, run full e2e UAT including Playwright MCP when UI behavior is involved, and debrief. **First action: resolve the ordered stage sequence from the SAID map and emit it as an explicit checklist for this task** (do not restate the chain from memory — read it), then reconfirm by user.
-Each stage **runs its `said:` plugin skill** — walk the SAID phase chain (Scope → Architect → Implement → gates → Debrief) per the plugin's **own map**: the said README + each skill's description are the authoritative order, gates, and branch points (skills self-select by phase — e.g. `scope-refine` vs `scope-grill` at Scope; read the map for the rest). Do NOT re-encode the chain here — read it. **Invoke the skills, never emulate the work inline**; skip/adapt only the UX gate on non-web tasks.
-**Run every stage by default; the cycle is not complete until the debrief close-footer exists** — the single closure signal, which debrief writes only after its Phase-3.5 gate-check clears (gates passed, or a skip you explicitly confirmed and it recorded). Declaring the work done without that footer is a false close, not a finished cycle. **Omission is never silent:** skip or defer a stage only on explicit operator confirmation, recorded — never present a mandatory stage as an optional offer ("if you want…"). When nested under an autonomy macro (`auror!` / `expelliarmus`), "reconfirm by user" relaxes to report-and-proceed and stages run without pauses — but an **omission is the one wait autonomy cannot drop: a hard blocker that forces the confirmation** (autonomy drops the wait, not the stage). During implementation use silencio! principle.
+Single-feature SAID orchestrator — full cycle (skill: `said:said`) — 3 slots, Invoke · Compose · Drive:
+1. **Invoke.** FIRST action = `Skill(said:said)` + the task — as `said! <directive>` or `<directive> as said!`. Hand-rolling stages = emulation (under `/goal`: no skill → no `goal:` line → spin).
+2. **Compose.** Under `auror!`/`expelliarmus`: the checklist-confirm relaxes to report-and-proceed — every stage/gate still runs; an unconfirmed omission is the one wait autonomy can't drop. Never `auror locomotor! said!` or `said! + flow!`. `silencio!` during impl.
+3. **Drive.** The skill prints a `goal:` line every turn (`done` = debrief footer + gates passed / `continue` / `stop`). Under `/goal` that IS the completion condition — write a plain directive, never hand-write it. `continue` re-invokes `said:said`; `done`/`stop` end it. `auror!`: think-deep loop-shaped `via:` step.
 
 ## `flow!`
-Multi-lane SAID orchestrator (skill: `said:flow`) — 5 slots, Route · Invoke · Boundary · Compose · Drive:
-1. **Route.** ≥2 SAID lanes (a mount ≠ a lane) → `flow!`. Single-lane → `said!` (→ `/said:impl` once architected). Never nest; never pre-decide the split.
-2. **Invoke.** FIRST action = `Skill(said:flow)` + feature id. Hand-rolling lanes = emulation — stop, invoke.
-3. **Boundary.** Skill owns everything invoke→yield (sequencing · crossings · fork/rotate · gates · UAT). Read there; never restate or override.
-4. **Compose.** Launch: pure lane-work → `/goal flow!`; + non-lane work → `/goal auror! flow!`; NEVER `auror locomotor! flow!` (→ INIT-28), never `said! + flow!`. `/goal`'s evaluator reads the transcript → the condition MUST name the sentinel `feature closed: yes` (template below); unattended = + auto mode. Under `auror!`/`expelliarmus`: report replaces the wait — **every gate still runs**. `silencio!` during impl.
-5. **Drive to stop.** No `/goal`: re-invoke `/said:flow <id>` until `feature closed: yes` — one pass ≠ the loop. Under `/goal`: that printed block is the evaluator's oracle and `/goal` re-invokes. Under `auror!`: think-deep drives it as a loop-shaped `via:` step each pass. Ticking one `/said:flow` done = the INIT-28 demotion.
-
-`/goal` condition template (name the sentinel, or the evaluator can stop early; prepend `auror!` for the mixed-work form):
-```
-/goal <FEAT-ID> — <one-line feature>. Drive it across every lane via flow! (/said:flow).
-Done ONLY when /said:flow prints `feature closed: yes` (all lanes Closed AND feature e2e/UAT ∈
-{passed, skipped(recorded), n/a}). If it prints `feature closed: no`, continue. Escalate on
-no-progress two passes running or after N turns.
-```
+Multi-lane SAID orchestrator (skill: `said:flow`) — 3 slots, Invoke · Compose · Drive:
+1. **Invoke.** FIRST action = `Skill(said:flow)` + feature id — as `flow! <directive>` or `<directive> as flow!`. Hand-rolling lanes = emulation (under `/goal`: no skill → no `goal:` line → the loop spins).
+2. **Compose.** Under `auror!`/`expelliarmus`: report replaces the wait — every gate still runs. Never `auror locomotor! flow!` (single-tasks the loop) or `said! + flow!`. `silencio!` during impl.
+3. **Drive.** The skill prints a `goal:` line every turn (`done`/`continue`/`stop`). Under `/goal` that line IS the completion condition — write a plain directive, never hand-write it. `continue` re-invokes `/said:flow`; `done`/`stop` end it. `auror!`: think-deep drives it as a loop-shaped `via:` step.
 
 ## `revelio` / `revelio!`
 execute /magic:revelio skill
