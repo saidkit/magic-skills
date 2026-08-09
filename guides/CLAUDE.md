@@ -7,6 +7,9 @@ Use a rule: in source code, reference comments must be **task-id + very short wh
 Format: `// <task-id>` (bare) or `// <task-id> — <≤10-word why>`.
 When operator types `silencio!`, recall this rule and apply it; retroactively trim in-progress source files if asked. Multi-line rationale belongs in the task body / ADR / UX-spec — not the source.
 
+## `think!`
+execute /magic:think-deep skill — the **interactive** form (keeps think-deep's Phase-0 confirm). think-deep captures the task's acceptance criteria as its `Done-when` and loops on them (Phase-3 gate → Phase-4 converge/escalate); pass any explicit success conditions in the task.
+
 ## `auror!`
 Invoke /magic:think-deep skill for user-specified task: build a plan, execute autonomously, cross-verify the results, and deliver a final report.
 The loop is think-deep's, not auror's: "cross-verify" = its Phase-3 acceptance gate against the task's `Done-when`; "natural completion" = Phase-4 all-pass; the repair loop hitting its cap without convergence is a hard blocker (escalate — never self-certify). auror! adds autonomy + the report, never a second loop.
@@ -23,35 +26,23 @@ Single task only — never combine with `said!` or `flow!`. The prompt-level equ
 ## `said!`
 Single-feature SAID orchestrator — full cycle (skill: `said:said`) — 3 slots, Invoke · Compose · Drive:
 1. **Invoke.** FIRST action = `Skill(said:said)` + the task — as `said! <directive>` or `<directive> as said!`. Hand-rolling stages = emulation (under `/goal`: no skill → no `goal:` line → spin).
-2. **Compose.** Under `auror!`/`expelliarmus`: the checklist-confirm relaxes to report-and-proceed — every stage/gate still runs; an unconfirmed omission is the one wait autonomy can't drop. Never `auror locomotor! said!` or `said! + flow!`. `silencio!` during impl.
+2. **Compose.** Under `auror!`/`expelliarmus`: the checklist-confirm relaxes to report-and-proceed — every stage/gate still runs; an unconfirmed omission is the one wait autonomy can't drop. `silencio!` during impl.
 3. **Drive.** The skill prints a `goal:` line every turn (`done` = debrief footer + gates passed / `continue` / `stop`). Under `/goal` that IS the completion condition — write a plain directive, never hand-write it. `continue` re-invokes `said:said`; `done`/`stop` end it. `auror!`: think-deep loop-shaped `via:` step.
 
 ## `flow!`
 Multi-lane SAID orchestrator (skill: `said:flow`) — 3 slots, Invoke · Compose · Drive:
 1. **Invoke.** FIRST action = `Skill(said:flow)` + feature id — as `flow! <directive>` or `<directive> as flow!`. Hand-rolling lanes = emulation (under `/goal`: no skill → no `goal:` line → the loop spins).
-2. **Compose.** Under `auror!`/`expelliarmus`: report replaces the wait — every gate still runs. Never `auror locomotor! flow!` (single-tasks the loop) or `said! + flow!`. `silencio!` during impl.
+2. **Compose.** Under `auror!`/`expelliarmus`: report replaces the wait — every gate still runs. `silencio!` during impl.
 3. **Drive.** The skill prints a `goal:` line every turn (`done`/`continue`/`stop`). Under `/goal` that line IS the completion condition — write a plain directive, never hand-write it. `continue` re-invokes `/said:flow`; `done`/`stop` end it. `auror!`: think-deep drives it as a loop-shaped `via:` step.
-
-## `revelio` / `revelio!`
-execute /magic:revelio skill
 
 ## `locomotor!`
 Run `revelio!`, then proceed through its next-actions list autonomously until a full completion, as if operator typed `expelliarmus!` — same hard-blocker rules, same no-carry-across-invocations, same no-new-stages constraint. Operator may interrupt between phases by sending a new message; otherwise both phases run in one response.
 
-## `pensieve!`
-execute /magic:pensieve skill
+## `pensieve locomotor!`
+Run `pensieve!`, then proceed through the remaining path autonomously as if `expelliarmus!` was active, stopping only at natural completion or a hard blocker.
 
 ## `lumos!`
 execute /said:retrieval skill
 
 ## `muggle!`
 Briefly explain in plain human language where we are, what is happening, or the subject the operator asked about. Prioritize the essential meaning, current state, and practical implication. Avoid implementation detail, jargon, exhaustive history, and formal status-report structure unless needed for clarity.
-
-## `pensieve locomotor!`
-Run `pensieve!`, then proceed through the remaining path autonomously as if `expelliarmus!` was active, stopping only at natural completion or a hard blocker.
-
-## `session!`
-execute /magic:session skill
-
-## `think!`
-execute /magic:think-deep skill — the **interactive** form (keeps think-deep's Phase-0 confirm). think-deep captures the task's acceptance criteria as its `Done-when` and loops on them (Phase-3 gate → Phase-4 converge/escalate); pass any explicit success conditions in the task.
