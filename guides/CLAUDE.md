@@ -26,13 +26,20 @@ Each stage **runs its `said:` plugin skill** — walk the SAID phase chain (Scop
 **Run every stage by default; the cycle is not complete until the debrief close-footer exists** — the single closure signal, which debrief writes only after its Phase-3.5 gate-check clears (gates passed, or a skip you explicitly confirmed and it recorded). Declaring the work done without that footer is a false close, not a finished cycle. **Omission is never silent:** skip or defer a stage only on explicit operator confirmation, recorded — never present a mandatory stage as an optional offer ("if you want…"). When nested under an autonomy macro (`auror!` / `expelliarmus`), "reconfirm by user" relaxes to report-and-proceed and stages run without pauses — but an **omission is the one wait autonomy cannot drop: a hard blocker that forces the confirmation** (autonomy drops the wait, not the stage). During implementation use silencio! principle.
 
 ## `flow!`
-Multi-lane feature — spans **two or more lanes**, each carrying its own SAID artifacts; count declared lanes, **not task logs** (a lane still at Scope/Architect has no task log yet but is a full lane). A lane owns its own spec, task log, working dir and ADRs; a lane is **not** a repo or a mount — one feature may touch several mounts and stay single-lane. Single-lane → `said!`. Never nest the two.
-**Enforcement:** FIRST action = `Skill(said:flow)` + feature id. Sequencing lanes without invoking it = emulation. Not invoked this turn? Stop, invoke.
-Skill owns: lane sequencing · crossing classification · handover scoping · fork-vs-rotate · gates · stop conditions. Read there. Never restate or override here.
-Never pre-decide the lane split. Never instruct it to hold tasks pending a reply.
-`silencio!` during implementation. Feature-level e2e UAT + Playwright MCP runs after all lanes close but **within** closure — `said:flow` gates `feature closed` on its evidence, so it is part of the stop condition, not an afterthought.
-Under `auror!` / `expelliarmus`: report replaces wait; every stage and gate still runs.
-**Drive the skill to its stop condition** — re-invoke until it emits `feature closed: yes`. A single invocation is a subroutine call, not the loop, and every rule the loop would enforce on later passes is lost. Under `auror!` this binds think-deep specifically: schedule `said:flow` as a **re-entrant** step (think-deep's loop-shaped `via:` rule) and re-invoke it every pass until `feature closed: yes` — a planner that ticks one `/said:flow` step done has run one pass of an N-pass loop, not the loop. 
+Multi-lane SAID orchestrator (skill: `said:flow`) — 5 slots, Route · Invoke · Boundary · Compose · Drive:
+1. **Route.** ≥2 SAID lanes (a mount ≠ a lane) → `flow!`. Single-lane → `said!` (→ `/said:impl` once architected). Never nest; never pre-decide the split.
+2. **Invoke.** FIRST action = `Skill(said:flow)` + feature id. Hand-rolling lanes = emulation — stop, invoke.
+3. **Boundary.** Skill owns everything invoke→yield (sequencing · crossings · fork/rotate · gates · UAT). Read there; never restate or override.
+4. **Compose.** Launch: pure lane-work → `/goal flow!`; + non-lane work → `/goal auror! flow!`; NEVER `auror locomotor! flow!` (→ INIT-28), never `said! + flow!`. `/goal`'s evaluator reads the transcript → the condition MUST name the sentinel `feature closed: yes` (template below); unattended = + auto mode. Under `auror!`/`expelliarmus`: report replaces the wait — **every gate still runs**. `silencio!` during impl.
+5. **Drive to stop.** No `/goal`: re-invoke `/said:flow <id>` until `feature closed: yes` — one pass ≠ the loop. Under `/goal`: that printed block is the evaluator's oracle and `/goal` re-invokes. Under `auror!`: think-deep drives it as a loop-shaped `via:` step each pass. Ticking one `/said:flow` done = the INIT-28 demotion.
+
+`/goal` condition template (name the sentinel, or the evaluator can stop early; prepend `auror!` for the mixed-work form):
+```
+/goal <FEAT-ID> — <one-line feature>. Drive it across every lane via flow! (/said:flow).
+Done ONLY when /said:flow prints `feature closed: yes` (all lanes Closed AND feature e2e/UAT ∈
+{passed, skipped(recorded), n/a}). If it prints `feature closed: no`, continue. Escalate on
+no-progress two passes running or after N turns.
+```
 
 ## `revelio` / `revelio!`
 execute /magic:revelio skill

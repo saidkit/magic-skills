@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 — 2026-08-09
+
+**Removed — `magic:lumos`.** Precedent/decision-record search moved to the SAID plugin as
+`said:retrieval` — it is decision-investigation inside the SAID setup, not a context-hygiene macro,
+and was already built against SAID's artifact layout. The `lumos!` operator macro is retained but now
+targets `/said:retrieval`. MagicKit is now four skills: `revelio`, `pensieve`, `session`,
+`think-deep`.
+
 ## 0.2.3 — 2026-08-08
 
 `magic:think-deep` closes the loop. It verified each step against the *plan* but never the whole

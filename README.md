@@ -1,6 +1,6 @@
 # MagicKit — operator macros for Claude Code
 
-Five small skills that keep a long Claude Code session honest about **what it knows**, **what it already decided**, and **what it still owes you**. Stack-agnostic, no project files, no configuration. Home: **https://saidkit.dev**
+Four small skills that keep a long Claude Code session honest about **what it knows**, **what it already decided**, and **what it still owes you**. Stack-agnostic, no project files, no configuration. Home: **https://saidkit.dev**
 
 Long sessions rot in predictable ways: constraints from turn 12 stop being applied by turn 60, the model proposes a default the project already rejected in an ADR, and the plan drifts from what was actually agreed. These skills are the interrupts for that.
 
@@ -8,7 +8,6 @@ Long sessions rot in predictable ways: constraints from turn 12 stop being appli
 | ------------------- | ------------------------------------------------------------------------------ | ---- |
 | `/magic:revelio`    | Context refresh — surfaces what went stale or buried, plus 3–5 next actions    | STOP |
 | `/magic:pensieve`   | Full scope/status audit end-to-end — status ledger, blockers, remaining path    | STOP |
-| `/magic:lumos`      | Precedent search across CLAUDE.md, memory, ADRs, working dirs, probe records    | Reports |
 | `/magic:session`    | Writes a handoff doc so a fresh session can pick the work up cold               | Confirms first |
 | `/magic:think-deep` | Plans a complex task into steps, self-checks after each, keeps a live protocol  | Confirms first |
 
@@ -25,9 +24,9 @@ Or in an active session: `/plugin marketplace add saidkit/magic-skills` → `/pl
 
 ## Then: add the macros
 
-The plugin is half the kit. The other half is a block of **operator macros** you paste into your `CLAUDE.md` — they give you `revelio!` / `pensieve!` / `lumos!` / `session!` as inline shorthand, and define the autonomy verbs (`expelliarmus`, `locomotor!`) that the skills refer to.
+The plugin is half the kit. The other half is a block of **operator macros** you paste into your `CLAUDE.md` — they give you `revelio!` / `pensieve!` / `session!` as inline shorthand, and define the autonomy verbs (`expelliarmus`, `locomotor!`) that the skills refer to.
 
-**→ [guides/operator-macros.md](guides/operator-macros.md)** — copy the block, paste into `~/.claude/CLAUDE.md`.
+**→ [guides/operator-macros.md](guides/operator-macros.md)** — how to install the macro block (it lives in `guides/CLAUDE.md`; paste it into `~/.claude/CLAUDE.md`).
 
 Skipping this is fine; you just invoke the skills by their full `/magic:<name>` form and lose the `locomotor!` chaining.
 
@@ -37,9 +36,6 @@ Skipping this is fine; you just invoke the skills by their full `/magic:<name>` 
 # mid-session, the thread has drifted
 revelio!                  → refresh, 3–5 next actions, stop
 locomotor!                → refresh, then work the list autonomously
-
-# before answering "what should the default be?"
-lumos!                    → what the project already decided, with citations
 
 # planning a long task, or after an interruption
 pensieve!                 → full ledger: done / in flight / blocked / remaining
@@ -59,16 +55,18 @@ magic-skills/                            (marketplace-of-one)
 ├── .claude-plugin/marketplace.json      marketplace: magickit
 ├── plugins/magic/                       the plugin
 │   ├── .claude-plugin/plugin.json
-│   ├── skills/                          revelio · pensieve · lumos · session · think-deep
+│   ├── skills/                          revelio · pensieve · session · think-deep
 │   └── README.md
-├── guides/operator-macros.md            the paste-in CLAUDE.md block
+├── guides/
+│   ├── CLAUDE.md                        the paste-in macro block
+│   └── operator-macros.md               how to install it
 ├── LICENSE                              MIT
 └── README.md
 ```
 
 ## Related
 
-[**SAID**](https://github.com/saidkit/said-skills) — the Scope → Architect → Implement → Debrief feature workflow. MagicKit is independent of it, but `lumos` and `session` were built against SAID's artifact layout (`docs/working/<feature>/`, ADRs, task logs) and are sharper on a SAID project.
+[**SAID**](https://github.com/saidkit/said-skills) — the Scope → Architect → Implement → Debrief feature workflow. MagicKit is independent of it, but `session` was built against SAID's artifact layout (`docs/working/<feature>/`, ADRs, task logs) and is sharper on a SAID project. (Precedent/decision-record search now ships in SAID as `said:retrieval`.)
 
 ## Contributing
 

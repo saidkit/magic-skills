@@ -1,6 +1,6 @@
 # `magic` — operator macros
 
-Five stack-agnostic skills for controlling context, scope, orchestration and handoff mid-session. Part of [MagicKit](https://github.com/saidkit/magic-skills).
+Four stack-agnostic skills for controlling context, scope, orchestration and handoff mid-session. Part of [MagicKit](https://github.com/saidkit/magic-skills).
 
 ## Skills
 
@@ -11,12 +11,6 @@ Surfaces what has gone stale or buried mid-conversation and is load-bearing for 
 ### `/magic:pensieve` — scope / status audit
 
 Reconstructs the whole active scope end-to-end and emits a status ledger: every planned step plus every step that became necessary during execution, each marked Done / In progress / Blocked / Not started / Superseded with evidence and a next action, followed by current blockers and the remaining path. Unlike `revelio`, it does **not** skip recent turns. **Stops.**
-
-### `/magic:lumos` — precedent / decision-record search
-
-Exhausts five precedent sources in order — `CLAUDE.md`, memory files, ADRs, prior-feature working dirs, prior probe/wire captures — before any default is proposed. Reports findings per source with citations; surfaces conflicts with the current proposal first, or names the gap when no precedent exists.
-
-Counteracts two failure modes: **agent-output-bias** (treating a spawned subagent's framing as authoritative) and **convenience-default bias** (proposing the easier answer over the architecturally coherent one).
 
 ### `/magic:session` — new-session handoff
 
@@ -36,4 +30,4 @@ Pairs with the `think!` macro (plain invocation) and `auror!` (invoke, then run 
 
 **Nothing carries across invocations.** No skill here makes subsequent turns "automatically refreshed" or "automatically precedent-checked". Each invocation is a fresh sweep scoped to the message that triggered it.
 
-**No project files, no config.** These skills read whatever layout a project already has and adapt — `docs/adr/` vs `decision-log/` vs `architecture/decisions/`, `docs/working/` vs `notes/` vs `planning/`. When a project has no decision record at all, `lumos` reports that as its first finding.
+**No project files, no config.** These skills read whatever layout a project already has and adapt — `docs/adr/` vs `decision-log/` vs `architecture/decisions/`, `docs/working/` vs `notes/` vs `planning/`.
