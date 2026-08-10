@@ -23,10 +23,7 @@ Anchored quality goal-run — one subjective target, single track:
 1. `Skill(magic:critic)` on the task → comparative `Done-when`.
 2. Print contract → confirm (autonomy: report-and-proceed).
 3. `auror!` with that `Done-when`.
-Fan-out breadth → `ultra locomotor!`. Single task; not across invocations.
-
-## `ultra locomotor` / `ultra locomotor!`
-Execute `Skill(magic:gauntlet)` on the task — assemble + print a fan-out gauntlet-loop prompt (does not run it). Single target; not across invocations.
+Fan-out breadth → `ultra locomotor!`.
 
 ## `said!`
 Single-feature SAID orchestrator — full cycle (skill: `said:said`) — 3 slots, Invoke · Compose · Drive:
@@ -49,5 +46,5 @@ Run `pensieve!`, then proceed through the remaining path autonomously as if `exp
 ## `lumos!`
 execute /said:retrieval skill
 
-## `muggle!`
-Briefly explain in plain human language where we are, what is happening, or the subject the operator asked about. Prioritize the essential meaning, current state, and practical implication. Avoid implementation detail, jargon, exhaustive history, and formal status-report structure unless needed for clarity.
+## `ultra locomotor` / `ultra locomotor!`
+execute /magic:gauntlet skill
