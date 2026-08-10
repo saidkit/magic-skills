@@ -19,11 +19,14 @@ Proceed as if expelliarmus is active: report phase boundaries, but do not wait a
 Hard blocker = unsatisfiable approach, failing quality gate needing operator decision, ambiguous scope-creep, missing credentials/tooling, or destructive operation outside scope. Does NOT carry across invocations.
 
 ## `auror locomotor` / `auror locomotor!`
-Gauntlet-loop run for one **subjective/quality** target — compose `magic:critic`, then drive the loop. 3 slots, Invoke · Compose · Drive:
-1. **Invoke.** FIRST action = `Skill(magic:critic)` on the task — pin the anchor + reference + domain and author the comparative `Done-when`. No reference ⇒ hard-block (the one input autonomy can't skip); a **contract**, never a prose prompt.
-2. **Compose.** Print the assembled contract (anchor · `Done-when` · task) for a confirm. Under `auror!`/`expelliarmus`/`/goal` the *wait* relaxes to report-and-proceed — the anchor-pin never drops.
-3. **Drive.** On confirm, run `auror!` with critic's `Done-when` as the completion condition → think-deep Phase-4 converge/escalate (cap-without-convergence escalates — never self-certify). No second loop; the loop stays think-deep's.
-Single task; subjective/quality only (objective/spec → `auror!`/`/goal`). Does NOT carry across invocations.
+Anchored quality goal-run — one subjective target, single track:
+1. `Skill(magic:critic)` on the task → comparative `Done-when`.
+2. Print contract → confirm (autonomy: report-and-proceed).
+3. `auror!` with that `Done-when`.
+Fan-out breadth → `ultra locomotor!`. Single task; not across invocations.
+
+## `ultra locomotor` / `ultra locomotor!`
+Execute `Skill(magic:gauntlet)` on the task — assemble + print a fan-out gauntlet-loop prompt (does not run it). Single target; not across invocations.
 
 ## `said!`
 Single-feature SAID orchestrator — full cycle (skill: `said:said`) — 3 slots, Invoke · Compose · Drive:
