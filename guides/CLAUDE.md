@@ -19,9 +19,11 @@ Proceed as if expelliarmus is active: report phase boundaries, but do not wait a
 Hard blocker = unsatisfiable approach, failing quality gate needing operator decision, ambiguous scope-creep, missing credentials/tooling, or destructive operation outside scope. Does NOT carry across invocations.
 
 ## `auror locomotor` / `auror locomotor!`
-One standalone task run as a **goal**: the requested scope + quality gates are the completion condition. Run `auror!` with them stated as think-deep's `Done-when`.
-think-deep's **Phase-4** drives it — turning each QA/review finding into the next repair cycle (re-plan -> fix -> re-verify) until every gate passes (converge) or a hard blocker is hit (escalate — never self-certify, never silently quit). `auror locomotor!` supplies the completion condition and scopes it to one task; it adds no second loop.
-Single task only — never combine with `said!` or `flow!`. The prompt-level equivalent of a `/goal` run. Does NOT carry across invocations.
+Gauntlet-loop run for one **subjective/quality** target — compose `magic:critic`, then drive the loop. 3 slots, Invoke · Compose · Drive:
+1. **Invoke.** FIRST action = `Skill(magic:critic)` on the task — pin the anchor + reference + domain and author the comparative `Done-when`. No reference ⇒ hard-block (the one input autonomy can't skip); a **contract**, never a prose prompt.
+2. **Compose.** Print the assembled contract (anchor · `Done-when` · task) for a confirm. Under `auror!`/`expelliarmus`/`/goal` the *wait* relaxes to report-and-proceed — the anchor-pin never drops.
+3. **Drive.** On confirm, run `auror!` with critic's `Done-when` as the completion condition → think-deep Phase-4 converge/escalate (cap-without-convergence escalates — never self-certify). No second loop; the loop stays think-deep's.
+Single task; subjective/quality only (objective/spec → `auror!`/`/goal`). Does NOT carry across invocations.
 
 ## `said!`
 Single-feature SAID orchestrator — full cycle (skill: `said:said`) — 3 slots, Invoke · Compose · Drive:
