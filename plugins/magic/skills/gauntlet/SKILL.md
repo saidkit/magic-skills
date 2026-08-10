@@ -9,69 +9,46 @@ description: >
 
 ## Contract — holds every run
 - **Assemble + print only.** Emit the prompt and STOP — never orchestrate, `/loop`, or spawn.
-- **Pin the bar first.** `Skill(magic:critic)` before assembling; no reference obtainable ⇒ hard-block.
-- **Engine-agnostic.** Bake no orchestration keyword into the prompt — the operator picks how to run it.
+- **Pin the anchor first.** `Skill(magic:critic)` before writing; no reference obtainable ⇒ hard-block.
+- **Output the canonical form.** The three flowing paragraphs below with `<target>` · `<anchor>` · items · modality swapped in — NOT a terse spec, NOT a K/N rubric, NOT an orchestration keyword.
 
-## 1 — Pin the bar (via critic)
-`Skill(magic:critic)` on the target → anchor · reference artifact · comparative `Done-when` (judge blind vs the reference, whole-artifact, stop at `≥K of N`). No reference ⇒ hard-block.
+## 1 — Pin the anchor (via critic)
+`Skill(magic:critic)` on the target → the named **anchor** to match/beat · the **reference** to compare against · the **modality** (looks / sounds / feels). No reference ⇒ hard-block.
 
 ## 2 — Decompose into items
-Split the target into the independently-buildable, independently-judgeable parts the fleet fans out over — e.g. a page → hero / pricing / footer; a 3D scene → rooms / props / lighting; a report → sections. Each item gets its own builder+critic loop.
+Split the target into the independently-buildable parts the fleet fans out over — a game → textures · physics · lighting · geometry · movement · sound; a page → hero · pricing · footer; a scene → rooms · props · lighting.
 
-## 3 — Fill the 3 slots
-- **Task (what):** build <target> at the level of <anchor> — every part to that bar.
-- **Build method (how):** fan out sub-agents, one per item; `/loop` each; a separate harsh critic checks each **blind** against <reference> (unlabeled A/B), whole-artifact; below the bar ⇒ keep going.
-- **Bar (when to stop):** <critic's comparative `Done-when`> — each item passes when it wins `≥K of N` blind looks vs <reference>; don't stop until every item passes.
+## 3 — Write the prompt (the canonical gauntlet-loop form)
+Fill the three paragraphs; keep the wording, swap in `<target>` · `<anchor>` · the items · the modality (**looks** / **sounds** / **feels**):
+
+1. *I want you to build `<target>` at the level of `<anchor>`. It should be utterly perfect, `<visually beautiful / on-brand / …>`, with every single thing done at the highest quality—from `<item>` to `<item>` to anything you could think of.*
+2. *Fan out sub-agents and have sub-agents tackle each one individually so that the `<target>` is utterly perfect. You should /loop on each item and have a separate sub-agent check it `<visually / by listening / by playing it>` against `<anchor>`. That separate sub-agent should be a really harsh critic, and if it doesn't match, it should keep going.*
+3. *Don't stop until each sub-agent is utterly wowed with the quality when compared with `<the actual anchor>`. It should literally compare them side by side blind and say which one `<looks / sounds / feels>` better. `<tech constraint, e.g. Do this in ThreeJS.>` /loop until it's utterly perfect. Fan out sub-agents.*
 
 ## 4 — Print
-Emit the filled prompt as ONE fenced block, ready to paste/run. Stop — do not run it.
+Emit the filled three paragraphs as ONE fenced block. Stop — do not run it.
 
-## Examples
-
-### Canonical (the source technique) — a game
-Input: `/magic:gauntlet — build a first-person shooter at the level of the most recent Call of Duty games, AAA quality (textures, physics, everything), in ThreeJS`
-
-Phase 1 (critic) pins: anchor = the most recent Call of Duty games (AAA); reference = CoD gameplay footage/screenshots; bar = blind side-by-side vs the actual game, ≥4/5.
-Phase 2 items = textures · physics · lighting · level geometry · weapons/animation · sound.
-Printed prompt:
+## Example — the canonical prompt (game)
+`/magic:gauntlet — build a first-person shooter at the level of the most recent Call of Duty games, in ThreeJS` →
 
 ```
-Task: Build a first-person shooter in ThreeJS at the level of the most recent Call
-of Duty games — every part (textures, physics, lighting, level geometry, weapons/
-animation, sound) at that AAA bar.
+I want you to build a first-person shooter at the level of the most recent Call of Duty games. It should be utterly perfect, visually beautiful, with every single thing done at AAA quality—from textures to physics to anything you could think of.
 
-Build method: Fan out sub-agents, one per part; /loop each. A separate harsh critic
-checks each part BLIND against footage of the actual Call of Duty game (unlabeled,
-side-by-side), judging the whole part — not a feature checklist. If it doesn't look
-AAA, keep going.
+Fan out sub-agents and have sub-agents tackle each one individually so that the game is utterly perfect. You should /loop on each item and have a separate sub-agent check it visually to ensure it looks triple A. That separate sub-agent should be a really harsh critic, and if it doesn't look triple A, it should keep going.
 
-Bar: A part passes when, judged blind side-by-side against the actual Call of Duty
-game, it is picked as matching-or-better in ≥4 of 5 looks. Don't stop until every
-part passes.
+Don't stop until each sub-agent is utterly wowed with the quality when compared with the actual Call of Duty game. It should literally compare them side by side blind and say which one looks better. Do this in ThreeJS. /loop until it's utterly perfect. Fan out sub-agents.
 ```
 
-### A UI
-Input: `/magic:gauntlet — make our pricing-page hero as polished as ref/hero-exemplar.png, on-brand with ref/brand-kit.md`
-
-Phase 1 (critic) pins: anchor = `ref/hero-exemplar.png`; reference = that screenshot + `ref/brand-kit.md`; bar = blind vs the exemplar, whole-artifact, ≥4/5.
-Phase 2 items = headline block · CTA · supporting visual · layout/spacing.
-Printed prompt:
+## Example — a UI (modality: looks)
+`/magic:gauntlet — make our pricing-page hero as polished as ref/hero.png` →
 
 ```
-Task: Build the pricing-page hero at the level of ref/hero-exemplar.png — every
-part (headline, CTA, supporting visual, layout) to that bar, on-brand with
-ref/brand-kit.md.
+I want you to build a pricing-page hero at the level of ref/hero.png. It should be utterly perfect, visually beautiful and on-brand, with every single part done at the highest quality—from the headline to the CTA to the layout to anything you could think of.
 
-Build method: Fan out sub-agents, one per part (headline block, CTA, supporting
-visual, layout/spacing); /loop each. A separate harsh critic checks each part
-BLIND against ref/hero-exemplar.png (render vs reference, unlabeled, positions
-re-randomized), judging the whole part — composition, hierarchy, type, color,
-spacing, finish — not a feature checklist. Below the bar ⇒ keep iterating.
+Fan out sub-agents and have sub-agents tackle each part individually so that the hero is utterly perfect. You should /loop on each item and have a separate sub-agent check it visually against ref/hero.png. That separate sub-agent should be a really harsh critic, and if it doesn't match ref/hero.png, it should keep going.
 
-Bar: A part passes when it matches-or-beats ref/hero-exemplar.png in ≥4 of 5 blind
-looks; also enforce brand-token conformance to ref/brand-kit.md (colors/type/
-spacing ∈ kit). Don't stop until every part passes.
+Don't stop until each sub-agent is utterly wowed with the quality when compared with ref/hero.png. It should literally compare them side by side blind and say which one looks better. /loop until it's utterly perfect. Fan out sub-agents.
 ```
 
 ## When NOT to use
-Objective/spec target · no reference obtainable.
+Objective/spec target · no reference obtainable (nothing to compare against side by side).
