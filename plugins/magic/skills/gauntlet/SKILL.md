@@ -1,8 +1,8 @@
 ---
 name: gauntlet
 description: >
-  Assemble and PRINT a gauntlet-loop prompt (fan out a builder+critic fleet, /loop until a blind-comparative bar) for a subjective/quality target — anchor pinned first. Emits prompt text only; never runs it. Use whenever the operator wants a gauntlet-loop or fan-out quality-build prompt assembled for a subjective target (a game, a 3D scene, a UI, a landing page, a design), even if they don't say "gauntlet".
-  Triggered ONLY by the explicit command "/magic:gauntlet". Only the exact command "/magic:gauntlet" activates this skill.
+  Assemble and PRINT a gauntlet-loop prompt (fan out a builder+critic fleet, /loop until a blind-comparative bar) for a subjective/quality target — anchor pinned first. Emits prompt text only; never runs it. 
+  Triggered ONLY by the explicit command "/magic:gauntlet".
 ---
 
 # Gauntlet — gauntlet-loop prompt assembler
@@ -26,8 +26,31 @@ Split the target into the independently-buildable, independently-judgeable parts
 ## 4 — Print
 Emit the filled prompt as ONE fenced block, ready to paste/run. Stop — do not run it.
 
-## Example
+## Examples
 
+### Canonical (the source technique) — a game
+Input: `/magic:gauntlet — build a first-person shooter at the level of the most recent Call of Duty games, AAA quality (textures, physics, everything), in ThreeJS`
+
+Phase 1 (critic) pins: anchor = the most recent Call of Duty games (AAA); reference = CoD gameplay footage/screenshots; bar = blind side-by-side vs the actual game, ≥4/5.
+Phase 2 items = textures · physics · lighting · level geometry · weapons/animation · sound.
+Printed prompt:
+
+```
+Task: Build a first-person shooter in ThreeJS at the level of the most recent Call
+of Duty games — every part (textures, physics, lighting, level geometry, weapons/
+animation, sound) at that AAA bar.
+
+Build method: Fan out sub-agents, one per part; /loop each. A separate harsh critic
+checks each part BLIND against footage of the actual Call of Duty game (unlabeled,
+side-by-side), judging the whole part — not a feature checklist. If it doesn't look
+AAA, keep going.
+
+Bar: A part passes when, judged blind side-by-side against the actual Call of Duty
+game, it is picked as matching-or-better in ≥4 of 5 looks. Don't stop until every
+part passes.
+```
+
+### A UI
 Input: `/magic:gauntlet — make our pricing-page hero as polished as ref/hero-exemplar.png, on-brand with ref/brand-kit.md`
 
 Phase 1 (critic) pins: anchor = `ref/hero-exemplar.png`; reference = that screenshot + `ref/brand-kit.md`; bar = blind vs the exemplar, whole-artifact, ≥4/5.

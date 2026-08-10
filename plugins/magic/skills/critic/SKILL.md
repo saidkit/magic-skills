@@ -14,7 +14,7 @@ Turn a subjective/quality target ("as good as X", "world-class", "on-brand") int
 Elicit for the target:
 - **Anchor** — the named exemplar the result must match or beat.
 - **Reference artifact** — the concrete thing to compare against: image · brand kit · exemplar doc · spec/test-suite. Capture its path/handle.
-- **Domain** — match to `references/critic-library.md`.
+- **Bar** — find the nearest target in `references/critic-library.md`; adapt its standard from the interview.
 
 No reference obtainable ⇒ **hard-block**: ask ONE focused question naming what is missing. Under `auror!`/`expelliarmus` the *wait* relaxes, the *pin* does not — never author a comparative gate without a reference (else the loop optimizes the wrong thing).
 
@@ -34,7 +34,7 @@ Emit the assembled `Done-when` block verbatim.
 
 ## Critic library
 
-`references/critic-library.md` — domain → judgment form · reference type · stop · guardrails. Ideate a new entry from the nearest template when the domain is absent.
+`references/critic-library.md` — worked acceptance bars keyed by target; find the nearest, adapt its standard from the interview. Comparative bars (**C**) are critic's; targets tagged **T** (software · execution) route to think-deep. Pin the standard; K/N by stakes; compose for cross-cutting targets.
 
 ## When NOT to use
 
