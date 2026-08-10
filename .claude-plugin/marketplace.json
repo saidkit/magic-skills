@@ -6,7 +6,7 @@
     "url": "https://saidkit.dev"
   },
   "description": "MagicKit - operator macros for Claude Code. Small, stack-agnostic skills that control context, scope and handoff mid-session.",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "plugins": [
     {
       "name": "magic",
