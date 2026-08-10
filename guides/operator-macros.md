@@ -1,10 +1,10 @@
 # Operator macros
 
-The `magic` plugin ships four skills. The **macro block that drives them** — the autonomy verbs and the inline shorthands — lives in **[`guides/CLAUDE.md`](./CLAUDE.md)** beside this file. That is the single source; this page keeps **no copy of the macros**, it only explains what the block is and how to install it.
+The `magic` plugin ships six skills. The **macro block that drives them** — the autonomy verbs and the inline shorthands — lives in **[`guides/CLAUDE.md`](./CLAUDE.md)** beside this file. That is the single source; this page keeps **no copy of the macros**, it only explains what the block is and how to install it.
 
 A Claude Code plugin cannot add text to your `CLAUDE.md`, and the macros are the orchestration layer: they define the autonomy verbs (`expelliarmus`, `locomotor!`, `auror!`) that the skills refer to when they say "do not continue unless paired with `locomotor`".
 
-Without the block the skills still work — you invoke them as `/magic:revelio`, `/magic:pensieve`, `/magic:session`, `/magic:think-deep`. With it, they work the way they were designed to.
+Without the block the skills still work — you invoke them as `/magic:revelio`, `/magic:pensieve`, `/magic:session`, `/magic:think-deep`, `/magic:critic`, `/magic:gauntlet`. With it, they work the way they were designed to.
 
 ## Install
 
