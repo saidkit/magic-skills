@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.3.3 — 2026-08-10
+
+**Changed — `think-deep` composes with the environment's native task tracker instead of emulating
+one.** Its protocol bundled two concerns: *step tracking* (the `## Steps` checklist, refocus prints,
+checkbox integrity) and *verification* (`Done-when` + acceptance gate + `Gate log` + converge/escalate
+loop). The tracking half duplicated — and underperformed — a harness's native todo/Task tools
+(structured states, automatic next-item refocus, dependencies, tool-enforced completion), against the
+skill's own *compose, don't emulate* directive.
+
+think-deep now **binds a step-tracker backend once at Phase 1**: an explicit `task-tracker:
+native|file` hint (operator or `CLAUDE.md`) wins; else a **deferred-aware, positive-confirmation** read
+of the actual tool manifest binds the native tracker (`TaskCreate/TaskUpdate`, or `TodoWrite`) when
+present — writing **no `## Steps` markdown**; else the file protocol, unchanged, as a portability
+fallback. The **verification layer stays think-deep's own in every mode** — a tracker item marked
+`completed` never closes the run; only the Phase-3 gate does. A harness with no native tracker behaves
+exactly as before.
+
+## 0.3.2 — 2026-08-10
+
+**Added — `magic:critic`.** A blind-comparative acceptance-contract author: turns a subjective/quality
+target ("as good as X", "world-class", "on-brand") into a pinned **K-of-N** `Done-when` that the
+`think-deep` acceptance loop converges on. It authors the contract and hands off — never runs the loop
+itself. MagicKit is now five skills: `revelio`, `pensieve`, `session`, `think-deep`, `critic`.
+
+**Changed — operator macros.** `said!` / `flow!` reworked to the 3-slot **Invoke · Compose · Drive**
+shape over their skills' `goal:` control lines; `auror locomotor!` now drives the critic/gauntlet.
+
 ## 0.3.0 — 2026-08-09
 
 **Removed — `magic:lumos`.** Precedent/decision-record search moved to the SAID plugin as

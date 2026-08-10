@@ -26,7 +26,12 @@ Emulating a named capability is the primary failure this skill prevents.
 
 1. **Decompose** into 3–10 steps. Each: deliverable · check criterion · **`via:`** (the skill/command that performs it, or `inline`). A pipeline's skills are `via:` bindings in declared order; its gates are their own steps. Sequential unless a dependency is noted.
 2. **Loop-shaped `via:`.** If a `via:` names a re-entrant loop skill (reconstruct → act → re-enter until its own stop condition), the step reads **"drive X to its stop condition via repeated invocation"**, never "invoke X"; the plan carries a **final step** that re-invokes X and records its stop-condition output verbatim. Invoking a loop once demotes it to a subroutine and drops every rule it enforces on later passes.
-3. **Protocol file.** Default `<protocol-dir>` = the **session scratchpad / temp dir** — the protocol is a transient single-run scaffold (it dies with the run; keep the project repo clean). Write it into a project working dir (`docs/working/<feature>/`, `notes/`, `planning/`) ONLY on operator request, or when the run's deliverable itself is a durable plan. Never a hardcoded path; state the resolved path in chat.
+3. **Bind the step tracker — once, here.** Compose with the environment's native tracker when present; emulate it with a file only when absent (the prime directive, applied to tracking). Take the first tier that resolves and **state the binding in one line** (e.g. *"task tracking: native"* / *"task tracking: file protocol"*):
+   - **Hint** — an operator or `CLAUDE.md` line (`task-tracker: native|file`) → use verbatim.
+   - **Native** — a native task tracker (`TaskCreate`/`TaskUpdate`, or `TodoWrite`) **named in your actual tool manifest**, incl. any **deferred / lazy-loaded** listing (not just the eager tools); if present-but-deferred, load its schema before first use. Register each step as a task (`via:`/check in metadata, deps where supported); write **no `## Steps` markdown**. Refocus = the tracker's own next-item reminder.
+   - **File** — the markdown protocol below; the default whenever native is not *positively confirmed* (a false negative costs only polish, but binding native when it is absent breaks the run).
+4. **Verification note — always think-deep's own, either backend.** `Done-when` + the `Gate log` have no native-tracker slot; keep them in a scratchpad note (`think-deep-gate.md`) — never a tracker state, never the repo. Under the file backend this note *is* the protocol file's non-`Steps` sections.
+5. **Protocol file (file backend).** Default `<protocol-dir>` = the **session scratchpad / temp dir** — the protocol is a transient single-run scaffold (it dies with the run; keep the project repo clean). Write it into a project working dir (`docs/working/<feature>/`, `notes/`, `planning/`) ONLY on operator request, or when the run's deliverable itself is a durable plan. Never a hardcoded path; state the resolved path in chat.
   ```
   Path: <protocol-dir>/think-deep-protocol.md
 
@@ -40,7 +45,7 @@ Emulating a named capability is the primary failure this skill prevents.
   ## Gate log
   (per-iteration verdicts)
   ```
-4. **Output the step list to chat.** Self-check: a named pipeline/skill absent from the `via:` bindings ⇒ rebind before executing.
+6. **Output the step list to chat.** Self-check: a named pipeline/skill absent from the `via:` bindings ⇒ rebind before executing.
 
 ## Phase 2 — Execute
 
@@ -51,12 +56,12 @@ Per step, in order:
    > **Self-check [N]** — **Good:** <specifics> · **Issues:** <numbered> · **Verdict:** PASS / FIX
    Test: completeness · correctness · consistency with prior steps · traceability (each claim → a source) · bloat. Nothing wrong ⇒ look harder; name one improvable thing.
 3. **FIX before advancing.** No forward move on a FIX verdict; re-check after fixing.
-4. **Update the protocol:** tick the step, write its Results. **Checkbox integrity** — no `[x]` while its Results read pending/blocked/not-started; on conflict, untick and say so. Plan changed ⇒ say so in chat, never silently.
-5. **Report** ≤3 sentences + remaining steps.
+4. **Record in the bound tracker.** Mark the step done and attach its Results. *File backend:* tick the step, write Results — **Checkbox integrity**: no `[x]` while its Results read pending/blocked/not-started; on conflict, untick and say so. *Native backend:* set the task done with a result note. Plan changed ⇒ say so in chat, never silently.
+5. **Report** ≤3 sentences + the next step (file: print remaining steps; native: the tracker's own reminder).
 
 ## Phase 3 — Acceptance gate (independent, depth-safe)
 
-Verify the deliverable against every `Done-when`. Independence = evidence, not an agent:
+Verify the deliverable against every `Done-when`. **A tracker step marked `completed` never closes the run — only this gate does** (a tracker "done" is self-asserted; the gate is the oracle). Independence = evidence, not an agent:
 
 - **Executable criterion** → run the check; tool output is the verdict. Never grade from memory of having done the work.
 - **Judgment criterion** → fresh-pass review, criterion by criterion, citing `file:line` / output.
