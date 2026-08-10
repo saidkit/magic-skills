@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.5 — 2026-08-10
+
+**Changed — terser Phase-1 backend tag.** think-deep now announces the bound tracker as a bare
+`(task tracking: native)` / `(task tracking: file protocol)` tag on the Phase-1 heading — no rationale
+("tools loaded", "no hint") and no "registering the plan…" preamble. Output hygiene only; no behavior
+change.
+
 ## 0.3.4 — 2026-08-10
 
 **Fixed — deferred native task tools now bind native instead of falling back to file.** The 0.3.3
