@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.4 — 2026-08-10
+
+**Fixed — deferred native task tools now bind native instead of falling back to file.** The 0.3.3
+tracker-composition rule was ambiguous for the *present-but-deferred* case: an agent could read a
+lazy-loaded `TaskCreate/TaskUpdate` as "not positively confirmed" and default to the file protocol —
+so no native task panel appeared even though the tracker was one `ToolSearch` away. Tier 2/3 of "Bind
+the step tracker" are now decisive: **being named anywhere in the manifest (eager OR deferred) is
+positive confirmation ⇒ load the schema and bind native**; the file backend is used **only when the
+tracker is absent entirely** (or an explicit `task-tracker: file` hint). "I'd have to load it first"
+and "another log already tracks this" are explicitly not reasons to fall back.
+
 ## 0.3.3 — 2026-08-10
 
 **Changed — `think-deep` composes with the environment's native task tracker instead of emulating

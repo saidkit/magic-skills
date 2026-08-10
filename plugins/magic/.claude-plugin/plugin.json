@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "magic",
   "displayName": "MagicKit operator macros",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Operator macros for Claude Code: revelio (context refresh), pensieve (scope/status audit), session (new-session handoff), think-deep (structured task orchestrator with per-step self-check + acceptance-gate loop), critic (blind-comparative acceptance-contract author). Stack-agnostic; pairs with the operator-macro block in guides/operator-macros.md.",
   "author": {
     "name": "Viktor Shpak",
