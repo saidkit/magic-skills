@@ -2,7 +2,7 @@
 name: critic
 description: >
   Authors a bounded acceptance contract for a quality target — subjective (blind-comparative against an exemplar) or objective (repair-loop to zero defects) — then gates it into review (default) · repair (`+fix`) · export (`as prompt`). Converts an open-ended "make it as good as X" into a terminating `Done-when` the acceptance loop converges on.
-  Activates ONLY on a user's explicit `/magic:critic <target>` or `critic! <target>` invocation AND NOTHING ELSE.
+  Activates ONLY on a user's explicit `/magic:critic <target>` or `critic! <target>` or `criticize! <target>` invocation AND NOTHING ELSE.
 ---
 
 # Critic — acceptance-contract author
