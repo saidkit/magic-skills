@@ -7,9 +7,6 @@ Use a rule: in source code, reference comments must be **task-id + very short wh
 Format: `// <task-id>` (bare) or `// <task-id> — <≤10-word why>`.
 When operator types `silencio!`, recall this rule and apply it; retroactively trim in-progress source files if asked. Multi-line rationale belongs in the task body / ADR / UX-spec — not the source.
 
-## `think!`
-execute /magic:think-deep skill — the **interactive** form (keeps think-deep's Phase-0 confirm). think-deep captures the task's acceptance criteria as its `Done-when` and loops on them (Phase-3 gate → Phase-4 converge/escalate); pass any explicit success conditions in the task.
-
 ## `auror!`
 Invoke /magic:think-deep skill for user-specified task: build a plan, execute autonomously, cross-verify the results, and deliver a final report.
 The loop is think-deep's, not auror's: "cross-verify" = its Phase-3 acceptance gate against the task's `Done-when`; "natural completion" = Phase-4 all-pass; the repair loop hitting its cap without convergence is a hard blocker (escalate — never self-certify). auror! adds autonomy + the report, never a second loop.
@@ -40,8 +37,10 @@ Multi-lane SAID orchestrator (skill: `said:flow`) — 3 slots, Invoke · Compose
 ## `locomotor!`
 Run `revelio!`, then proceed through its next-actions list autonomously until a full completion, as if operator typed `expelliarmus!` — same hard-blocker rules, same no-carry-across-invocations, same no-new-stages constraint. Operator may interrupt between phases by sending a new message; otherwise both phases run in one response.
 
-## `pensieve locomotor!`
-Run `pensieve!`, then proceed through the remaining path autonomously as if `expelliarmus!` was active, stopping only at natural completion or a hard blocker.
+
+
+## `think!`
+execute /magic:think-deep skill — the **interactive** form (keeps think-deep's Phase-0 confirm). think-deep captures the task's acceptance criteria as its `Done-when` and loops on them (Phase-3 gate → Phase-4 converge/escalate); pass any explicit success conditions in the task.
 
 ## `lumos!`
 execute /said:retrieval skill
