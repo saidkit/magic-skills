@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.3.6 — 2026-08-10
+
+**Added — ownership & isolation on the shared task list (native backend, R11).** Claude Code's task
+list is shared and un-namespaced — any skill/agent appends and `TaskList` returns all of it (proven
+live: an empty list, then global integer IDs). think-deep now (a) names each task
+`[think-deep] <N>-<step>` with `owner: think-deep/<run-id>` + `metadata {ns,run,step}`, (b)
+reconstructs only its own by filtering `TaskList` on that `owner`, (c) never mutates a foreign task,
+(d) cleans up its tasks on close. Bounded by R6 (a tracker `completed` never closes the run) — foreign
+todos degrade refocus/UX only, never correctness. Guards: harness S16–S18.
+
+**Changed — numbered native task subjects.** Subjects carry an `<N>-` order prefix
+(`[think-deep] 1-…`) so the shared task panel reads in plan order at a glance.
+
+**Changed — terser tag reinforced.** The Phase-1 backend tag now explicitly bans "bound" and "schema
+loaded" (field-observed slips) — the bare `(task tracking: native)` only.
+
 ## 0.3.5 — 2026-08-10
 
 **Changed — terser Phase-1 backend tag.** think-deep now announces the bound tracker as a bare
