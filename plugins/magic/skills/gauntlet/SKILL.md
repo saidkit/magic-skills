@@ -2,7 +2,7 @@
 name: gauntlet
 description: >
   Assemble and PRINT a gauntlet-loop prompt (fan out a builder+critic fleet, /loop until a blind-comparative bar) for a subjective/quality target — anchor pinned first. Emits prompt text only; never runs it. 
-  Triggered ONLY by the explicit command "/magic:gauntlet".
+  Triggered ONLY by the explicit command "/magic:gauntlet" or "gauntlet!".
 ---
 
 # Gauntlet — gauntlet-loop prompt assembler

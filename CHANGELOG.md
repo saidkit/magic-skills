@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.6 — 2026-08-10
+## 0.3.5 — 2026-08-10
 
 **Added — ownership & isolation on the shared task list (native backend, R11).** Claude Code's task
 list is shared and un-namespaced — any skill/agent appends and `TaskList` returns all of it (proven
@@ -15,8 +15,6 @@ todos degrade refocus/UX only, never correctness. Guards: harness S16–S18.
 
 **Changed — terser tag reinforced.** The Phase-1 backend tag now explicitly bans "bound" and "schema
 loaded" (field-observed slips) — the bare `(task tracking: native)` only.
-
-## 0.3.5 — 2026-08-10
 
 **Changed — terser Phase-1 backend tag.** think-deep now announces the bound tracker as a bare
 `(task tracking: native)` / `(task tracking: file protocol)` tag on the Phase-1 heading — no rationale

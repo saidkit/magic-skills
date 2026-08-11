@@ -46,5 +46,5 @@ Run `pensieve!`, then proceed through the remaining path autonomously as if `exp
 ## `lumos!`
 execute /said:retrieval skill
 
-## `ultra locomotor` / `ultra locomotor!`
-execute /magic:gauntlet skill
+## `web!`
+use web search to get the information
