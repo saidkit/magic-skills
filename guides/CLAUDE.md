@@ -16,7 +16,7 @@ Proceed as if expelliarmus is active: report phase boundaries, but do not wait a
 Hard blocker = unsatisfiable approach, failing quality gate needing operator decision, ambiguous scope-creep, missing credentials/tooling, or destructive operation outside scope. Does NOT carry across invocations.
 
 ## `auror locomotor` / `auror locomotor!`
-Anchored quality goal-run — one subjective target, single track:
+Anchored quality goal-run — one subjective target, single builder track (not a subagent ban):
 1. `Skill(magic:critic)` on the task → comparative `Done-when`.
 2. Print contract → confirm (autonomy: report-and-proceed).
 3. `auror!` with that `Done-when`.
@@ -42,6 +42,3 @@ execute /magic:think-deep skill — the **interactive** form (keeps think-deep's
 
 ## `lumos!`
 execute /said:retrieval skill
-
-## `web!`
-use web search to get the information
