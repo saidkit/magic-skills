@@ -7,7 +7,7 @@ list is shared and un-namespaced — any skill/agent appends and `TaskList` retu
 live: an empty list, then global integer IDs). think-deep now (a) names each task
 `[think-deep] <N>-<step>` with `owner: think-deep/<run-id>` + `metadata {ns,run,step}`, (b)
 reconstructs only its own by filtering `TaskList` on that `owner`, (c) never mutates a foreign task,
-(d) cleans up its tasks on close. Bounded by R6 (a tracker `completed` never closes the run) — foreign
+(d) marks its tasks to their true terminal state on close (`completed` on converge, kept as-is on escalation as the residual-gap surface; delete only a planning-error task, never completed work — O5). Bounded by R6 (a tracker `completed` never closes the run) — foreign
 todos degrade refocus/UX only, never correctness. Guards: harness S16–S18.
 
 **Changed — numbered native task subjects.** Subjects carry an `<N>-` order prefix
