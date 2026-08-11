@@ -1,20 +1,46 @@
 # Changelog
 
+## 0.3.8 — 2026-08-11
+
+**Changed — `critic` invocation surface finalized (explicit-token trigger).** The frontmatter now
+activates the skill ONLY on an explicit `/magic:critic` or `critic!` invocation (never on a bare
+"review"/"critique"/"write acceptance criteria" request), so it never hijacks a casual review — a
+deliberate precision-over-recall choice for a power-tool. `critic!` is the skill's own frontmatter
+alias, not an operator macro (the macro was redundant once the frontmatter owns the trigger). No
+behavior change to the phases; description-only. (A description-triggering optimization pass was run
+but is not a meaningful signal for a token-triggered skill — an installed skill shadows the throwaway
+test copies — so the lean explicit-only description was kept, which the pass also returned as best.)
+
+## 0.3.7 — 2026-08-11
+
+**Changed — `critic` now authors objective/repair-loop contracts, not just blind-comparative ones.**
+`critic` previously framed itself as comparative-only and hard-blocked whenever no external reference
+existed — yet its library already shipped non-perceptual **T** bars (software feature · API · refactor ·
+data) that were unreachable through that gate. A new **Phase 0 — Classify** routes the target to **C**
+(subjective/perceptual → blind A/B vs a reference), **T** (objective/spec → adversarial review to
+*0 open P0/P1 and nothing new*, attacker stance for money/data/security, or the executed form), or
+**C+T** (composed). **Phase 1 branches:** the C branch still pins an external anchor and hard-blocks
+without one; the T branch pins the *internal* standard (spec/tests/source-of-truth) and does **not**
+hard-block — a repair loop's reference is the code itself. The pin still survives autonomy in both
+branches. Lets an operator get the full repair-loop `Done-when` from an interview instead of hand-writing
+it. `think-deep` untouched; the comparative path is unchanged. (Version 0.3.6 was skipped.)
+
+**Added — output modes: a gate, a review-vs-repair default, and a human-prompt render.** `critic` now
+does more than emit a `Done-when` and stop. Phase 3 gained a **gate**: standalone, it renders the
+contract **terse** (a floor pointer + the bar + the stop — the enumerated form is `as full prompt`, in
+the new `references/prompt-forms.md`) and **waits**; under `auror!`/`expelliarmus` (or composed in a
+loop) the gate auto-passes — the pin never drops in either case. Three exits: **contract** (`as prompt`
+— render-only export for future human composition, or the feeder hand-off inside a loop), **review**
+(the default drive — adversarial per target, verified, writes a ranked `…-review.md`; **reports
+findings, edits nothing**; stops when a pass finds nothing new), and **repair** (`+fix` — review then
+fix to *0 open P0/P1 + nothing new*, the only exit that edits). The review-not-repair default means
+"criticize what X generated" never silently rewrites the thing under review. The skill now self-triggers
+on `/magic:critic` **or** the bare `critic!` alias (frontmatter), and an **Invocation & parameters** table
+documents the mode parameter (`+fix` · `as prompt` / `as full prompt` · `park`; default = review). No
+operator macro is needed — classify/gate/exits are all self-enforced, so the trigger lives in the skill,
+not the always-loaded block.
+
 ## 0.3.5 — 2026-08-10
-
-**Added — ownership & isolation on the shared task list (native backend, R11).** Claude Code's task
-list is shared and un-namespaced — any skill/agent appends and `TaskList` returns all of it (proven
-live: an empty list, then global integer IDs). think-deep now (a) names each task
-`[think-deep] <N>-<step>` with `owner: think-deep/<run-id>` + `metadata {ns,run,step}`, (b)
-reconstructs only its own by filtering `TaskList` on that `owner`, (c) never mutates a foreign task,
-(d) marks its tasks to their true terminal state on close (`completed` on converge, kept as-is on escalation as the residual-gap surface; delete only a planning-error task, never completed work — O5). Bounded by R6 (a tracker `completed` never closes the run) — foreign
-todos degrade refocus/UX only, never correctness. Guards: harness S16–S18.
-
-**Changed — numbered native task subjects.** Subjects carry an `<N>-` order prefix
-(`[think-deep] 1-…`) so the shared task panel reads in plan order at a glance.
-
-**Changed — terser tag reinforced.** The Phase-1 backend tag now explicitly bans "bound" and "schema
-loaded" (field-observed slips) — the bare `(task tracking: native)` only.
 
 **Changed — terser Phase-1 backend tag.** think-deep now announces the bound tracker as a bare
 `(task tracking: native)` / `(task tracking: file protocol)` tag on the Phase-1 heading — no rationale
