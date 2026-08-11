@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.9 — 2026-08-11
+
+**Changed — trigger tidy across `think-deep`, `gauntlet`, `muggle`; `auror locomotor` fan-out repoint.**
+Applies the same explicit-invocation tightening used for `critic` to the sibling skills: `think-deep`
+and `gauntlet` frontmatter now read "explicit … invocation AND NOTHING ELSE", and `muggle`'s trigger
+line was trimmed. The `auror locomotor` macro's fan-out breadth now redirects to **`gauntlet!`** (the
+surviving invocation) instead of the retired `ultra locomotor!` alias — synced across the distributable
+`guides/CLAUDE.md` and the personal macro copy. Description/macro-doc only; no phase behavior change.
+
 ## 0.3.8 — 2026-08-11
 
 **Changed — `critic` invocation surface finalized (explicit-token trigger).** The frontmatter now

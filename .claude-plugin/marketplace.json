@@ -6,12 +6,12 @@
     "url": "https://saidkit.dev"
   },
   "description": "MagicKit - operator macros for Claude Code. Small, stack-agnostic skills that control context, scope and handoff mid-session.",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "plugins": [
     {
       "name": "magic",
       "source": "./plugins/magic",
-      "version": "0.3.8",
+      "version": "0.3.9",
       "description": "Operator macros: revelio (context refresh), pensieve (scope/status audit), session (handoff), think-deep (structured task orchestrator). Four skills that keep a long session honest about what it knows, what it already decided, and what it still owes you.",
       "author": {
         "name": "Viktor Shpak",

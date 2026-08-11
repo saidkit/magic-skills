@@ -20,6 +20,7 @@ Anchored quality goal-run — one subjective target, single track:
 1. `Skill(magic:critic)` on the task → comparative `Done-when`.
 2. Print contract → confirm (autonomy: report-and-proceed).
 3. `auror!` with that `Done-when`.
+Fan-out breadth → `gauntlet!`.
 
 ## `said!`
 Single-feature SAID orchestrator — full cycle (skill: `said:said`) — 3 slots, Invoke · Compose · Drive:
