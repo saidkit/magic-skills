@@ -1,62 +1,104 @@
-# `magic` — operator macros
+# `magic` — plain-language guide to the operator skills
 
-Six stack-agnostic skills for controlling context, scope, orchestration, handoff, and anchored quality mid-session. Part of [MagicKit](https://github.com/saidkit/magic-skills).
+Seven small, stack-agnostic skills for staying on top of a long working session: refresh your context, audit your progress, explain things simply, hand off cleanly, run a multi-step job carefully, hold work to a quality bar, and generate a build prompt. You invoke each by typing a short word — no setup, no config. Part of [MagicKit](https://github.com/saidkit/magic-skills).
 
-## Skills
+Every skill below has its own fuller guide at `skills/<name>/README.md`. This page is the tour, with a couple of real "you type → you get" samples each.
 
-### `/magic:revelio` — context refresh
+## The seven at a glance
 
-Surfaces what has gone stale or buried mid-conversation and is load-bearing for the next step: recent activity, current work state, operator constraints stated in earlier turns, and 3–5 prioritized next actions. Deliberately skips what is already in recent turns — re-emitting that is noise, not refresh. **Stops.**
+| Skill | What it does | You type |
+|---|---|---|
+| **revelio** | Quick "where were we?" recap of a long chat | `revelio` / `revelio!` |
+| **pensieve** | Full start-to-finish status audit (a table) | `pensieve` / `pensieve!` |
+| **muggle** | Explains what's going on in plain English | `muggle!` |
+| **session** | Saves a handoff so a new chat picks up warm | `session!` |
+| **think-deep** | Runs a multi-step job and verifies the result | `/magic:think-deep` · `think!` · `auror!` |
+| **critic** | Turns "make it good" into a finish line, then reviews | `critic!` / `criticize!` |
+| **gauntlet** | Prints a ready-to-paste "build-to-a-bar" prompt | `gauntlet!` |
 
-### `/magic:pensieve` — scope / status audit
+The first three **just report and stop** — they show you where things stand and hand the decision back. The rest **do work.**
 
-Reconstructs the whole active scope end-to-end and emits a status ledger: every planned step plus every step that became necessary during execution, each marked Done / In progress / Blocked / Not started / Superseded with evidence and a next action, followed by current blockers and the remaining path. Unlike `revelio`, it does **not** skip recent turns. **Stops.**
+---
 
-### `/magic:session` — new-session handoff
+## revelio — a quick "where were we?"
+Sweeps back through a long conversation and hands you a short recap: recent activity, where the work stands, constraints you set earlier, and 3–5 next actions. Then stops.
 
-Writes `working/<feature>/session-<n>.md` so a fresh session picks the work up cold. Confirms feature id and session number with the operator before writing. Carries what a cold session cannot reconstruct — decisions and their reasons, operator constraints, done vs. in flight vs. blocked — with citations rather than restated prose.
+- **You type:** `revelio`
+  **You get:** *"Recent: refactored the checkout page, fixed two failing tests. State: payment step works; the confirmation email is still stubbed. Constraints you set: keep it TypeScript, no new dependencies. Next: (1) wire up the real email, (2) test the empty-cart case, (3) update the changelog."*
+- **You type:** `revelio!` *(early in a short chat)* → a brief note that there isn't much to refresh yet — it's all still on screen.
 
-### `/magic:think-deep` — structured task orchestrator
+*Full guide: `skills/revelio/README.md`*
 
-Decomposes a complex task into 3–10 steps, each carrying a deliverable, a check criterion, and a **`via:`** binding naming the skill that performs it. Confirms the restatement with the operator, writes a live execution protocol file, then executes step by step — with a mandatory self-check after each that must name specific positives *and* specific criticism before moving on.
+## pensieve — the full status check-up
+Reconstructs the whole task end-to-end and lays it out as a **status ledger** — every step marked Done / In progress / Blocked / Not started / Superseded, with evidence and a next action — then the blockers and the remaining path. Then stops.
 
-Its prime directive is **compose, don't emulate**: when a step is covered by a named skill, macro or pipeline, the step invokes it rather than hand-rolling equivalent work. A plan whose `via:` bindings omit a pipeline the task named is treated as a wrong plan and rebound before execution.
+- **You type:** `pensieve`
+  **You get:** a one-line task restatement, then a table like:
 
-Pairs with the `think!` macro (plain invocation) and `auror!` (invoke, then run the plan through autonomously and deliver a final report).
+  ```
+  | # | Step          | Status      | Evidence / notes        | Next action      |
+  |---|---------------|-------------|-------------------------|------------------|
+  | 1 | Sign-up form  | Done        | PROJ-01 shipped, tested | —                |
+  | 2 | Welcome email | In progress | draft written           | wire up the send |
+  | 3 | Error copy    | Blocked     | waiting on the writer   | ping them        |
+  ```
+- **You type:** `pensieve!` *(before a handoff)* → the same audit, so nothing quietly falls through the cracks.
 
-### `/magic:critic` — anchored acceptance bar
+*Full guide: `skills/pensieve/README.md`*
 
-Authors a bounded, blind-comparative acceptance contract for a subjective or quality target: it pins an external anchor (an exemplar to match, a baseline to beat), chooses the judging form, and emits a `Done-when` a loop can actually terminate on — a blind ≥K-of-N comparison rather than an absolute "make it a 9/10" self-score that never converges. For a non-perceptual target it routes to a review-until-clean or tests-green bar instead of inventing a comparison. Authors the bar and **stops** — the acceptance loop is run by whatever drives it (`auror!`, a `/goal`).
+## muggle — explain it in plain English
+A jargon-free explanation of where things stand or what something means — the gist, the current state, and the practical "so what." No code, no status tables.
 
-### `/magic:gauntlet` — fan-out gauntlet-loop prompt
+- **You type:** `muggle! explain what this change actually does`
+  **You get:** a couple of plain sentences — what it's for, what's different now, and why it matters, without walking through the code.
+- **You type:** `muggle! give me something I can send to a non-technical teammate` → one clear, shareable sentence you can paste into a message.
 
-Assembles and **prints** a gauntlet-loop prompt for a decomposable perceptual target: fan out a builder-and-critic fleet across the parts, `/loop` each with a separate harsh critic judging it *blind* against the anchor, and don't stop until every part matches or beats the reference side by side. It pins the anchor first and **hard-blocks** if there is nothing to compare against, rather than fabricate a bar. Emits the prompt text only — you run it.
+*Full guide: `skills/muggle/README.md`*
 
-## Use cases — anchored-quality loops
+## session — save your place for a new chat
+Writes a handoff file so tomorrow's session (or a teammate's) starts warm: what's done, in progress, and blocked, the decisions and why, and pointers to the files that matter. It confirms the details with you first.
 
-`auror locomotor!` extends `auror!` (see `/magic:think-deep` above) with a **pinned quality bar**. Give it a goal plus something to be judged against; it authors a bounded acceptance bar (via `/magic:critic`), prints the contract, then runs a single builder-and-critic loop — build → judge *blind* against the bar → repair the weakest part → re-judge → **stop when it clears the bar, or escalate at the repair cap** (it never self-certifies). The bar is chosen to fit the target, so one verb spans three shapes:
+- **You type:** `session!`
+  **You get:** *"Before I save — this is the billing feature, id `PROJ-01`, session 2. Sound right?"* Once you confirm, it writes `working/PROJ-01/session-2.md` and tells you it's saved. Next chat: *"read `working/PROJ-01/session-2.md` and let's keep going."*
+- **You type:** `session!` *(handing off to a teammate)* → the same quick confirm, then a file their chat can open to get the full picture — no long write-up needed from you.
 
-**Match an exemplar** — perceptual targets, judged by blind comparison:
-- `auror locomotor! make the pricing hero as polished as ref/hero.png` — each part (headline · CTA · visual · layout) blind against the exemplar until it clears a set pass mark; brand tokens stay in-kit.
-- `auror locomotor! a 15-second intro jingle at the level of ref/theme.mp3` — blind *listen* against the reference track; loudness/format held as a floor.
-- `auror locomotor! rewrite our tagline to beat the current line` — blind-pick new vs current on a pinned voice, best-of-N.
+*Full guide: `skills/session/README.md`*
 
-**Get it correct** — objective targets, reviewed or executed (no blind A/B is invented where none fits):
-- `auror locomotor! harden our password-reset flow` — attacker-stance review down to zero open high-severity findings, with the security tests green.
-- `auror locomotor! extract the tax logic, no behavior change` — full suite green, outputs identical, diff stays in scope.
-- `auror locomotor! make the quarterly figures reconcile to the ledger` — every number recomputed against the source, zero discrepancies, reproducible.
+## think-deep — a careful worker for multi-step jobs
+Breaks a task into a short plan, does each step with a self-check, then verifies the whole result against your "done when…" criteria — looping to fix whatever failed. Three ways to call it, by how hands-on you want to be.
 
-**Both look and correctness** — mixed targets, every sub-bar must pass:
-- `auror locomotor! build the revenue dashboard — matches ref/dash.png and every number reconciles` — the charts clear a blind comparison **and** the numbers recompute to zero discrepancies; either one failing fails the whole.
+- **You type:** `auror! add pagination to the results table and make sure the tests pass`
+  **You get:** a plan, each step done with a self-check, a final run against "tests pass," and a short report — fully hands-off.
+- **You type:** `think! migrate the CSV import feature to the new config format` → the task restated with a plan for your **approval**, then it works through each step with checks.
 
-Want **breadth** instead of depth? `ultra locomotor!` fans out several competing builders, has a harsh critic judge them side-by-side blind, and keeps the best — it prints that prompt (via `/magic:gauntlet`) for you to run.
+*Full guide: `skills/think-deep/README.md`*
 
-These verbs are operator macros; install the block per [operator-macros.md](../../guides/operator-macros.md).
+## critic — turn a fuzzy goal into a finish line
+Pins a vague standard ("make it good", "as good as that page") into a concrete, finishable **done-when**, then reviews your target against it — so a quality loop can actually stop.
 
-## Design notes
+- **You type:** `critic! review the pricing page against ref/hero.png`
+  **You get:** a blind side-by-side bar from your example image, a ranked list of what's off (spacing, color, alignment), and **zero edits** to your files.
+- **You type:** `critic! get the checkout flow to production quality +fix` → a done-when of "zero serious issues and tests green," then the fixes applied until it clears the bar. *(Default is review, which never edits; add `+fix` only when you want changes.)*
 
-**`revelio` and `pensieve` stop by contract.** They are diagnostics. The operator reads the output and decides. To chain straight into execution, use the `locomotor!` / `pensieve locomotor!` macros from [operator-macros.md](../../guides/operator-macros.md).
+*Full guide: `skills/critic/README.md`*
 
-**Nothing carries across invocations.** No skill here makes subsequent turns "automatically refreshed" or "automatically precedent-checked". Each invocation is a fresh sweep scoped to the message that triggered it.
+## gauntlet — a ready-to-paste build prompt
+Writes (does **not** run) a strong copy-paste prompt that tells an AI to split the work into parts, put a builder and a harsh critic on each, and loop until every part matches or beats an example you name — judged blind.
 
-**No project files, no config.** These skills read whatever layout a project already has and adapt — `docs/adr/` vs `decision-log/` vs `architecture/decisions/`, `docs/working/` vs `notes/` vs `planning/`.
+- **You type:** `gauntlet! a landing page as polished as ref/hero.png`
+  **You get:** a copy-paste prompt that splits the page into parts (hero, pricing, footer…), loops each against `ref/hero.png`, and won't stop until each wins a blind side-by-side. You paste it and run it wherever you like.
+- **You type:** `gauntlet! a polished dashboard` *(no reference)* → it pauses and asks what to compare against, rather than inventing a bar.
+
+*Full guide: `skills/gauntlet/README.md`*
+
+---
+
+## How they fit together
+- **Lost the thread?** `revelio` (quick recap) · `pensieve` (full audit) · `muggle` (plain-English explainer). All three report and stop.
+- **Stepping away?** `session!` saves a handoff for a fresh chat.
+- **Real work to do?** `think-deep` (via `think!` or `auror!`) plans, does, and **verifies** a multi-step job. `critic!` pins a quality bar and reviews or fixes against it. `gauntlet!` hands you a build-to-a-bar prompt to run elsewhere.
+
+## Good to know
+- **The diagnostics stop by contract.** `revelio` / `pensieve` / `muggle` report and hand the decision back to you. To refresh *and then* keep going, use the `locomotor!` / `pensieve locomotor!` macros (see [operator-macros.md](../../guides/operator-macros.md)).
+- **Nothing carries across calls.** Each invocation is a fresh sweep scoped to the message that triggered it — call again whenever you need another look.
+- **No project files, no config.** These skills read whatever layout your project already has and adapt (`docs/adr/` vs `decision-log/`, `docs/working/` vs `notes/`, and so on).
