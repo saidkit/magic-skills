@@ -20,7 +20,6 @@ Anchored quality goal-run — one subjective target, single track:
 1. `Skill(magic:critic)` on the task → comparative `Done-when`.
 2. Print contract → confirm (autonomy: report-and-proceed).
 3. `auror!` with that `Done-when`.
-Fan-out breadth → `ultra locomotor!`.
 
 ## `said!`
 Single-feature SAID orchestrator — full cycle (skill: `said:said`) — 3 slots, Invoke · Compose · Drive:
@@ -36,8 +35,6 @@ Multi-lane SAID orchestrator (skill: `said:flow`) — 3 slots, Invoke · Compose
 
 ## `locomotor!`
 Run `revelio!`, then proceed through its next-actions list autonomously until a full completion, as if operator typed `expelliarmus!` — same hard-blocker rules, same no-carry-across-invocations, same no-new-stages constraint. Operator may interrupt between phases by sending a new message; otherwise both phases run in one response.
-
-
 
 ## `think!`
 execute /magic:think-deep skill — the **interactive** form (keeps think-deep's Phase-0 confirm). think-deep captures the task's acceptance criteria as its `Done-when` and loops on them (Phase-3 gate → Phase-4 converge/escalate); pass any explicit success conditions in the task.
