@@ -12,6 +12,15 @@ mutates a foreign task, and (O5) marks its tasks to their true terminal state on
 converge, kept as-is on escalation as the residual-gap surface, delete only a planning-error task and
 never completed work. Bounded by R6 — the gate, not the list, closes the run. Guards: harness S16–S19.
 
+**Changed — `auror locomotor!` acceptance is now an independent `critic!` review (reviewer ≠ builder),
+not the builder's self-grade.** The macro authored a critic bar (step 1) but let `auror!`/think-deep
+**self-grade** against it — so a self-generated artifact could close *"all pass, no iteration"* while an
+independent review found P0s (observed live: a spec corpus minted "clean" with a cross-file money-math
+contradiction inside). New **step 4** binds acceptance to an independent critic review that converges only
+when it adds *nothing new* (else escalates); a self-graded "all pass" can never close it. Composition-only
+— `think-deep`/`critic` untouched; synced across the distributable `guides/CLAUDE.md` + the personal macro
+copy. Guards: auror-locomotor harness S15/S16, fixture A7.
+
 ## 0.3.9 — 2026-08-11
 
 **Changed — trigger tidy across `think-deep`, `gauntlet`, `muggle`; `auror locomotor` fan-out repoint.**
