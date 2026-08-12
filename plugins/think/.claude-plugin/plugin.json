@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "think",
+  "displayName": "Think — divergent front-doors",
+  "version": "0.1.0",
+  "description": "Divergent-thinking front-doors for Claude Code: ideate (generate 5–15 genuinely diverse candidate ideas, adversarially review each against a pinned merit rubric, return the top N with rationale). Composes the magic plugin's critic as its judge; feeds think-deep / gauntlet (smart is planned). Stack-agnostic, no project files.",
+  "author": {
+    "name": "Viktor Shpak",
+    "url": "https://saidkit.dev"
+  },
+  "homepage": "https://saidkit.dev",
+  "repository": "https://github.com/saidkit/magic-skills",
+  "license": "MIT",
+  "keywords": [
+    "ideation",
+    "divergent-thinking",
+    "idea-generation",
+    "evaluator-optimizer",
+    "adversarial-review",
+    "rubric",
+    "front-door",
+    "saidkit"
+  ]
+}

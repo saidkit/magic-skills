@@ -6,7 +6,7 @@
     "url": "https://saidkit.dev"
   },
   "description": "MagicKit - operator macros for Claude Code. Small, stack-agnostic skills that control context, scope and handoff mid-session.",
-  "version": "0.3.10",
+  "version": "0.4.0",
   "plugins": [
     {
       "name": "magic",
@@ -26,6 +26,26 @@
         "handoff",
         "decision-record",
         "task-orchestration",
+        "saidkit"
+      ]
+    },
+    {
+      "name": "think",
+      "source": "./plugins/think",
+      "version": "0.1.0",
+      "description": "Divergent-thinking front-doors: ideate (generate 5–15 diverse candidate ideas, adversarially select the best against a pinned merit rubric). Composes magic's critic as the judge; feeds think-deep / gauntlet (smart planned).",
+      "author": {
+        "name": "Viktor Shpak",
+        "url": "https://saidkit.dev"
+      },
+      "homepage": "https://saidkit.dev",
+      "license": "MIT",
+      "category": "workflow",
+      "tags": [
+        "ideation",
+        "divergent-thinking",
+        "evaluator-optimizer",
+        "adversarial-review",
         "saidkit"
       ]
     }

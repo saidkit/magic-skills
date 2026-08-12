@@ -1,5 +1,10 @@
 # Changelog
 
+> **Marketplace note — 2026-08-12:** the `magickit` marketplace now ships a second plugin, **`think`**
+> (v0.1.0) — divergent-thinking front-doors, first skill **`ideate`** (diverge → adversarially judge →
+> select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
+> are the `magic` plugin.
+
 ## 0.3.10 — 2026-08-12
 
 **Re-instated — ownership & isolation on the shared task list (native backend, R11 + O5).** The 0.3.6
