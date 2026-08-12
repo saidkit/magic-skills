@@ -21,7 +21,6 @@ Anchored quality goal-run — one subjective target, single builder track (not a
 2. Print contract → confirm (autonomy: report-and-proceed).
 3. `auror!` builds to that `Done-when`.
 4. **Acceptance = an independent `critic!` review (reviewer ≠ builder), NOT the builder's own gate** — auror!'s converge/escalate runs on that review's findings, closing only when the independent review adds **nothing new**, else escalating. A self-graded "all pass, no iteration" can never close it.
-Fan-out breadth → `gauntlet!`.
 
 ## `said!`
 Single-feature SAID orchestrator — full cycle (skill: `said:said`) — 3 slots, Invoke · Compose · Drive:
