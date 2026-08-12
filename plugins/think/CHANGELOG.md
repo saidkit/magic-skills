@@ -1,5 +1,19 @@
 # Changelog — think plugin
 
+## 0.2.0 — 2026-08-12
+
+**New skill: `smart` — front-door goal-shaper (the kit's IFR builder).** Turns a vague goal into a
+think-deep-ready statement carrying the two properties a run needs — **Measurable** (a success signal a gate
+can evaluate) and **Convergent** (a reachable stop, not "as good as possible") — with light Specific/Relevant
+(anti-drift) + Achievable (feasibility) checks, and **Time-bound reinterpreted as convergence, never a clock**.
+It **names** the measure and **defers** operationalization: authors **no** executable `Done-when`
+(think-deep's) and **no** acceptance/quality bar (critic's). Emits the sharpened-goal block and **STOPs**
+(feeder — runs inline, never spawns); standalone (no cross-kit dependency). Reframes goal-shaping as
+**IFR-building** — a sharpened goal (objective + measurable signal + convergent stop) *is* a checkable Ideal
+Final Result. Frontmatter-owned trigger (`smart!` / `/think:smart`), no macro. README in
+`docs/specs/think/smart/`; static + behavioral eval (`G1`–`G8`, negative-control-proven; ≤60 line budget).
+The general (any-goal) front door — sibling to `critic` (the specialized quality-bar case).
+
 ## 0.1.0 — 2026-08-12
 
 **New plugin: `think` — divergent front-doors.** Ships its first skill, **`ideate`** — the divergent
@@ -8,7 +22,7 @@ a **distinct lens**), adversarially reviews them against a **pinned merit rubric
 plugin's `critic` as the judge — never a bespoke inline scorer), and selects **comparatively**
 (refute-each-then-rank ≤8 ideas · pairwise tournament larger) to return the **top N** (default 3, `N=1` on
 request) with the rationale each survived on + its main risk — then **STOPS**, feeding the winners to
-`think!` / `auror!` / `gauntlet!` (and `smart!` once it ships).
+`think!` / `auror!` / `gauntlet!` / `smart!`.
 
 - The **mirror twin of `gauntlet`**: `ideate` diverges (many ideas → select the best against a rubric);
   `gauntlet` converges (one target → build it to a blind-vs-reference bar). Distinct on four axes:

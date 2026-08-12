@@ -1,7 +1,7 @@
 ---
 name: ideate
 description: >
-  Divergent front-end for a problem/question: generate 5–15 genuinely diverse candidate ideas (each from a distinct lens), adversarially review them against a pinned merit rubric (composing `critic`), and return the top N (default 3, `N=1` on request) with the rationale each survived on + its main risk — then STOP, feeding the winners to think! / auror! / gauntlet! (and smart! once it ships). Diverge → judge → select; it explores options, it never builds them.
+  Divergent front-end for a problem/question: generate 5–15 genuinely diverse candidate ideas (each from a distinct lens), adversarially review them against a pinned merit rubric (composing `critic`), and return the top N (default 3, `N=1` on request) with the rationale each survived on + its main risk — then STOP, feeding the winners to think! / auror! / gauntlet! / smart!. Diverge → judge → select; it explores options, it never builds them.
   Activates ONLY on an explicit `/think:ideate <problem>` or `ideate! <problem>` invocation AND NOTHING ELSE.
 ---
 
@@ -42,11 +42,11 @@ Top 3
 1. <idea> — survives: <rubric fit> · risk: <main weakness>
 2. <idea> — survives: … · risk: …
 3. <idea> — survives: … · risk: …
-→ run it: think!/auror! <idea>  ·  build to a bar: gauntlet! <idea>  ·  sharpen first: smart! <idea> (planned)
+→ run it: think!/auror! <idea>  ·  build to a bar: gauntlet! <idea>  ·  sharpen first: smart! <idea>
 ```
 
 ## Boundary — vs `gauntlet` (the mirror twin)
 Distinct on four axes: **ideas** not builds · **rubric** not external-reference · **diverge** not converge · **run** not print. `ideate` explores options (the front); `gauntlet` builds the chosen one to a blind-comparative bar (the back). No blind-vs-exemplar judging here — there is no exemplar; the rubric is the anchor.
 
 ## When NOT to use
-Target already chosen → `think!` / `auror!` (build it) · `gauntlet!` (build to a bar) · `smart!` (sharpen it, once it ships). · A single-answer question with no solution space to explore. · Judging that needs an external-reference blind A/B → that is `gauntlet!`, not this.
+Target already chosen → `think!` / `auror!` (build it) · `gauntlet!` (build to a bar) · `smart!` (sharpen it). · A single-answer question with no solution space to explore. · Judging that needs an external-reference blind A/B → that is `gauntlet!`, not this.
