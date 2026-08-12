@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.10 — 2026-08-12
+
+**Re-instated — ownership & isolation on the shared task list (native backend, R11 + O5).** The 0.3.6
+R11 experiment was backed out (`revert 0a5c732`, "keep 0.3.5") before it was ever exercised; a live
+session then produced the exact failure it targets — **46 native tasks from `auror!`/think-deep AND
+`critic!` mixed in one flat, un-namespaced list**, unattributable and unfilterable. So R11 is restored
+with that evidence: think-deep names each task `[think-deep] <N>-<step>` with `owner: think-deep/<run-id>`
++ `metadata {ns,run,step}`, reconstructs only its own by filtering `TaskList` on that `owner`, never
+mutates a foreign task, and (O5) marks its tasks to their true terminal state on close — `completed` on
+converge, kept as-is on escalation as the residual-gap surface, delete only a planning-error task and
+never completed work. Bounded by R6 — the gate, not the list, closes the run. Guards: harness S16–S19.
+
 ## 0.3.9 — 2026-08-11
 
 **Changed — trigger tidy across `think-deep`, `gauntlet`, `muggle`; `auror locomotor` fan-out repoint.**
