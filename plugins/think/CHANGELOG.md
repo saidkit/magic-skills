@@ -1,5 +1,15 @@
 # Changelog — think plugin
 
+## 0.2.1 — 2026-08-13
+
+**Fix (`smart`) — console-safe output format.** The Phase-2 sharpened-goal block used a fixed-width
+aligned-column layout (padded `Field:` labels, right-floated `[Measurable ✓]` tags, `•` hanging indents)
+that **deformed on console word-wrap** — long real-world values couldn't be copied from terminal output
+without manual reflow. Reshaped to **flush-left markdown**: one `###` heading per field, values on their own
+lines, tags inline as a lead-in, sub-points as flush-left `-` bullets. Exact template moved to
+`references/output-format.md` (keeps `SKILL.md` ≤60). Harness guard `S16` locks the format (no aligned
+columns); `S15` extended to cover the reference.
+
 ## 0.2.0 — 2026-08-12
 
 **New skill: `smart` — front-door goal-shaper (the kit's IFR builder).** Turns a vague goal into a

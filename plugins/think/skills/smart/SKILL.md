@@ -26,17 +26,7 @@ Read the goal; name which properties are missing — **Measurable? Convergent?**
 Pin **one specific objective**; an **in / out-of-scope** line; the **success signal(s)** — measurable, named in principle (the gate's raw material); and a **reachable stop** ("done when the signal holds", not "perfect"). Add a light Achievable/Relevant watch-out if any.
 
 ## Phase 2 — Emit + hand off
-Emit the sharpened-goal block, then **STOP** with the handoff line. Standalone MAY offer to chain into `think!` on confirm (opt-in); under autonomy, emit-and-STOP.
-
-```
-Goal (sharpened) — the goal's IFR
-- Objective:      <one specific, decomposable target>
-- In scope:       <…>   · Out of scope: <…>
-- Success signal: <measurable, evaluable — the gate's raw material>   [Measurable ✓]
-- Stops when:     <reachable termination, not "perfect">              [Convergent ✓]
-- Watch-outs:     <over-scoped? off-brief?>   (Achievable / Relevant flags, if any)
-→ run it: think! <goal> · auror! <goal>   (quality target? pin the bar first: critic! <goal>)
-```
+Emit the sharpened-goal block as **flush-left markdown** — one `###` heading per field (Goal (sharpened) · Objective · In scope · Out of scope · Success signal · Stops when · Watch-outs · Usage), each value on its own line(s), tags **inline** as a lead-in (`Measurable (the gate's raw material) [✓]:`), multi-point fields as flush-left `-` bullets. **Never** align columns, pad, right-float a tag, or hang-indent — fixed-width layout deforms on console word-wrap and can't be copied without reflow. Exact shape + rules: `references/output-format.md`. Then **STOP** (standalone MAY offer to chain into `think!` on confirm).
 
 ## When NOT to use
 Goal already sharp (measurable + bounded) → just `think!` / `auror!`. · Subjective-quality target with an exemplar → `critic!` / `auror locomotor!` pins the bar. · You want options, not a sharpened goal → `ideate!`.

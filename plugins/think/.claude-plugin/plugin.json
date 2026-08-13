@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "think",
   "displayName": "Think — front-door thinking skills",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Front-door thinking skills for Claude Code: smart (sharpen a vague goal into a measurable + convergent, think-deep-ready statement — the kit's IFR builder) and ideate (generate 5–15 diverse candidate ideas, adversarially select the best against a pinned merit rubric). Compose the magic plugin's critic; feed think! / auror! / gauntlet!. Stack-agnostic, no project files.",
   "author": {
     "name": "Viktor Shpak",

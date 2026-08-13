@@ -32,7 +32,7 @@
     {
       "name": "think",
       "source": "./plugins/think",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "description": "Front-door thinking skills: smart (sharpen a vague goal into a measurable + convergent statement — the IFR builder) and ideate (generate diverse ideas, adversarially select the best). Compose magic's critic; feed think! / auror! / gauntlet!.",
       "author": {
         "name": "Viktor Shpak",
