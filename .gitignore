@@ -4,3 +4,5 @@ node_modules/
 .claude/settings.local.json
 # /docs — the private ../magic-skills-docs companion symlink (a trailing-slash `docs/` won't match a symlink)
 /docs
+# CLAUDE.md — a symlink into the gitignored docs/; the dev guide is private, keep it untracked
+CLAUDE.md
