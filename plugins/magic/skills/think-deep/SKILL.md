@@ -27,14 +27,15 @@ Emulating a named capability is the primary failure this skill prevents.
 
 1. **Decompose** into 3–10 steps. Each: deliverable · check criterion · **`via:`** (the skill/command that performs it, or `inline`). A pipeline's skills are `via:` bindings in declared order; its gates are their own steps. Sequential unless a dependency is noted.
 2. **Loop-shaped `via:`.** If a `via:` names a re-entrant loop skill (reconstruct → act → re-enter until its own stop condition), the step reads **"drive X to its stop condition via repeated invocation"**, never "invoke X"; the plan carries a **final step** that re-invokes X and records its stop-condition output verbatim. Invoking a loop once demotes it to a subroutine and drops every rule it enforces on later passes.
-3. **Protocol file — one per run, stacked & resumable.** Track steps in a markdown protocol file. Default `<protocol-dir>` = the **session scratchpad / temp dir** (keep the project repo clean) — a **shared, session-scoped** dir that outlives any one run. Write it into a project working dir (`docs/working/<feature>/`, `notes/`, `planning/`) ONLY on operator request, or when the run's deliverable itself is a durable plan. Never a hardcoded path; state the resolved path in chat.
-   - **Isolate + stack — the scratchpad is shared.** Nested or parallel runs share one dir (an outer `auror!` / `/goal` driving a nested `think!`; a `via:` step that re-enters think-deep; sibling subagents). Write your own **`think-<slug>-<n>.md`** (`<slug>`: lowercase the deliverable, drop stop-words, first ~4 significant tokens, hyphen-joined; `<n>`: the smallest integer that makes the name free in the dir) and stamp a header — **`Run:` this file · `Parent:` the run whose step launched you (else `none`) · `Status:` `active` | `awaiting-child` | `done` | `escalated`**. Launching a nested run: set your **own** `Status: awaiting-child`; when that child reaches a **terminal** state (`done` or `escalated`), flip back to `active` and continue or propagate. **Every run ends terminal** — `done` on converge (you may then delete your own file), `escalated` on STOP; **never leave a spent run `active`.** **READ any `think-*.md` header to relate runs; WRITE only the file whose `Run:` is yours** — never overwrite or adopt one you did not create.
-   - **Resume from disk, never from memory (survives compaction).** On any re-entry — including after a context compaction — do **not** recompute-and-hope. Glob `think-*.md` in `<protocol-dir>`, read each `Run`/`Parent`/`Status`. **Exactly one `active` leaf ⇒ resume it** (regardless of header match). **Several `active` leaves ⇒ resume the one whose header matches this run**; zero-or-still-ambiguous ⇒ ASK which to resume; if you cannot ask (a subagent, no operator), resume the best task-match, else start a fresh run — never block, never fork blindly. **No `active` leaf but an `awaiting-child` parent whose child is terminal ⇒ flip that parent to `active` and resume it.**
+3. **Protocol file — a carried run-id + a disk fallback.** Track steps in a markdown protocol file in the **session scratchpad / temp dir** (keep the project repo clean). Write it into a project working dir (`docs/working/<feature>/`, `notes/`, `planning/`) ONLY on operator request, or when the run's deliverable itself is a durable plan. Never a hardcoded path; state the resolved path in chat.
+   - **Carry your run-id (fast path).** Your **id** names your file `think-<id>.md`; **echo `▶ think-deep <id>` atop every turn while the run is live** so the id rides in context, and resume by opening `think-<id>.md` directly (no scan). **Minting an id (fresh run) checks the dir once:** the candidate is a task slug (`<slug>`: lowercase the deliverable, drop stop-words, first ~4 significant tokens, hyphen-joined), or for a **nested** run the launcher's id + `-<k>` (`k` = next unused child number, which only **seeds** the candidate — the **minted id is authoritative**; never recompute a file's name from `<k>` later); if `think-<candidate>.md` already exists, append a numeric suffix until free — **every run gets a unique file** (top-level runs included, so a re-run or same-slug task never overwrites a prior one). Nested runs each carry their own id; when a child returns, resume your own.
+   - **Disk fallback (survives a full compaction).** Each file stamps `Parent: <parent-id|none>` and flips `Closed:` to `done`/`escalated` at its terminal outcome. **If you are mid-run but cannot open your carried id's file** (a full compaction dropped it), reconstruct from disk instead of re-minting: glob `think-*.md`, read `Parent`/`Closed`; the **live leaf** is the un-`Closed` run that no other un-`Closed` run names as `Parent` — resume it. **Several un-closed leaves, or none matching the task ⇒ ASK which to resume; if you cannot ask (a subagent, no operator), resume the best task-match, else start fresh — never fork blindly.**
+   - **Write only your own.** Read any `think-*.md` to relate runs; write only `think-<id>.md`, never a file you did not create. On converge you may delete your own file.
   ```
-  Path: <protocol-dir>/think-<slug>-<n>.md
+  Path: <protocol-dir>/think-<id>.md
 
   # Execution Protocol: <task>
-  Run: think-<slug>-<n>.md · Parent: <file|none> · Status: active   # → awaiting-child while a child runs; → done|escalated at end
+  Parent: <parent-id|none> · Closed: no          # Closed → done|escalated at end
   ## Done-when
   - [ ] <criterion> — <check: cmd / grep / judgment>
   ## Steps
@@ -55,7 +56,7 @@ Per step, in order:
    > **Self-check [N]** — **Good:** <specifics> · **Issues:** <numbered> · **Verdict:** PASS / FIX
    Test: completeness · correctness · consistency with prior steps · traceability (each claim → a source) · bloat. Nothing wrong ⇒ look harder; name one improvable thing.
 3. **FIX before advancing.** No forward move on a FIX verdict; re-check after fixing.
-4. **Update the protocol:** tick the step, write its Results. **Checkbox + Status integrity** — no `[x]` while its Results read pending/blocked/not-started (untick on conflict); the header `Status` matches reality — set the terminal state at end, never leave a spent run `active`. Plan changed ⇒ say so in chat, never silently.
+4. **Update the protocol:** tick the step, write its Results. **Checkbox + Closed integrity** — no `[x]` while its Results read pending/blocked/not-started (untick on conflict); set `Closed: done`/`escalated` at the terminal outcome, never leave an ended run un-`Closed`. Plan changed ⇒ say so in chat, never silently.
 5. **Report** ≤3 sentences + remaining steps.
 
 ## Phase 3 — Acceptance gate (independent, depth-safe)
@@ -70,9 +71,9 @@ Per criterion → **PASS** / **FAIL** (+ evidence, gap). Confirm coherence: the 
 
 ## Phase 4 — Converge or escalate
 
-- **All PASS** → assemble and present the deliverable + a ≤3-sentence summary (done · key decisions · caveats); record the verdicts in the Gate log; **set your `Status: done`** (you may delete your own protocol file); close. Do not replay the step history.
+- **All PASS** → assemble and present the deliverable + a ≤3-sentence summary (done · key decisions · caveats); record the verdicts in the Gate log; **set `Closed: done`** (you may delete your own protocol file); close. Do not replay the step history.
 - **Any FAIL · iterations < cap · progress since last pass** → **repair iteration**: re-enter Phase 1 scoped to the failed criteria only, seeded by the gap + the protocol (do not re-tread). Increment the Gate-log iteration. Default cap: 3.
-- **Cap reached · OR the same criterion fails two iterations running** → **STOP + escalate** with the residual gap; **set your `Status: escalated`**. Never self-certify; never silently quit. Under `auror!`/`expelliarmus`, this escalation is the one wait autonomy cannot drop.
+- **Cap reached · OR the same criterion fails two iterations running** → **STOP + escalate** with the residual gap; **set `Closed: escalated`**. Never self-certify; never silently quit. Under `auror!`/`expelliarmus`, this escalation is the one wait autonomy cannot drop.
 
 ## Anti-patterns
 
@@ -80,8 +81,8 @@ Per criterion → **PASS** / **FAIL** (+ evidence, gap). Confirm coherence: the 
 - Autonomy (`auror!`/`expelliarmus`) dropping a stage/gate — it removes waits, not stages.
 - Skipping or rubber-stamping a check ("looks good") — name specific positives and issues.
 - Grading a `Done-when` from memory instead of running its check.
-- Reusing a shared protocol filename across nested/parallel runs, or forking a fresh one after a compaction instead of resuming the `active` leaf — both clobber or orphan a run.
-- Leaving a run `active` after it closes or escalates — a stale `active` file breaks the leaf rule.
+- Scanning or re-minting your protocol when your carried id already names it — open `think-<id>.md` directly.
+- Leaving an ended run un-`Closed` — a stale open file is a false leaf for the disk fallback.
 - Spawning a subagent from within a subagent, or requiring a spawn to verify.
 - Closing without the gate — declaring done because the steps ran, not because the criteria passed.
 - Silent plan rewrites · gold-plating past confirmed scope · apologizing for corrections.

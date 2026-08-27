@@ -5,29 +5,29 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## 0.3.12 — 2026-08-27
+
+**Changed — run-isolation: carried-id fast path + lean disk fallback** (supersedes the 0.3.11 run-stack,
+per an independent review that found its `Status`/active-leaf lifecycle heavier than the common case
+needs). Each run carries a meaningful id — a task slug + `-<k>` nesting counter (`auth-refactor` →
+`auth-refactor-1`), echoed each turn — naming `think-<id>.md`, opened directly. Fallback: an on-disk
+`Parent:` + `Closed:` marker recovers the live leaf if a full compaction drops the id. Timestamp id
+rejected (opaque → poor compaction-summary survival; the counter, not a clock, disambiguates nesting).
+Guards: harness S15–S22; fixtures F9–F12; independent-critic accepted.
+
 ## 0.3.11 — 2026-08-27
 
 **Removed — native task-tracker composition; think-deep is file-protocol only again.** Claude Code
-dropped the native todo/Task tools (`TodoWrite`, `TaskCreate`/`TaskUpdate`/`TaskList`) — they are no
-longer in the tool manifest, eager or deferred. The 0.3.3–0.3.10 native path therefore bound nothing
-(its tier-2 told the agent to `ToolSearch`-load a tracker that no longer exists), so the whole 3-tier
-`Bind the step tracker` block, the `task-tracker:` hint, the deferred⇒native rule, and the native
-`owner`/`ns`/`[think-deep] <N>-` ownership machinery are withdrawn. think-deep tracks steps the way it
-did before 0.3.3: a single markdown protocol file in the session scratchpad. The verification layer
-(`Done-when` · Phase-3 acceptance gate · `Gate log` · converge/escalate) is unchanged, and R6 survives
-in file terms — **a ticked step never closes the run, only the gate does.**
+dropped the native todo/Task tools (`TodoWrite`, `TaskCreate`/`TaskUpdate`/`TaskList`) from the tool
+manifest, so the 0.3.3–0.3.10 native path bound nothing. The 3-tier `Bind the step tracker` block, the
+`task-tracker:` hint, and the native ownership machinery are withdrawn; step tracking returns to a single
+scratchpad protocol file. The verification layer (`Done-when` · gate · `Gate log` · converge/escalate) is
+unchanged — a ticked step never closes the run, only the gate does.
 
-**Added — per-run isolation + compaction-resume on the protocol file.** The old fixed filename
-(`think-deep-protocol.md`) clobbered itself under nested or parallel runs — the exact hazard that drove
-the native R11 work (an outer `auror!`/`goal` driving a nested `think!`; sibling subagents; a `via:`
-step that re-enters think-deep). That isolation idea is ported to the file backend: each run writes
-**`think-<slug>-<n>.md`**, bumps `<n>` on a slug clash or a live sibling, and reads/writes **only its
-own** file — never overwriting or adopting one it did not create. Because `<slug>` is derived from the
-task (not a remembered token), the name is **recomputable after a context compaction**: a re-entering
-run re-locates its protocol by globbing `think-*.md` and matching the task header, then resumes it
-instead of starting a second one. Guards: harness S11–S19 repointed from native mechanics to
-file-protocol + run-isolation; fixture F8 recast, F9 added (nested-run clobber). Version pinned to a
-patch bump (operator call), consistent with the 0.3.x line.
+**Added — per-run isolation + compaction-resume.** The old fixed filename clobbered itself under
+nested/parallel runs; each run now writes its own task-slug-keyed file, reads/writes only its own, and
+re-locates it from disk after a compaction. Guards: harness S11–S19; fixtures F8 recast, F9 added.
+*(Reworked in 0.3.12.)*
 
 ## 0.3.10 — 2026-08-12
 
