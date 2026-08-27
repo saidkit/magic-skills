@@ -27,17 +27,14 @@ Emulating a named capability is the primary failure this skill prevents.
 
 1. **Decompose** into 3–10 steps. Each: deliverable · check criterion · **`via:`** (the skill/command that performs it, or `inline`). A pipeline's skills are `via:` bindings in declared order; its gates are their own steps. Sequential unless a dependency is noted.
 2. **Loop-shaped `via:`.** If a `via:` names a re-entrant loop skill (reconstruct → act → re-enter until its own stop condition), the step reads **"drive X to its stop condition via repeated invocation"**, never "invoke X"; the plan carries a **final step** that re-invokes X and records its stop-condition output verbatim. Invoking a loop once demotes it to a subroutine and drops every rule it enforces on later passes.
-3. **Bind the step tracker — once, here.** Compose with the environment's native tracker when present; emulate it with a file only when it is genuinely absent (the prime directive, applied to tracking). Take the first tier below that resolves, and **tag it tersely on the Phase-1 heading** — `(task tracking: **native**)` or `(task tracking: **file protocol**)`, nothing more: no rationale ("tools loaded…", "no hint"), no "registering the plan…" preamble.
-   - **Hint** — an operator or `CLAUDE.md` line (`task-tracker: native|file`) → use verbatim.
-   - **Native** — a native task tracker (`TaskCreate`/`TaskUpdate`, or `TodoWrite`) **named anywhere in your tool manifest — the eager list OR a deferred / lazy-loaded listing.** Being listed **is** positive confirmation; **present-but-deferred is NOT a reason to fall back** — you MUST load its schema (e.g. `ToolSearch`) and bind native. Register each step as a task — **subject `[think-deep] <N>-<step>`** (the `<N>-` prefix shows plan order at a glance), `via:`/check in `metadata`, deps where supported; write **no `## Steps` markdown**. Refocus = the tracker's own next-item reminder.
-     - **Own + isolate — the list is shared and un-namespaced** (any skill/agent appends; `TaskList` returns all): set `owner: think-deep/<run-id>` + `metadata {ns: think-deep, run, step}`. **Reconstruct only your own** — filter `TaskList` by that `owner`; never read the whole list as your state. Update only task-ids you created, **never a foreign task**. On close, mark your tasks to their **true terminal state** — `completed` on converge, left as-is (in-progress/pending) on escalation so they surface the residual gap; **delete only a task you created then dropped** (a planning error), never completed work. Interference is bounded to refocus/UX: the Phase-3 gate, not the list, closes the run.
-   - **File** — the markdown protocol below. Use it **only when a native tracker is absent from the manifest entirely** (neither eager nor deferred), or the hint says `file`. **Deferred-but-loadable ⇒ native, not file** — "I'd have to load it first" and "another log already tracks this" are not reasons to fall back. The safe-default caveat is the *absent* case only: a false-absent costs polish, a false-present breaks the run.
-4. **Verification note — always think-deep's own, either backend.** `Done-when` + the `Gate log` have no native-tracker slot; keep them in a scratchpad note (`think-deep-gate.md`) — never a tracker state, never the repo. Under the file backend this note *is* the protocol file's non-`Steps` sections.
-5. **Protocol file (file backend).** Default `<protocol-dir>` = the **session scratchpad / temp dir** — the protocol is a transient single-run scaffold (it dies with the run; keep the project repo clean). Write it into a project working dir (`docs/working/<feature>/`, `notes/`, `planning/`) ONLY on operator request, or when the run's deliverable itself is a durable plan. Never a hardcoded path; state the resolved path in chat.
+3. **Protocol file — one per run, stacked & resumable.** Track steps in a markdown protocol file. Default `<protocol-dir>` = the **session scratchpad / temp dir** (keep the project repo clean) — a **shared, session-scoped** dir that outlives any one run. Write it into a project working dir (`docs/working/<feature>/`, `notes/`, `planning/`) ONLY on operator request, or when the run's deliverable itself is a durable plan. Never a hardcoded path; state the resolved path in chat.
+   - **Isolate + stack — the scratchpad is shared.** Nested or parallel runs share one dir (an outer `auror!` / `/goal` driving a nested `think!`; a `via:` step that re-enters think-deep; sibling subagents). Write your own **`think-<slug>-<n>.md`** (`<slug>`: lowercase the deliverable, drop stop-words, first ~4 significant tokens, hyphen-joined; `<n>`: the smallest integer that makes the name free in the dir) and stamp a header — **`Run:` this file · `Parent:` the run whose step launched you (else `none`) · `Status:` `active` | `awaiting-child` | `done` | `escalated`**. Launching a nested run: set your **own** `Status: awaiting-child`; when that child reaches a **terminal** state (`done` or `escalated`), flip back to `active` and continue or propagate. **Every run ends terminal** — `done` on converge (you may then delete your own file), `escalated` on STOP; **never leave a spent run `active`.** **READ any `think-*.md` header to relate runs; WRITE only the file whose `Run:` is yours** — never overwrite or adopt one you did not create.
+   - **Resume from disk, never from memory (survives compaction).** On any re-entry — including after a context compaction — do **not** recompute-and-hope. Glob `think-*.md` in `<protocol-dir>`, read each `Run`/`Parent`/`Status`. **Exactly one `active` leaf ⇒ resume it** (regardless of header match). **Several `active` leaves ⇒ resume the one whose header matches this run**; zero-or-still-ambiguous ⇒ ASK which to resume; if you cannot ask (a subagent, no operator), resume the best task-match, else start a fresh run — never block, never fork blindly. **No `active` leaf but an `awaiting-child` parent whose child is terminal ⇒ flip that parent to `active` and resume it.**
   ```
-  Path: <protocol-dir>/think-deep-protocol.md
+  Path: <protocol-dir>/think-<slug>-<n>.md
 
   # Execution Protocol: <task>
+  Run: think-<slug>-<n>.md · Parent: <file|none> · Status: active   # → awaiting-child while a child runs; → done|escalated at end
   ## Done-when
   - [ ] <criterion> — <check: cmd / grep / judgment>
   ## Steps
@@ -47,7 +44,7 @@ Emulating a named capability is the primary failure this skill prevents.
   ## Gate log
   (per-iteration verdicts)
   ```
-6. **Output the step list to chat.** Self-check: a named pipeline/skill absent from the `via:` bindings ⇒ rebind before executing.
+4. **Output the step list to chat.** Self-check: a named pipeline/skill absent from the `via:` bindings ⇒ rebind before executing.
 
 ## Phase 2 — Execute
 
@@ -58,12 +55,12 @@ Per step, in order:
    > **Self-check [N]** — **Good:** <specifics> · **Issues:** <numbered> · **Verdict:** PASS / FIX
    Test: completeness · correctness · consistency with prior steps · traceability (each claim → a source) · bloat. Nothing wrong ⇒ look harder; name one improvable thing.
 3. **FIX before advancing.** No forward move on a FIX verdict; re-check after fixing.
-4. **Record in the bound tracker.** Mark the step done and attach its Results. *File backend:* tick the step, write Results — **Checkbox integrity**: no `[x]` while its Results read pending/blocked/not-started; on conflict, untick and say so. *Native backend:* set the task done with a result note. Plan changed ⇒ say so in chat, never silently.
-5. **Report** ≤3 sentences + the next step (file: print remaining steps; native: the tracker's own reminder).
+4. **Update the protocol:** tick the step, write its Results. **Checkbox + Status integrity** — no `[x]` while its Results read pending/blocked/not-started (untick on conflict); the header `Status` matches reality — set the terminal state at end, never leave a spent run `active`. Plan changed ⇒ say so in chat, never silently.
+5. **Report** ≤3 sentences + remaining steps.
 
 ## Phase 3 — Acceptance gate (independent, depth-safe)
 
-Verify the deliverable against every `Done-when`. **A tracker step marked `completed` never closes the run — only this gate does** (a tracker "done" is self-asserted; the gate is the oracle). Independence = evidence, not an agent:
+Verify the deliverable against every `Done-when`. **A ticked step never closes the run — only this gate does.** Independence = evidence, not an agent:
 
 - **Executable criterion** → run the check; tool output is the verdict. Never grade from memory of having done the work.
 - **Judgment criterion** → fresh-pass review, criterion by criterion, citing `file:line` / output.
@@ -73,9 +70,9 @@ Per criterion → **PASS** / **FAIL** (+ evidence, gap). Confirm coherence: the 
 
 ## Phase 4 — Converge or escalate
 
-- **All PASS** → assemble and present the deliverable + a ≤3-sentence summary (done · key decisions · caveats); record the verdicts in the Gate log; close. Do not replay the step history.
+- **All PASS** → assemble and present the deliverable + a ≤3-sentence summary (done · key decisions · caveats); record the verdicts in the Gate log; **set your `Status: done`** (you may delete your own protocol file); close. Do not replay the step history.
 - **Any FAIL · iterations < cap · progress since last pass** → **repair iteration**: re-enter Phase 1 scoped to the failed criteria only, seeded by the gap + the protocol (do not re-tread). Increment the Gate-log iteration. Default cap: 3.
-- **Cap reached · OR the same criterion fails two iterations running** → **STOP + escalate** with the residual gap. Never self-certify; never silently quit. Under `auror!`/`expelliarmus`, this escalation is the one wait autonomy cannot drop.
+- **Cap reached · OR the same criterion fails two iterations running** → **STOP + escalate** with the residual gap; **set your `Status: escalated`**. Never self-certify; never silently quit. Under `auror!`/`expelliarmus`, this escalation is the one wait autonomy cannot drop.
 
 ## Anti-patterns
 
@@ -83,6 +80,8 @@ Per criterion → **PASS** / **FAIL** (+ evidence, gap). Confirm coherence: the 
 - Autonomy (`auror!`/`expelliarmus`) dropping a stage/gate — it removes waits, not stages.
 - Skipping or rubber-stamping a check ("looks good") — name specific positives and issues.
 - Grading a `Done-when` from memory instead of running its check.
+- Reusing a shared protocol filename across nested/parallel runs, or forking a fresh one after a compaction instead of resuming the `active` leaf — both clobber or orphan a run.
+- Leaving a run `active` after it closes or escalates — a stale `active` file breaks the leaf rule.
 - Spawning a subagent from within a subagent, or requiring a spawn to verify.
 - Closing without the gate — declaring done because the steps ran, not because the criteria passed.
 - Silent plan rewrites · gold-plating past confirmed scope · apologizing for corrections.
