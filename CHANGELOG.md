@@ -5,6 +5,25 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## 0.4.0 — 2026-08-28
+
+**Added — `magic:think` run manager.** A new skill managing the `think-<id>.md` protocol files think-deep
+writes to the session scratchpad — the manager to think-deep's executor. Six verbs: `list` (outline the
+unfinished runs) · `status` (the current run's tree) · `clear` (sweep terminal runs, never a live leaf
+without confirm) · `resume` (re-enter a run) · `export` / `continue` (the opt-in cross-session bridge). It
+**composes** think-deep — reads its live-leaf / `Parent:` / `Closed:` / marker model, hands
+`resume`/`continue` to `Skill(magic:think-deep)`, and never forks its reconstruct logic. The `think!` macro
+gains an **operand-guarded** front-dispatch: a verb routes to the manager only as the operative token (bare,
+or + a lone `all`/id/path), so a task phrase like `think! clear up the spec` still runs the executor.
+Guards: a new eval package (`harness.sh` SUT-by-role, negative-control-proven, live-leaf fixture oracle;
+behavioral goldens G1–G7); self-containment + line-budget checks.
+
+**Changed — run-id rule extracted to a single shared source.** think-deep's id derivation + minting (the
+task-slug / nested `-<k>` / suffix-until-free rule) moved out of its SKILL.md into `references/run-id.md`,
+the one source the whole `think-*` family reuses; think-deep now points at it. Behavior-preserving —
+think-deep's own harness stays green (S17 rebased onto the extract). Independent critic (reviewer ≠ builder)
+accepted; 0 open P0/P1.
+
 ## 0.3.13 — 2026-08-28
 
 **Added — turn-level `[think] <id>` run-marker.** The carried run-id (R12) was echoed only in Phase-1
