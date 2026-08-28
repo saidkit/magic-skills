@@ -11,8 +11,8 @@
     {
       "name": "magic",
       "source": "./plugins/magic",
-      "version": "0.3.13",
-      "description": "Operator macros: revelio (context refresh), pensieve (scope/status audit), session (handoff), think-deep (structured task orchestrator). Four skills that keep a long session honest about what it knows, what it already decided, and what it still owes you.",
+      "version": "0.4.0",
+      "description": "Operator macros: revelio (context refresh), pensieve (scope/status audit), session (handoff), think-deep (structured task orchestrator), think (run manager for think-deep's protocol files). Skills that keep a long session honest about what it knows, what it already decided, and what it still owes you.",
       "author": {
         "name": "Viktor Shpak",
         "url": "https://saidkit.dev"

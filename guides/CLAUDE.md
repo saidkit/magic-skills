@@ -38,7 +38,7 @@ Multi-lane SAID orchestrator (skill: `said:flow`) — 3 slots, Invoke · Compose
 Run `revelio!`, then proceed through its next-actions list autonomously until a full completion, as if operator typed `expelliarmus!` — same hard-blocker rules, same no-carry-across-invocations, same no-new-stages constraint. Operator may interrupt between phases by sending a new message; otherwise both phases run in one response.
 
 ## `think!`
-execute /magic:think-deep skill — the **interactive** form (keeps think-deep's Phase-0 confirm). think-deep captures the task's acceptance criteria as its `Done-when` and loops on them (Phase-3 gate → Phase-4 converge/escalate); pass any explicit success conditions in the task.
+**Front-dispatch.** Route to `Skill(magic:think)` (the run manager over think-deep's `think-<id>.md` files) ONLY when the first token is a manager verb {list, status, clear, resume, export, continue} **and its tail is empty or a lone operand** (`all` · an id · a path) — NOT free-form prose. So `think! clear all` / `think! resume PROJ-01` / `think! continue /path/think-x.md` → manager; a verb followed by a task phrase — `think! clear up the spec`, `think! continue the refactor`, `think! list the top risks` → `Skill(magic:think-deep)`: execute the task (interactive form; captures its acceptance criteria as the `Done-when`, loops Phase-3 gate → Phase-4). The manager owns its routing table.
 
 ## `lumos!`
 execute /said:retrieval skill

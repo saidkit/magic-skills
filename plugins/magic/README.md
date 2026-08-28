@@ -1,10 +1,10 @@
 # `magic` — plain-language guide to the operator skills
 
-Seven small, stack-agnostic skills for staying on top of a long working session: refresh your context, audit your progress, explain things simply, hand off cleanly, run a multi-step job carefully, hold work to a quality bar, and generate a build prompt. You invoke each by typing a short word — no setup, no config. Part of [MagicKit](https://github.com/saidkit/magic-skills).
+Eight small, stack-agnostic skills for staying on top of a long working session: refresh your context, audit your progress, explain things simply, hand off cleanly, run a multi-step job carefully, manage its run files, hold work to a quality bar, and generate a build prompt. You invoke each by typing a short word — no setup, no config. Part of [MagicKit](https://github.com/saidkit/magic-skills).
 
 Every skill below has its own fuller guide at `skills/<name>/README.md`. This page is the tour, with a couple of real "you type → you get" samples each.
 
-## The seven at a glance
+## The eight at a glance
 
 | Skill | What it does | You type |
 |---|---|---|
@@ -13,6 +13,7 @@ Every skill below has its own fuller guide at `skills/<name>/README.md`. This pa
 | **muggle** | Explains what's going on in plain English | `muggle!` |
 | **session** | Saves a handoff so a new chat picks up warm | `session!` |
 | **think-deep** | Runs a multi-step job and verifies the result | `/magic:think-deep` · `think!` · `auror!` |
+| **think** | Manages think-deep's run files — list, resume, clean up, move | `think! list` · `/magic:think` |
 | **critic** | Turns "make it good" into a finish line, then reviews | `critic!` / `criticize!` |
 | **gauntlet** | Prints a ready-to-paste "build-to-a-bar" prompt | `gauntlet!` |
 
