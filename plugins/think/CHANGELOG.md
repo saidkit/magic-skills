@@ -1,5 +1,14 @@
 # Changelog — think plugin
 
+## 0.2.2 — 2026-08-28
+
+**Fix (`ideate`) — console-safe output format (backport of smart's 0.2.1 fix).** `ideate`'s Phase-2 output
+block used the same fixed-width aligned-column layout (`Problem:  …   Rubric:`) that deformed for `smart` —
+long real-world values broke on console word-wrap and couldn't be copied without reflow. Reshaped to
+**flush-left `###`-per-field markdown** (Problem · Rubric · Field · Top-N · Usage); exact template in
+`references/output-format.md`. Harness guard `S16` (no aligned columns) + `S15` extended to the reference.
+Both `think` skills now emit console-safe output. (THINK-01-03.)
+
 ## 0.2.1 — 2026-08-13
 
 **Fix (`smart`) — console-safe output format.** The Phase-2 sharpened-goal block used a fixed-width

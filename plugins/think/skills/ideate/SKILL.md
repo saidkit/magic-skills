@@ -32,18 +32,9 @@ Restate the problem in one line. Pin the **merit rubric** — the axes an idea i
 Generate one idea per lens/angle to the target count — a multi-modal sweep. At depth-0 you may fan out one generator per lens; inline otherwise. **Tag each idea with its lens.** Prune obvious near-duplicates so the field is genuinely varied; record how many were pruned.
 
 ## Phase 2 — Judge + select + hand off
-**Judge via `critic`.** Invoke `Skill(magic:critic)` in **review mode**, holding each idea to the pinned rubric as its standard (refute-first — surface its fatal flaw / worst-fit axis); as a subagent or for a large field, apply critic's refute-first review discipline inline. **critic is the judge — author no scorer.** Then select **comparatively** — refute-each-then-rank (≤8) or pairwise tournament (larger) — ranking by what survives the refutation. Emit the **top N**, each with *why it survived* (rubric fit) and *its main risk*; then STOP with the handoff line.
+**Judge via `critic`.** Invoke `Skill(magic:critic)` in **review mode**, holding each idea to the pinned rubric as its standard (refute-first — surface its fatal flaw / worst-fit axis); as a subagent or for a large field, apply critic's refute-first review discipline inline. **critic is the judge — author no scorer.** Then select **comparatively** — refute-each-then-rank (≤8) or pairwise tournament (larger) — ranking by what survives the refutation. Emit the **top N**, each with *why it survived* (rubric fit) and *its main risk*; then STOP.
 
-```
-Problem:  <one line>          Rubric: <axis · axis · axis>   (N = 3)
-Field:    <k ideas, each tagged by its lens>   (pruned m near-duplicates)
-
-Top 3
-1. <idea> — survives: <rubric fit> · risk: <main weakness>
-2. <idea> — survives: … · risk: …
-3. <idea> — survives: … · risk: …
-→ run it: think!/auror! <idea>  ·  build to a bar: gauntlet! <idea>  ·  sharpen first: smart! <idea>
-```
+**Emit as flush-left markdown** — one `###` heading per field (Problem · Rubric · Field · Top N · Usage), each value on its own line(s), the lens-tagged Field as flush-left `-` bullets, the Top-N as a flush-left numbered list (`1. <idea> — survives: … · risk: …`). **Never** align columns, pad, or right-float — fixed-width layout deforms on console word-wrap and won't copy without reflow. Exact shape: `references/output-format.md`.
 
 ## Boundary — vs `gauntlet` (the mirror twin)
 Distinct on four axes: **ideas** not builds · **rubric** not external-reference · **diverge** not converge · **run** not print. `ideate` explores options (the front); `gauntlet` builds the chosen one to a blind-comparative bar (the back). No blind-vs-exemplar judging here — there is no exemplar; the rubric is the anchor.
