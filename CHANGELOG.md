@@ -5,6 +5,16 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## 0.3.13 — 2026-08-28
+
+**Added — turn-level `[think] <id>` run-marker.** The carried run-id (R12) was echoed only in Phase-1
+setup, so the marker printed once at launch then vanished (the per-step Report is per-step, and the
+Phase-3 gate / Phase-4 repair tails carried no id — the long tails where a compaction lands). It is now a
+**turn-level invariant** beside the `Language` rule: every live-run turn leads with `[think] <id>`,
+phase-scoped (`· step N/total` / `· gate` / `· iter K` / `· done` / `· escalated`), nested flips to the
+active leaf; the launch line `▶ think-deep <id>` is rescoped to the first turn. Guards: harness S24
+(fixed-string — `[think]` is a `grep -E` char class) + S16 tightened; fixtures F13; EVAL B15. (MAGIC-03-04.)
+
 ## 0.3.12 — 2026-08-27
 
 **Changed — run-isolation: carried-id fast path + lean disk fallback** (supersedes the 0.3.11 run-stack,
