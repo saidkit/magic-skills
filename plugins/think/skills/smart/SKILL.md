@@ -1,16 +1,16 @@
 ---
 name: smart
 description: >
-  Front-door goal-shaper: turn a vague goal into a think-deep-ready statement carrying the two properties a run needs — Measurable (a success signal a gate can evaluate) and Convergent (a reachable stop, not "as good as possible") — with light Specific/Relevant (anti-drift) + Achievable (feasibility) checks, then hand off to think! / auror! (and critic! for a quality bar). It shapes the GOAL (aka IFR); it never authors the Done-when or the bar. Emit and STOP.
-  Activates ONLY on an explicit `/think:smart <goal>` or `smart! <goal>` invocation AND NOTHING ELSE.
+  Front-door goal-shaper: turn a vague goal into a think-deep-ready statement carrying the two properties a run needs — Measurable (a success signal a gate can evaluate) and Convergent (a reachable stop, not "as good as possible") — with light Specific/Relevant (anti-drift) + Achievable (feasibility) checks, then hand off to think!! / run!! (and critic!! for a quality bar). It shapes the GOAL (aka IFR); it never authors the Done-when or the bar. Emit and STOP.
+  Activates ONLY on an explicit `/think:smart <goal>` or `smart!! <goal>` invocation AND NOTHING ELSE.
 ---
 
 # Smart — front-door goal-shaper (the kit's IFR builder)
 
-Sharpen a fuzzy goal *before* the loop runs — goal quality is the upstream lever on run quality; a soft goal yields a soft gate that drifts or spins. `smart` pins the goal's **Ideal Final Result**: a specific objective, a **measurable** success signal, and a **convergent** stop — the checkable end-state `think!` / `auror!` then aim at. It **names** the measure and **defers** the executable check to think-deep and the quality bar to critic.
+Sharpen a fuzzy goal *before* the loop runs — goal quality is the upstream lever on run quality; a soft goal yields a soft gate that drifts or spins. `smart` pins the goal's **Ideal Final Result**: a specific objective, a **measurable** success signal, and a **convergent** stop — the checkable end-state `think!!` / `run!!` then aim at. It **names** the measure and **defers** the executable check to think-deep and the quality bar to critic.
 
 ## Invocation
-`/think:smart <goal>` or `smart! <goal>` — `<goal>` = a fuzzy objective. Default: shape + emit, then **STOP**. `smart! <goal> then think!` / `then auror!` = after emit, offer to drive the sharpened goal inline (opt-in).
+`/think:smart <goal>` or `smart!! <goal>` — `<goal>` = a fuzzy objective. Default: shape + emit, then **STOP**. `smart!! <goal> then think!!` / `then run!!` = after emit, offer to drive the sharpened goal inline (opt-in).
 
 ## Contract — holds every run
 - **The two-point core (non-negotiable).** Never emit a goal missing a **Measurable** signal (a gate can evaluate it) or a **Convergent** stop (a reachable termination, not "perfect"); missing either → **surface the gap**, don't paper over it. These two decide whether a run succeeds or spins.
@@ -26,7 +26,7 @@ Read the goal; name which properties are missing — **Measurable? Convergent?**
 Pin **one specific objective**; an **in / out-of-scope** line; the **success signal(s)** — measurable, named in principle (the gate's raw material); and a **reachable stop** ("done when the signal holds", not "perfect"). Add a light Achievable/Relevant watch-out if any.
 
 ## Phase 2 — Emit + hand off
-Emit the sharpened-goal block as **flush-left markdown** — one `###` heading per field (Goal (sharpened) · Objective · In scope · Out of scope · Success signal · Stops when · Watch-outs · Usage), each value on its own line(s), tags **inline** as a lead-in (`Measurable (the gate's raw material) [✓]:`), multi-point fields as flush-left `-` bullets. **Never** align columns, pad, right-float a tag, or hang-indent — fixed-width layout deforms on console word-wrap and can't be copied without reflow. Exact shape + rules: `references/output-format.md`. Then **STOP** (standalone MAY offer to chain into `think!` on confirm).
+Emit the sharpened-goal block as **flush-left markdown** — one `###` heading per field (Goal (sharpened) · Objective · In scope · Out of scope · Success signal · Stops when · Watch-outs · Usage), each value on its own line(s), tags **inline** as a lead-in (`Measurable (the gate's raw material) [✓]:`), multi-point fields as flush-left `-` bullets. **Never** align columns, pad, right-float a tag, or hang-indent — fixed-width layout deforms on console word-wrap and can't be copied without reflow. Exact shape + rules: `references/output-format.md`. Then **STOP** (standalone MAY offer to chain into `think!!` on confirm).
 
 ## When NOT to use
-Goal already sharp (measurable + bounded) → just `think!` / `auror!`. · Subjective-quality target with an exemplar → `critic!` / `auror locomotor!` pins the bar. · You want options, not a sharpened goal → `ideate!`.
+Goal already sharp (measurable + bounded) → just `think!!` / `run!!`. · Subjective-quality target with an exemplar → `critic!!` / `drive!!` pins the bar. · You want options, not a sharpened goal → `ideate!!`.

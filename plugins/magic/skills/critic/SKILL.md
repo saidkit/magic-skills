@@ -2,16 +2,16 @@
 name: critic
 description: >
   Authors a bounded acceptance contract for a quality target — subjective (blind-comparative against an exemplar) or objective (repair-loop to zero defects) — then gates it into review (default) · repair (`+fix`) · export (`as prompt`). Converts an open-ended "make it as good as X" into a terminating `Done-when` the acceptance loop converges on.
-  Activates ONLY on a user's explicit `/magic:critic <target>` or `critic! <target>` or `criticize! <target>` invocation AND NOTHING ELSE.
+  Activates ONLY on a user's explicit `/magic:critic <target>` or `critic!! <target>` or `criticize!! <target>` invocation AND NOTHING ELSE.
 ---
 
 # Critic — acceptance-contract author
 
-Turn a fuzzy quality target ("as good as X", "world-class", "production-quality", "no bugs left") into a pinned, bounded `Done-when` the acceptance loop can converge on. **Author the contract; never run the loop** — `/magic:think-deep` (via `auror!` / `think!` / `/goal`) executes it. A `Done-when` is a well-specified criterion the loop already runs; never re-implement it or start a second loop.
+Turn a fuzzy quality target ("as good as X", "world-class", "production-quality", "no bugs left") into a pinned, bounded `Done-when` the acceptance loop can converge on. **Author the contract; never run the loop** — `/magic:think-deep` (via `run!!` / `think!!` / `/goal`) executes it. A `Done-when` is a well-specified criterion the loop already runs; never re-implement it or start a second loop.
 
 ## Invocation & parameters
 
-`/magic:critic <target>` or `critic! <target>` — `<target>` = a path · dir · session id · description. One optional trailing **mode** parameter (default = **review**):
+`/magic:critic <target>` or `critic!! <target>` — `<target>` = a path · dir · session id · description. One optional trailing **mode** parameter (default = **review**):
 
 | Parameter | Mode | Effect |
 |---|---|---|
@@ -32,7 +32,7 @@ From the interview, route to the bar shape (worked entries in `references/critic
 - **C branch:** pin the **anchor** (named exemplar to match/beat) + **reference artifact** (image · brand kit · exemplar doc — capture its path/handle). No reference obtainable ⇒ **hard-block**: ask ONE focused question naming what is missing — never author a comparative gate without a reference, or the loop optimizes the wrong thing.
 - **T branch:** pin the **internal standard** — the spec, test suite, or source-of-truth the review holds it against — plus the **severity threshold** (P0/P1 vs P0–P2) and whether it touches money/data/security (→ attacker stance). A repair loop's reference is the code itself, so **no hard-block**.
 
-Under `auror!`/`expelliarmus` the *wait* relaxes, the *pin* does not — the standard (external anchor **or** internal spec/tests) is never droppable. Find the nearest library entry; adapt its standard from the interview.
+Under `run!!`/`proceed!!` the *wait* relaxes, the *pin* does not — the standard (external anchor **or** internal spec/tests) is never droppable. Find the nearest library entry; adapt its standard from the interview.
 
 ## Phase 2 — Author the `Done-when`
 
@@ -47,7 +47,7 @@ Assemble the `Done-when`; Phase 3 renders and routes it.
 
 **Render terse by default** — a floor pointer + the bar + the stop (`as full prompt` enumerates; see `references/prompt-forms.md`). Then hit the **gate**, and take the mode parameter's exit:
 - **Standalone** — show the contract and **wait at the gate** for the mode (`review ⏎ · +fix · as prompt · park`). The pin already happened; the wait is the cheap checkpoint before an expensive run.
-- **Under `auror!`/`expelliarmus`, or composed in a loop** — the *gate* auto-passes (never the pin), no footer: emit-and-STOP as a `via:`/loop step (the enclosing loop drives), else drive inline.
+- **Under `run!!`/`proceed!!`, or composed in a loop** — the *gate* auto-passes (never the pin), no footer: emit-and-STOP as a `via:`/loop step (the enclosing loop drives), else drive inline.
 
 **Each exit's deliverable:** **review** hands the `Done-when` to `/magic:think-deep` — adversarial per target, verified, **writes a ranked `…-review.md` (file:line)**; reports findings, **edits nothing**, stops when a pass finds **nothing new**. · **`+fix`** repairs to **0 open P0/P1 and nothing new** — the only exit that edits. · **as prompt** emits the terse contract and STOPS (human export / loop feeder) — never run the loop, never re-implement the gate. Runs inline; **never spawns**.
 

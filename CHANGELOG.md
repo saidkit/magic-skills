@@ -5,6 +5,22 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## 0.5.0 — 2026-09-03
+
+**Changed — operator macros migrated to the `!!` command ontology.** Every operator macro is now named
+from intent and marked by a double bang — the sole macro marker; single-`!` and bare-word forms are
+retired. `auror!`→`run!!` · `auror locomotor!`→`drive!!` · `expelliarmus!`→`proceed!!` ·
+`silencio!`→`task-comments!!` · `locomotor!`→`resume!!` · `lumos!`→`precedent!!` · `think!`→`think!!` ·
+`said!`→`said!!` · `flow!`→`flow!!` · `gauntlet!`→`gauntlet!!` · `web!`→`web!!`. **Full uniformity** —
+every operator-invoked skill trigger migrates too: `critic!`→`critic!!` · `criticize!`→`criticize!!` ·
+`smart!`→`smart!!` · `ideate!`→`ideate!!` · `session!`→`session!!`. Three skills whose operator identity
+*is* the ontology were renamed end-to-end: **`revelio`→`refresh`** (`refresh!!`), **`pensieve`→`audit`**
+(`audit!!`), and **`muggle`→`explain`** (`explain!!`) — dir, frontmatter `name`, `description` trigger,
+and guide. (`explain!!` coexists with the pre-existing personal `explain!!` macro.)
+**Hard rename, no aliases** — the old names are retired. Behavior is frozen: skills, gates, stop
+conditions, and composition semantics are unchanged; only names/notation and the macro block's
+cross-references moved. `guides/operator-macros.md` rewritten to the `!!`-only ontology.
+
 ## 0.4.0 — 2026-08-28
 
 **Added — `magic:think` run manager.** A new skill managing the `think-<id>.md` protocol files think-deep

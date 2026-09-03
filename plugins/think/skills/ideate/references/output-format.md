@@ -27,4 +27,4 @@ Emit the result as **flush-left markdown**. The reader copies it straight from a
 3. <idea> — survives: … · risk: …
 
 ### Usage
-→ run it: think!/auror! <idea> · build to a bar: gauntlet! <idea> · sharpen first: smart! <idea>
+→ run it: think!!/run!! <idea> · build to a bar: gauntlet!! <idea> · sharpen first: smart!! <idea>

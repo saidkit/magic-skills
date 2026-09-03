@@ -1,5 +1,14 @@
 # Changelog — think plugin
 
+## 0.3.0 — 2026-09-03
+
+**Changed — macro references migrated to the `!!` ontology.** `smart` and `ideate` reference the magic
+plugin's operator macros as downstream targets; those references now use the `!!` names —
+`think!`→`think!!`, `auror!`→`run!!`, `gauntlet!`→`gauntlet!!` — across `description` triggers, bodies,
+`references/output-format.md`, and the plugin manifest. Each skill's **own** trigger also migrates for full
+`!!` uniformity: `smart!`→`smart!!`, `ideate!`→`ideate!!` (behavior unchanged). Guard: `smart`'s `S12`
+compose-check rebased onto the new names.
+
 ## 0.2.2 — 2026-08-28
 
 **Fix (`ideate`) — console-safe output format (backport of smart's 0.2.1 fix).** `ideate`'s Phase-2 output

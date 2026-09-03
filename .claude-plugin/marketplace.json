@@ -6,13 +6,13 @@
     "url": "https://saidkit.dev"
   },
   "description": "MagicKit - operator macros for Claude Code. Small, stack-agnostic skills that control context, scope and handoff mid-session.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "plugins": [
     {
       "name": "magic",
       "source": "./plugins/magic",
-      "version": "0.4.0",
-      "description": "Operator macros: revelio (context refresh), pensieve (scope/status audit), session (handoff), think-deep (structured task orchestrator), think (run manager for think-deep's protocol files). Skills that keep a long session honest about what it knows, what it already decided, and what it still owes you.",
+      "version": "0.5.0",
+      "description": "Operator macros: refresh (context refresh), audit (scope/status audit), session (handoff), think-deep (structured task orchestrator), think (run manager for think-deep's protocol files). Skills that keep a long session honest about what it knows, what it already decided, and what it still owes you.",
       "author": {
         "name": "Viktor Shpak",
         "url": "https://saidkit.dev"
@@ -32,8 +32,8 @@
     {
       "name": "think",
       "source": "./plugins/think",
-      "version": "0.2.2",
-      "description": "Front-door thinking skills: smart (sharpen a vague goal into a measurable + convergent statement — the IFR builder) and ideate (generate diverse ideas, adversarially select the best). Compose magic's critic; feed think! / auror! / gauntlet!.",
+      "version": "0.3.0",
+      "description": "Front-door thinking skills: smart (sharpen a vague goal into a measurable + convergent statement — the IFR builder) and ideate (generate diverse ideas, adversarially select the best). Compose magic's critic; feed think!! / run!! / gauntlet!!.",
       "author": {
         "name": "Viktor Shpak",
         "url": "https://saidkit.dev"

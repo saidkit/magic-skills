@@ -4,7 +4,7 @@ description: >
   Run-manager for magic:think-deep — observe, resume, clean up, and move the run-scoped
   think-<id>.md protocol files think-deep writes to the session scratchpad. The manager to
   think-deep's executor. Verbs: list · status · clear · resume · export · continue.
-  Activates ONLY on "/magic:think <verb>" or "think! <verb>" where <verb> ∈ list|status|clear|resume|export|continue is the operative token — alone, or with a lone operand (all · an id · a path) — AND NOTHING ELSE. NOT for task execution: a verb followed by a free-form task phrase (e.g. "think! clear up the spec") runs magic:think-deep.
+  Activates ONLY on "/magic:think <verb>" or "think!! <verb>" where <verb> ∈ list|status|clear|resume|export|continue is the operative token — alone, or with a lone operand (all · an id · a path) — AND NOTHING ELSE. NOT for task execution: a verb followed by a free-form task phrase (e.g. "think!! clear up the spec") runs magic:think-deep.
 ---
 
 # Think — magic:think-deep run manager
@@ -69,5 +69,5 @@ The manager first flattens a `Parent:` pointing at a gone scratchpad to a root (
 candidate root), then hands off to `Skill(magic:think-deep)`, which mints a fresh scratchpad id on entry.
 
 ## When NOT to use
-- To **execute** a think task → `magic:think-deep` (bare `think! <task>`), never this.
+- To **execute** a think task → `magic:think-deep` (bare `think!! <task>`), never this.
 - To change think-deep's phases or its carried-id / disk-fallback model → out of scope; read it, never redefine it.

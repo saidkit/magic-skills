@@ -23,7 +23,7 @@ Emulating a named capability is the primary failure this skill prevents.
 1. **Parse.** Identify deliverable · constraints · domain knowledge · **capability signals** (named skills / `/commands` / macros / pipelines). Resolve each to the skills it invokes.
 2. **Contract — `Done-when`.** List the acceptance criteria that define done: from the operator's stated conditions, else derived from the task. Each is a **checkable predicate** — executable where possible (a test passes · a command exits 0 · a route returns 200 · a grep matches), else tagged **judgment**. Phase 3 tests against these; without `Done-when` there is no gate.
 3. **Unclear → ask ONE focused question.** Do not guess; do not proceed until answered.
-4. **Restate + confirm:** deliverable, scope, constraints, `Done-when`, and the skills you will invoke. Wait for confirmation. Under `auror!`/`expelliarmus`: state it and proceed. Trivial task → one-line restate, proceed.
+4. **Restate + confirm:** deliverable, scope, constraints, `Done-when`, and the skills you will invoke. Wait for confirmation. Under `run!!`/`proceed!!`: state it and proceed. Trivial task → one-line restate, proceed.
 
 ## Phase 1 — Plan
 
@@ -75,12 +75,12 @@ Per criterion → **PASS** / **FAIL** (+ evidence, gap). Confirm coherence: the 
 
 - **All PASS** → assemble and present the deliverable + a ≤3-sentence summary (done · key decisions · caveats); record the verdicts in the Gate log; **set `Closed: done`** (you may delete your own protocol file); close. Do not replay the step history.
 - **Any FAIL · iterations < cap · progress since last pass** → **repair iteration**: re-enter Phase 1 scoped to the failed criteria only, seeded by the gap + the protocol (do not re-tread). Increment the Gate-log iteration. Default cap: 3.
-- **Cap reached · OR the same criterion fails two iterations running** → **STOP + escalate** with the residual gap; **set `Closed: escalated`**. Never self-certify; never silently quit. Under `auror!`/`expelliarmus`, this escalation is the one wait autonomy cannot drop.
+- **Cap reached · OR the same criterion fails two iterations running** → **STOP + escalate** with the residual gap; **set `Closed: escalated`**. Never self-certify; never silently quit. Under `run!!`/`proceed!!`, this escalation is the one wait autonomy cannot drop.
 
 ## Anti-patterns
 
 - Emulating a named skill/macro/pipeline instead of invoking it — the #1 failure.
-- Autonomy (`auror!`/`expelliarmus`) dropping a stage/gate — it removes waits, not stages.
+- Autonomy (`run!!`/`proceed!!`) dropping a stage/gate — it removes waits, not stages.
 - Skipping or rubber-stamping a check ("looks good") — name specific positives and issues.
 - Grading a `Done-when` from memory instead of running its check.
 - Scanning or re-minting your protocol when your carried id already names it — open `think-<id>.md` directly.

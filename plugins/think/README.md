@@ -7,7 +7,7 @@ Front-door skills that run *before* you commit to how you'll build. Where the `m
 | `/think:smart`   | Sharpen a vague goal into a **measurable + convergent** statement a run can finish — the kit's **IFR builder** | Emits the sharpened goal, STOPS |
 | `/think:ideate`  | Generate 5–15 genuinely diverse candidate ideas, adversarially select the best against a pinned merit rubric   | Returns the top-N, STOPS |
 
-Both are **feeders** — they shape the work and STOP. `smart` points a sharpened goal at `think!` / `auror!` (or `critic!` for a quality bar); `ideate` **composes** `critic` as its judge and hands its winners to `smart!` / `think!` / `auror!` / `gauntlet!`. Neither touches an engine — each emits plain text. `smart` pins a goal's **Ideal Final Result** before the loop runs; `ideate` explores the option space (the divergent mirror of `gauntlet`).
+Both are **feeders** — they shape the work and STOP. `smart` points a sharpened goal at `think!!` / `run!!` (or `critic!!` for a quality bar); `ideate` **composes** `critic` as its judge and hands its winners to `smart!!` / `think!!` / `run!!` / `gauntlet!!`. Neither touches an engine — each emits plain text. `smart` pins a goal's **Ideal Final Result** before the loop runs; `ideate` explores the option space (the divergent mirror of `gauntlet`).
 
 ## Install
 
@@ -26,7 +26,7 @@ claude plugin install magic@magickit
 
 ## Triggers
 
-- `smart! <goal>` or `/think:smart <goal>` — sharpen a fuzzy goal into a finishable one.
-- `ideate! <problem>` or `/think:ideate <problem>` — explore + adversarially select ideas.
+- `smart!! <goal>` or `/think:smart <goal>` — sharpen a fuzzy goal into a finishable one.
+- `ideate!! <problem>` or `/think:ideate <problem>` — explore + adversarially select ideas.
 
 Explicit only; neither fires by accident.

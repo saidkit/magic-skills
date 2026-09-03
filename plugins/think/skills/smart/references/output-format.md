@@ -33,6 +33,6 @@ Convergent [✓]:
 - <Achievable / Relevant / feasibility flags, if any>
 
 ### Usage
-→ run it: think! <goal> · auror! <goal>   (quality target? pin the bar first: critic! <goal>)
+→ run it: think!! <goal> · run!! <goal>   (quality target? pin the bar first: critic!! <goal>)
 
-Then a one-line close: `STOP — goal shaped (Measurable + Convergent); no Done-when authored, nothing built.` (standalone MAY offer to drive it with think! on confirm).
+Then a one-line close: `STOP — goal shaped (Measurable + Convergent); no Done-when authored, nothing built.` (standalone MAY offer to drive it with think!! on confirm).
