@@ -5,6 +5,16 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## 0.6.0 — 2026-09-03
+
+**Added — `prompt!!` skill.** A new `magic` skill that generates a prompt from the project's curated
+prompt library (the `MAGIC.prompts` key in CLAUDE.md → default `docs/prompts.md`) in the operator's own
+terse voice, and `prompt!! add` curates good prompts back into it (least-verbose, append-only). Two verbs,
+`add` operand-guarded; the corpus is a hand-maintainable human↔AI bridge — one shot per `## <case> — <when>`
+block. Ships `references/prompts.template.md` and seeds `docs/prompts.md` on first `add`. Composes nothing
+heavy — no critic loop, no embeddings. Guards: exit-coded `harness.sh` (14 checks, negative-control-proven)
++ behavioral goldens.
+
 ## 0.5.0 — 2026-09-03
 
 **Changed — operator macros migrated to the `!!` command ontology.** Every operator macro is now named
