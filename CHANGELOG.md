@@ -5,6 +5,10 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## 0.8.0 — 2026-09-03
+
+**Changed — `think-deep` enforces the rising-severity escape (Phase 4).** The repair loop now records a per-iteration severity signal (weighted by how bad the open findings are when the gate ranks them, else the open-criterion count) and, when it fails to decrease across two consecutive iterations, **stops and escalates "premise suspect — re-examine the premise, not another repair pass"** — a new trigger alongside the existing cap / same-criterion-twice ones. Turns the authored `critic` escape clause into a mechanical engine stop; behavior-preserving for the normal (decreasing) case. Guard: harness `S25` + two golden fixtures (the trigger + a decreasing-severity behavior-preservation control).
+
 ## 0.7.0 — 2026-09-03
 
 **Changed — `critic` hardens the acceptance bar against a stale-source premise.** The authored contract now
@@ -68,7 +72,7 @@ Phase-3 gate / Phase-4 repair tails carried no id — the long tails where a com
 **turn-level invariant** beside the `Language` rule: every live-run turn leads with `[think] <id>`,
 phase-scoped (`· step N/total` / `· gate` / `· iter K` / `· done` / `· escalated`), nested flips to the
 active leaf; the launch line `▶ think-deep <id>` is rescoped to the first turn. Guards: harness S24
-(fixed-string — `[think]` is a `grep -E` char class) + S16 tightened; fixtures F13; EVAL B15. (MAGIC-03-04.)
+(fixed-string — `[think]` is a `grep -E` char class) + S16 tightened; fixtures F13; EVAL B15.
 
 ## 0.3.12 — 2026-08-27
 

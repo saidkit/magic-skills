@@ -45,7 +45,7 @@ Emulating a named capability is the primary failure this skill prevents.
   ## Results
   (filled during execution)
   ## Gate log
-  (per-iteration verdicts)
+  (per-iteration verdicts + severity signal)
   ```
 4. **Output the step list to chat.** Self-check: a named pipeline/skill absent from the `via:` bindings ⇒ rebind before executing.
 
@@ -74,8 +74,8 @@ Per criterion → **PASS** / **FAIL** (+ evidence, gap). Confirm coherence: the 
 ## Phase 4 — Converge or escalate
 
 - **All PASS** → assemble and present the deliverable + a ≤3-sentence summary (done · key decisions · caveats); record the verdicts in the Gate log; **set `Closed: done`** (you may delete your own protocol file); close. Do not replay the step history.
-- **Any FAIL · iterations < cap · progress since last pass** → **repair iteration**: re-enter Phase 1 scoped to the failed criteria only, seeded by the gap + the protocol (do not re-tread). Increment the Gate-log iteration. Default cap: 3.
-- **Cap reached · OR the same criterion fails two iterations running** → **STOP + escalate** with the residual gap; **set `Closed: escalated`**. Never self-certify; never silently quit. Under `run!!`/`proceed!!`, this escalation is the one wait autonomy cannot drop.
+- **Any FAIL · iterations < cap · progress since last pass (the severity signal fell)** → **repair iteration**: re-enter Phase 1 scoped to the failed criteria only, seeded by the gap + the protocol (do not re-tread). Increment the Gate-log iteration **and record its severity signal — a P0/P1-weighted score when the gate ranked findings, else the open-`Done-when`-FAIL count**. Default cap: 3. *(A non-decreasing signal is not progress → it falls through to the escalate below, never another repair.)*
+- **Cap reached · the same criterion fails two iterations running · OR the severity signal is non-decreasing across 2 consecutive iterations** (rising or flat ⇒ **premise suspect**: re-examine the premise — is the source current? does the bar measure the right thing? — not another repair pass) → **STOP + escalate** with the residual gap (name which trigger fired); **set `Closed: escalated`**. Never self-certify; never silently quit. Under `run!!`/`proceed!!`, this escalation is the one wait autonomy cannot drop.
 
 ## Anti-patterns
 
