@@ -5,6 +5,16 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## 0.7.0 — 2026-09-03
+
+**Changed — `critic` hardens the acceptance bar against a stale-source premise.** The authored contract now
+(1) verifies the pinned source is the current/canonical revision and records the discriminator — a bar on a
+superseded source is *void*; (2) briefs one reviewer per run to attack the *contract* ("is this source
+current? does the bar measure the right thing?"), distinct from the artifact-attacker; (3) treats *rising*
+severity across repair passes as a signal to re-examine the premise, not to keep fixing. Behavior-preserving
+— a sound-premise run is unchanged; the only new outcome is "stale source ⇒ void". Guards: three new
+`harness.sh` static checks (source-currency spans both branches) + golden fixtures.
+
 ## 0.6.0 — 2026-09-03
 
 **Added — `prompt!!` skill.** A new `magic` skill that generates a prompt from the project's curated

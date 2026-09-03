@@ -29,8 +29,8 @@ From the interview, route to the bar shape (worked entries in `references/critic
 
 ## Phase 1 — Pin the standard (the one input autonomy cannot skip)
 
-- **C branch:** pin the **anchor** (named exemplar to match/beat) + **reference artifact** (image · brand kit · exemplar doc — capture its path/handle). No reference obtainable ⇒ **hard-block**: ask ONE focused question naming what is missing — never author a comparative gate without a reference, or the loop optimizes the wrong thing.
-- **T branch:** pin the **internal standard** — the spec, test suite, or source-of-truth the review holds it against — plus the **severity threshold** (P0/P1 vs P0–P2) and whether it touches money/data/security (→ attacker stance). A repair loop's reference is the code itself, so **no hard-block**.
+- **C branch:** pin the **anchor** (named exemplar to match/beat) + **reference artifact** (image · brand kit · exemplar doc — capture its path/handle). No reference obtainable ⇒ **hard-block**: ask ONE focused question naming what is missing — never author a comparative gate without a reference, or the loop optimizes the wrong thing. Then **verify the anchor is the current/canonical revision and record the discriminator** — the phrase or fact distinguishing it from a stale sibling; a source not verified-current makes the bar **void** (a stale-source bar measures against the wrong truth — distinct from the no-reference hard-block).
+- **T branch:** pin the **internal standard** — the spec, test suite, or source-of-truth the review holds it against — plus the **severity threshold** (P0/P1 vs P0–P2) and whether it touches money/data/security (→ attacker stance). A repair loop's reference is the code itself, so **no hard-block** — but confirm that internal standard is the **current source-of-truth** (HEAD, not a superseded draft), else the bar is void.
 
 Under `run!!`/`proceed!!` the *wait* relaxes, the *pin* does not — the standard (external anchor **or** internal spec/tests) is never droppable. Find the nearest library entry; adapt its standard from the interview.
 
@@ -38,7 +38,7 @@ Under `run!!`/`proceed!!` the *wait* relaxes, the *pin* does not — the standar
 
 Write terminating criteria — never a bare score (never converges), never a reward-hackable feature checklist:
 - **C:** "judge <deliverable> BLIND against <reference> (both unlabeled), whole artifact, say which better meets the anchor; pass at **≥K of N** blind looks" — fix K/N before the run (the stop).
-- **T:** "adversarial review until **0 open P0/P1 and nothing new** (attacker stance if it moves money/data/security); + tests green, no regressions" — or the executed form ("contract tests green · every documented shape returned") for a pure spec target. The stop is *defects reach zero and a fresh pass finds nothing new*.
+- **T:** "adversarial review until **0 open P0/P1 and nothing new** (attacker stance if it moves money/data/security); + tests green, no regressions" — or the executed form ("contract tests green · every documented shape returned") for a pure spec target. The stop is *defects reach zero and a fresh pass finds nothing new*. Brief **one reviewer to attack the contract, not the artifact** — *is the named source current? does the bar measure the right thing?* — distinct from the artifact-attacker stance above (which hunts the artifact for money/data/security defects). A converging repair loop shows **decreasing** severity; severity **rising** across passes ⇒ halt and **re-examine the premise** (re-run the source-currency check), not another repair pass.
 - **Guardrails** (executable floor, from the library) — necessary-but-not-sufficient (tokens ∈ kit · tests green · budget · a11y).
 
 Assemble the `Done-when`; Phase 3 renders and routes it.
