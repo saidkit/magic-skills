@@ -1,5 +1,19 @@
 # Changelog — think plugin
 
+## 0.4.1 — 2026-09-20
+
+**Changed — `reflect!!` output sharpened.** The distilled instruction is now an **atomic numbered
+playbook** — distinct, deduplicated, imperative rules, one per line, highest-value first (a
+correction-dense session yields roughly fifteen to thirty) — replacing the earlier single-paragraph
+form that hid the distinct moves a future run needs. Knowledge-base reconciliation now routes **by
+kind**: working-method lessons to the operator's method / notes store, project-scoped rules to the
+project's rule / decision docs — both discovered generically, no hardcoded path, self-contained. The
+change was grounded by a two-arm experiment and reverses the earlier "personal memory excluded"
+premise (a working-method lesson belongs with method notes, not code-style rules). Guards: harness
+`G16` (atomic playbook) + `G17` (two-kind routing), negative-control-proven; `G3` (explicit sibling
+negative-routing) retired — routing is carried by the description's positive-exclusion. No trigger or
+behavioural-contract change; description unchanged.
+
 ## 0.4.0 — 2026-09-20
 
 **Added — `reflect!!` skill.** A new `think` skill that distils the operator's *working method* from the
