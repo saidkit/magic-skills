@@ -1,5 +1,9 @@
 # Changelog — think plugin
 
+## 0.5.0 — 2026-09-20
+
+**Added — `advise!!` / `think:advise`, a grounded-decision front door.** Turns ONE owed decision the agent cannot answer — or a bare lean stated in passing — into a recommendation grounded in a real experiment, then briefs the owner and STOPS. Cycle: frame measurable criteria → sweep precedent+facts only to avoid re-deciding → candidates → a battery of real+adversarial cases with a negative control on the real engine (arms isolated) → verify the conclusion → brief in one of five stop states, the owner deciding. Proportionality sizes the experiment (a fact/leaf gets a citation or one cheap check, not a battery); it never escalates an untested premise. Composes its non-experiment modes (precedent → a decision-record search, candidates → `ideate`, independent break → `critic`) with declared inline fallbacks so it works in a `think`-only install. Self-triggers from its description — no macro block. Two-tier eval: a deterministic synthetic floor + a replay harness over real decision episodes (blind judge). Runs launched non-clean-room reach “PASS pending clean-room confirmation”.
+
 ## 0.4.2 — 2026-09-20
 
 **Changed — `reflect!!` KB step is opt-in; body distilled to pure directives.** After the playbook,
