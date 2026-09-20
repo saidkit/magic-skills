@@ -1,5 +1,14 @@
 # Changelog — think plugin
 
+## 0.4.2 — 2026-09-20
+
+**Changed — `reflect!!` KB step is opt-in; body distilled to pure directives.** After the playbook,
+reflect emits a short menu — (a) integrate now (find homes + propose diffs), (b) just point me where,
+(c) make it reusable (instruction / prompt / new-skill brief), or nothing — instead of always emitting
+the full knowledge-base reconciliation; the homes + diffs render only under (a). Separately, the
+SKILL.md body was stripped of justification/explanatory prose (relocated to the design doc) so it reads
+as pure instructions. Guard: harness `G18` (opt-in menu, negative-control-proven); 17 guards total.
+
 ## 0.4.1 — 2026-09-20
 
 **Changed — `reflect!!` output sharpened.** The distilled instruction is now an **atomic numbered
