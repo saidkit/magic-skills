@@ -25,17 +25,22 @@ question back untested.
    tradeoff or a similar-but-different precedent — answers it, cite it (`path:line`) and stop there
    (`already-decided` / `decided`). Minutes, not the run.
 3. **Ideate at least two genuinely different solutions** — the lean as stated, and its real alternative.
-4. **Build and run the experiment on the real engine.** Run every candidate on the same cases: real ones,
-   adversarial ones, and a negative control (a case a broken or over-permissive candidate would wrongly pass). Run
-   independent candidates in separate subagents so one cannot leak into another. Capture output mechanically, never
-   from memory. When the thing under test is itself a skill or a prompt, the engine is a blind subagent executing it
-   on the same specs — run that. **Size the experiment to the question:** if one check separates the candidates,
-   that check is the whole experiment; if they are different designs, build each minimally and run them.
-5. **Estimate each candidate's drawbacks and consequences** from what the runs showed.
+4. **Run the experiment on the real engine — cheapest decisive check first.** Name the ONE check that could pick the
+   winner among all your candidates — one run of an existing test or harness, or one measurement on a handful of real
+   cases (include one a wrong answer would wrongly pass) — and run it. If it picks the winner against the step-1
+   criteria, that check IS the experiment: stop running things and go to step 5. If it only rules one candidate out —
+   without confirming the survivor clears the criteria — or only reads text where the candidates would have to be run
+   to differ, it has not picked a winner: build each remaining candidate minimally and run them all on the same cases
+   — real ones, adversarial ones, and a negative control (a case a broken or over-permissive candidate would wrongly
+   pass) — independent candidates in separate subagents so one cannot leak into another. When the thing under test is
+   itself a skill or a prompt, the engine is a blind subagent executing it on the same specs — run that. Capture
+   output mechanically, never from memory.
+5. **Estimate each candidate's drawbacks and consequences** from what the runs showed — by reasoning, not extra
+   runs, for a candidate the one check never touched.
 6. **Only then choose — and verify the conclusions.** Re-read the results against the step-1 criteria and ask what
-   they actually license: a true finding can carry a wrong inference. For a claim others will build on, get an
-   independent adversarial pass (a reviewer who did not do the work, briefed to make it fail) and re-run its
-   counter-cases yourself.
+   they actually license: a true finding can carry a wrong inference. If step 4 went to the full build-and-run
+   comparison and others will build on its result, get an independent adversarial pass (a reviewer who did not do
+   the work, briefed to make it fail) and re-run its counter-cases yourself.
 7. **Brief the owner and STOP.**
 
 ## Hold every run
@@ -61,7 +66,7 @@ A field the run never reached prints `n/a` — never invent one.
 ### criteria
 <the measurable bar from step 1>
 ### experiment
-none (<the record or fact that settled it>) | <path to the evidence record> — <candidates × cases, negative control named>
+none (<the record or fact that settled it>) | one-check: <command> — <result> | <path to the evidence record> — <candidates × cases, negative control named>
 ### finding
 <what the runs showed, mechanically>
 ### conclusion
