@@ -1,5 +1,20 @@
 # Changelog — think plugin
 
+## 0.4.0 — 2026-09-20
+
+**Added — `reflect!!` skill.** A new `think` skill that distils the operator's *working method* from the
+current dialogue's corrections into a reusable instruction, then proposes reconciling it with the
+project's knowledge base. It mines seven fields (original task, what was corrected, what dissatisfied,
+why the vector changed, decisions made, formulations approved, mistakes-never-repeat), grounds every
+line in the dialogue (invents nothing — says "none observed" when a field has no signal), discovers the
+project's rule/convention docs generically (no hardcoded path, no cross-plugin dependency), reconciles
+by merge / de-duplicate / "superseded — because", and **proposes-then-writes-nothing until the operator
+confirms** (standalone instruction when the project keeps no KB). Runs in the main agent on the live
+dialogue; description-triggered, no macro (like `refresh!!` / `session!!`). Console-safe flush-left
+output. Authored via `skill-creator` → `skill-doctor`; the lane owns the eval (Tier-0 exit-coded harness
+15/15, negative-control-proven + Tier-1 non-comparative blind panel, both PASS). Retrieval-sweep
+composition (for KB discovery) is operator-composed at the prompt, never shipped in the skill body.
+
 ## 0.3.0 — 2026-09-03
 
 **Changed — macro references migrated to the `!!` ontology.** `smart` and `ideate` reference the magic
