@@ -100,6 +100,7 @@ Writes (does **not** run) a strong copy-paste prompt that tells an AI to split t
 - **Real work to do?** `think-deep` (via `think!!` or `run!!`) plans, does, and **verifies** a multi-step job. `critic!!` pins a quality bar and reviews or fixes against it. `gauntlet!!` hands you a build-to-a-bar prompt to run elsewhere.
 
 ## Good to know
-- **The diagnostics stop by contract.** `refresh!!` / `audit!!` / `explain!!` report and hand the decision back to you. To refresh *and then* keep going, use the `resume!!` / `finish!!` macros (see [operator-macros.md](../../guides/operator-macros.md)).
+- **The diagnostics stop by contract.** `refresh!!` / `audit!!` / `explain!!` report and hand the decision back to you. To refresh *and then* keep going, use the `resume!!` macro (see [operator-macros.md](../../guides/operator-macros.md)).
+- **Autonomy never green-lights an outward action.** A blanket `proceed!!` / `run!!` grant relaxes routine waits — never a decision reserved for you, and never an outward, hard-to-reverse operation (sending, publishing, deleting). These skills ship no tool-level fuse for that; consent for such an operation stays your own tool-permission configuration (allow / deny rules, approval prompts).
 - **Nothing carries across calls.** Each invocation is a fresh sweep scoped to the message that triggered it — call again whenever you need another look.
 - **No project files, no config.** These skills read whatever layout your project already has and adapt (`docs/adr/` vs `decision-log/`, `docs/working/` vs `notes/`, and so on).

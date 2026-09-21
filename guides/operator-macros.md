@@ -12,7 +12,7 @@ Paste the contents of **[`guides/CLAUDE.md`](./CLAUDE.md)** (beside this file) i
 
 ## Notes
 
-- **`proceed!!` is load-bearing.** `resume!!` and `finish!!` are defined in terms of it, and `/magic:audit` names it in its stop condition. Keep it even if you never type it directly.
+- **`proceed!!` is load-bearing.** `resume!!` is defined in terms of it, and `/magic:audit` names it in its stop condition. Keep it even if you never type it directly.
 - **`precedent!!` targets `/said:retrieval`.** Precedent/decision-record search moved to the SAID plugin (`said:retrieval`); the `precedent!!` macro is kept in the block but needs the `said` plugin installed.
 - **`!!` is the operator-macro marker.** Every operator macro ends in `!!` — the double bang is what tells the agent you mean the macro, not the English word. One form per macro: no bare-word or single-`!` variants.
 - **Macros do not carry across invocations.** This is deliberate — every macro is scoped to the message that invoked it, so an autonomy grant can never silently persist into later work.

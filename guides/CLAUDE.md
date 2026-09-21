@@ -1,6 +1,7 @@
 ## `proceed!!`
 Standing OK to proceed through all phases / batched tasks / multi-step flows without further confirmation pauses, until natural completion or a hard blocker.
-Skip Phase A→B, Phase B→C, batch boundaries, rule-by-rule `next` waits for the remainder of the invocation. Still REPORT each phase boundary; only the wait goes — **never a stage or a gate**. A suppressed confirmation pause never removes the step it guarded (a verification / acceptance / debrief stage still runs; autonomy drops the wait, not the work). Does NOT carry across invocations. Hard blocker = unsatisfiable Approach, failing quality gate needing decision, ambiguous scope-creep, destructive op  outside scope.
+Skip Phase A→B, Phase B→C, batch boundaries, rule-by-rule `next` waits for the remainder of the invocation. Still REPORT each phase boundary; only the wait goes — **never a stage, a gate, or an owed-decision boundary**. A suppressed confirmation pause never removes the step it guarded (a verification / acceptance / debrief stage still runs; autonomy drops the wait, not the work). Does NOT carry across invocations. Hard blocker = unsatisfiable Approach, failing quality gate needing decision, ambiguous scope-creep, destructive op  outside scope.
+A blanket grant covers **how-to-build choices only — never an owed operator decision**, which is announced once, then held (the same whether you watch or walk away); to pre-decide a reserved class, **name it** in the directive — no grant persists.
 
 ## `task-comments!!`
 Use a rule: in source code, reference comments must be **task-id + very short why** only.
@@ -25,7 +26,7 @@ Anchored quality goal-run — one subjective target, single builder track (not a
 ## `said!!`
 Single-feature SAID orchestrator — full cycle (skill: `said:said`) — 3 slots, Invoke · Compose · Drive:
 1. **Invoke.** FIRST action = `Skill(said:said)` + the task — as `said!! <directive>` or `<directive> as said!!`. Hand-rolling stages = emulation (under `/goal`: no skill → no `goal:` line → spin).
-2. **Compose.** Under `run!!`/`proceed!!`: the checklist-confirm relaxes to report-and-proceed — every stage/gate still runs; an unconfirmed omission is the one wait autonomy can't drop. `task-comments!!` during impl.
+2. **Compose.** Under `run!!`/`proceed!!`: the checklist-confirm relaxes to report-and-proceed — every stage/gate still runs; an unconfirmed omission is a wait autonomy can't drop (as is an owed operator decision, per `proceed!!`). `task-comments!!` during impl.
 3. **Drive.** The skill prints a `goal:` line every turn (`done` = debrief footer + gates passed / `continue` / `stop`). Under `/goal` that IS the completion condition — write a plain directive, never hand-write it. `continue` re-invokes `said:said`; `done`/`stop` end it. `run!!`: think-deep loop-shaped `via:` step.
 
 ## `flow!!`
