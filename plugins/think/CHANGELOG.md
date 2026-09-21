@@ -1,5 +1,47 @@
 # Changelog — think plugin
 
+## 0.5.0 — 2026-09-20
+
+**Added — `advise!!` / `think:advise`, a grounded-decision front door.** Turns ONE owed decision the agent cannot answer — or a bare lean stated in passing — into a recommendation grounded in a real experiment, then briefs the owner and STOPS. The explicit invocation IS the decision to experiment: state the task and measurable criteria → sweep precedent+facts only to avoid re-deciding → name at least two candidates → run the **cheapest decisive check first** (if one check on a handful of real cases picks the winner, that is the experiment; otherwise build every candidate and run them on real + adversarial + negative-control cases, arms isolated) → weigh drawbacks/consequences → verify the conclusion (an independent `critic` break after a full build-and-run) → brief in one of five stop states, the owner deciding. It never escalates an untested premise. Composes its non-experiment modes (precedent → a decision-record search, candidates → `ideate`, break → `critic`) with declared inline fallbacks so it works in a `think`-only install. Self-triggers from its description — no macro block. Acceptance is a replay harness over real decision episodes, run in isolation and judged blind.
+
+## 0.4.2 — 2026-09-20
+
+**Changed — `reflect!!` KB step is opt-in; body distilled to pure directives.** After the playbook,
+reflect emits a short menu — (a) integrate now (find homes + propose diffs), (b) just point me where,
+(c) make it reusable (instruction / prompt / new-skill brief), or nothing — instead of always emitting
+the full knowledge-base reconciliation; the homes + diffs render only under (a). Separately, the
+SKILL.md body was stripped of justification/explanatory prose (relocated to the design doc) so it reads
+as pure instructions. Guard: harness `G18` (opt-in menu, negative-control-proven); 17 guards total.
+
+## 0.4.1 — 2026-09-20
+
+**Changed — `reflect!!` output sharpened.** The distilled instruction is now an **atomic numbered
+playbook** — distinct, deduplicated, imperative rules, one per line, highest-value first (a
+correction-dense session yields roughly fifteen to thirty) — replacing the earlier single-paragraph
+form that hid the distinct moves a future run needs. Knowledge-base reconciliation now routes **by
+kind**: working-method lessons to the operator's method / notes store, project-scoped rules to the
+project's rule / decision docs — both discovered generically, no hardcoded path, self-contained. The
+change was grounded by a two-arm experiment and reverses the earlier "personal memory excluded"
+premise (a working-method lesson belongs with method notes, not code-style rules). Guards: harness
+`G16` (atomic playbook) + `G17` (two-kind routing), negative-control-proven; `G3` (explicit sibling
+negative-routing) retired — routing is carried by the description's positive-exclusion. No trigger or
+behavioural-contract change; description unchanged.
+
+## 0.4.0 — 2026-09-20
+
+**Added — `reflect!!` skill.** A new `think` skill that distils the operator's *working method* from the
+current dialogue's corrections into a reusable instruction, then proposes reconciling it with the
+project's knowledge base. It mines seven fields (original task, what was corrected, what dissatisfied,
+why the vector changed, decisions made, formulations approved, mistakes-never-repeat), grounds every
+line in the dialogue (invents nothing — says "none observed" when a field has no signal), discovers the
+project's rule/convention docs generically (no hardcoded path, no cross-plugin dependency), reconciles
+by merge / de-duplicate / "superseded — because", and **proposes-then-writes-nothing until the operator
+confirms** (standalone instruction when the project keeps no KB). Runs in the main agent on the live
+dialogue; description-triggered, no macro (like `refresh!!` / `session!!`). Console-safe flush-left
+output. Authored via `skill-creator` → `skill-doctor`; the lane owns the eval (Tier-0 exit-coded harness
+15/15, negative-control-proven + Tier-1 non-comparative blind panel, both PASS). Retrieval-sweep
+composition (for KB discovery) is operator-composed at the prompt, never shipped in the skill body.
+
 ## 0.3.0 — 2026-09-03
 
 **Changed — macro references migrated to the `!!` ontology.** `smart` and `ideate` reference the magic

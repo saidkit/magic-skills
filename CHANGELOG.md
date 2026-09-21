@@ -1,5 +1,10 @@
 # Changelog
 
+> **Marketplace note — 2026-09-20:** the **`think`** plugin ships **v0.4.0** — a third skill,
+> **`reflect!!`** (distil the working method from the current dialogue into a reusable instruction;
+> propose reconciling it with the project's knowledge base, propose-then-confirm). See
+> `plugins/think/CHANGELOG.md`. The `magic` plugin is unchanged by this release.
+>
 > **Marketplace note — 2026-08-12:** the `magickit` marketplace now ships a second plugin, **`think`**
 > (v0.1.0) — divergent-thinking front-doors, first skill **`ideate`** (diverge → adversarially judge →
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
