@@ -10,6 +10,20 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## 0.9.0 — 2026-09-22
+
+**Changed — the owed-operator-decision fuse is explicit in the operator-macro layer.** A blanket autonomy
+grant (`proceed!!` / `run!!`) now covers *how-to-build choices only — never a decision reserved for the
+operator*: an owed decision is announced once, then held (the same whether you are watching or away); to
+pre-decide a reserved class, name it in the directive. The phase-boundary-skip clause is tightened so
+autonomy never sweeps up an owed-decision boundary, and the `said!!` Compose line no longer implies an
+unconfirmed omission is the *sole* undroppable wait. Behavior-preserving for how-to-build autonomy — the new
+outcome is that a reserved decision **holds** under a grant instead of being silently defaulted. Also: a
+consumer-permission note in the plugin README (the plugin ships no tool-level fuse — outward-operation
+consent stays your own tool-permission configuration), and a stale `finish!!` reference removed from the
+install page + README. Guard: `docs/evaluation/macros/decision-fuse/harness.sh` (11 checks, RED-first +
+mutation-tested).
+
 ## 0.8.0 — 2026-09-03
 
 **Changed — `think-deep` enforces the rising-severity escape (Phase 4).** The repair loop now records a per-iteration severity signal (weighted by how bad the open findings are when the gate ranks them, else the open-criterion count) and, when it fails to decrease across two consecutive iterations, **stops and escalates "premise suspect — re-examine the premise, not another repair pass"** — a new trigger alongside the existing cap / same-criterion-twice ones. Turns the authored `critic` escape clause into a mechanical engine stop; behavior-preserving for the normal (decreasing) case. Guard: harness `S25` + two golden fixtures (the trigger + a decreasing-severity behavior-preservation control).
