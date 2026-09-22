@@ -10,6 +10,18 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## 0.10.0 — 2026-09-22
+
+**Changed — the grant-reading fuse carries an explicit counter-framing (defense-in-depth).** The
+always-loaded invariant now states, in one added line, that an owed operator decision is **not an
+"ambiguous answer" a blanket grant may default**: a blanket grant does not reach it, however the grant is
+worded — only naming the specific reserved class pre-decides it. This closes the residual failure where an
+autonomous run, standing on a blanket "default ambiguous answers" grant, reclassifies a reserved decision as
+just such an answer and self-defaults it. Behavior-preserving for how-to-build autonomy; the only new outcome
+is that a reserved decision held even under a grant that names "ambiguous answers" as a class to default.
+Guard: `docs/evaluation/macros/decision-fuse/harness.sh` grows to **12 checks** (new `D11`, RED-first — proven
+failing on the shipped block before the edit).
+
 ## 0.9.0 — 2026-09-22
 
 **Changed — the owed-operator-decision fuse is explicit in the operator-macro layer.** A blanket autonomy

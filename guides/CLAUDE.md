@@ -1,7 +1,7 @@
 ## `proceed!!`
 Standing OK to proceed through all phases / batched tasks / multi-step flows without further confirmation pauses, until natural completion or a hard blocker.
 Skip Phase A→B, Phase B→C, batch boundaries, rule-by-rule `next` waits for the remainder of the invocation. Still REPORT each phase boundary; only the wait goes — **never a stage, a gate, or an owed-decision boundary**. A suppressed confirmation pause never removes the step it guarded (a verification / acceptance / debrief stage still runs; autonomy drops the wait, not the work). Does NOT carry across invocations. Hard blocker = unsatisfiable Approach, failing quality gate needing decision, ambiguous scope-creep, destructive op  outside scope.
-A blanket grant covers **how-to-build choices only — never an owed operator decision**, which is announced once, then held (the same whether you watch or walk away); to pre-decide a reserved class, **name it** in the directive — no grant persists.
+A blanket grant covers **how-to-build choices only — never an owed operator decision**, which is announced once, then held (the same whether you watch or walk away); to pre-decide a reserved class, **name it** in the directive — no grant persists. An owed operator decision is **not an "ambiguous answer"** a grant may default: a blanket grant does not reach it, however the grant is worded — only naming the specific reserved class pre-decides it.
 
 ## `task-comments!!`
 Use a rule: in source code, reference comments must be **task-id + very short why** only.
