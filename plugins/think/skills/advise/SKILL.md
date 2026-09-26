@@ -55,31 +55,51 @@ question back untested.
 - **One decision, then STOP** — never implement it, never walk on to the next question.
 
 ## The brief — the last thing you print
-Flush-left, one `###` per field, the value on its own line, stop state first (print the fields, not the code fence).
-A field the run never reached prints `n/a` — never invent one.
+Flush-left, Title Case `###` headings, a blank line between fields, each value on its own line, stop state first,
+`### Explained` last (print the fields, not the code fence). A field the run never reached prints `n/a` — never
+invent one.
 
 ```
-### advise
+### Advise
 <already-decided | decided | recommend | escalated | blocked>
-### question
+
+### Question
 <the one decision, one line>
-### criteria
+
+### Criteria
 <the measurable bar from step 1>
-### experiment
+
+### Experiment
 none (<the record or fact that settled it>) | one-check: <command> — <result> | <path to the evidence record> — <candidates × cases, negative control named>
-### finding
+
+### Finding
 <what the runs showed, mechanically>
-### conclusion
+
+### Conclusion
 <what that licenses, checked against the criteria>
-### recommendation
+
+### Recommendation
 <the option you recommend and why it won on the evidence, or n/a if none met the criteria>
-### drawbacks-consequences
+
+### Drawbacks and Consequences
 <what the recommended option costs, and what changes downstream>
-### owner-decides
+
+### Owner Decides
 <the choice that is the owner's> | n/a (reversible detail, settled)
+
+### Explained
+<the run explained in plain human language to the owner — see below>
 ```
+
+`### Explained`, for the owner who will not read the fields — about 200 words, in this shape: the answer in one
+plain sentence · one bullet per option, named and judged exactly as the fields name and judge it · what the run found, at most three bullets with
+their numbers · **Recommend:** the option and its main catch · **You decide:** one bold line per owner decision with
+what hangs on it, or that nothing is owed — every `### Owner Decides` item its own line, never merged. Plain language,
+no jargon, command or path; say only what the fields say, each verdict and decision at its exact strength — never
+"every" into "some", never "one" into "all"; leave details to the fields rather than blur them. Before printing,
+reread it against the fields and fix every quantity, verdict and option name that differs.
 
 Stop states: **already-decided** a held record answers it · **decided** a fact answers it, or a reversible detail you
 settled · **recommend** briefed, the owner rules, no decision recorded · **escalated** the experiment ran and no
 candidate meets the criteria, evidence attached · **blocked** it cannot be grounded from this project — name who or
-what can, in `conclusion`.
+what can, in `### Conclusion`.

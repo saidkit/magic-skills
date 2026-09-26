@@ -1,5 +1,15 @@
 # Changelog — think plugin
 
+## 0.5.1 — 2026-09-23
+
+**Changed — `advise!!` brief reads without a second pass.** The brief's headings are now Title Case with a blank line
+between fields (`### Advise` … `### Owner Decides`), and the brief closes with `### Explained`: about 200 words for the
+owner — the answer in one sentence, each option named and judged as the fields do, what the run found with its
+numbers, the recommendation and its main catch, and one line per owner decision — rechecked against the fields before
+printing. The stop state is still the first field, so a driver reads it unchanged. The experiment steps are unchanged.
+Guards: static checks for Title Case headings, `### Explained` last and blank-line separation; blind readability and
+faithfulness judging plus two mechanical checks (numbers, owner decisions) on archived runs.
+
 ## 0.5.0 — 2026-09-20
 
 **Added — `advise!!` / `think:advise`, a grounded-decision front door.** Turns ONE owed decision the agent cannot answer — or a bare lean stated in passing — into a recommendation grounded in a real experiment, then briefs the owner and STOPS. The explicit invocation IS the decision to experiment: state the task and measurable criteria → sweep precedent+facts only to avoid re-deciding → name at least two candidates → run the **cheapest decisive check first** (if one check on a handful of real cases picks the winner, that is the experiment; otherwise build every candidate and run them on real + adversarial + negative-control cases, arms isolated) → weigh drawbacks/consequences → verify the conclusion (an independent `critic` break after a full build-and-run) → brief in one of five stop states, the owner deciding. It never escalates an untested premise. Composes its non-experiment modes (precedent → a decision-record search, candidates → `ideate`, break → `critic`) with declared inline fallbacks so it works in a `think`-only install. Self-triggers from its description — no macro block. Acceptance is a replay harness over real decision episodes, run in isolation and judged blind.
