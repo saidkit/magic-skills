@@ -46,7 +46,7 @@ Emulating a named capability is the primary failure this skill prevents.
   ## Results
   (filled during execution)
   ## Gate log
-  (per-iteration verdicts + severity signal)
+  (one row per iteration: `- iter N: <per-criterion verdicts> · signal <s>`; the closing row reads `- iter N: all PASS` or `- iter N: escalated`)
   ```
 4. **Output the step list to chat** -- the protocol skeleton Write rides on the plan message (same call as the step list). Self-check: a named pipeline/skill absent from the `via:` bindings ⇒ rebind before executing.
 
@@ -59,7 +59,7 @@ Per step, in order:
    > **Self-check [N]** — **Good:** <specifics> · **Issues:** <numbered> · **Verdict:** PASS / FIX
    Test: completeness · correctness · consistency with prior steps · traceability (each claim → a source) · bloat. Nothing wrong ⇒ look harder; name one improvable thing.
 3. **FIX before advancing.** No forward move on a FIX verdict; re-check after fixing.
-4. **Update the protocol:** tick the step, write its Results -- riding on the next work call (or a report/deliverable message), never alone: never a call whose only tool use is `think-<id>.md`. The one exception is Phase 4's Gate-log write, which carries the verdict and the closure together. **Checkbox + Closed integrity** — no `[x]` while its Results read pending/blocked/not-started (untick on conflict); `Closed:` is written only by Phase 4, with the Gate-log verdict; never leave an ended run un-`Closed`. Plan changed ⇒ say so in chat, never silently.
+4. **Update the protocol:** tick the step, write its Results -- riding on the next work call (or a report/deliverable message), never alone: never a call whose only tool use is `think-<id>.md`, so at most one step's Results are unwritten at any moment. The one exception is Phase 4's Gate-log write, which carries the verdict and the closure together. **Checkbox + Closed integrity** — no `[x]` while its Results read pending/blocked/not-started (untick on conflict); `Closed:` is written only by Phase 4, with the Gate-log verdict; never leave an ended run un-`Closed`. Plan changed ⇒ say so in chat, never silently.
 5. **Report** ≤3 sentences + remaining steps.
 
 ## Phase 3 — Acceptance gate (independent, depth-safe)
@@ -74,9 +74,9 @@ Per criterion → **PASS** / **FAIL** (+ evidence, gap). Confirm coherence: the 
 
 ## Phase 4 — Converge or escalate
 
-- **All PASS** → assemble and present the deliverable + a ≤3-sentence summary (done · key decisions · caveats); record the verdicts in the Gate log and, in the same edit as the last check's result, its verdict line `all PASS` -- closure is that Gate-log verdict line; `Closed: done` mirrors it in the same edit; no separate close call (you may delete your own protocol file). Do not replay the step history.
+- **All PASS** → assemble and present the deliverable + a ≤3-sentence summary (done · key decisions · caveats); record the verdicts in the Gate log and, in the same edit as the last check's result, its verdict line `- iter N: all PASS` -- closure is that Gate-log verdict line; `Closed: done` mirrors it in the same edit; no separate close call (you may delete your own protocol file). Do not replay the step history.
 - **Any FAIL · iterations < cap · progress since last pass (the severity signal fell)** → **repair iteration**: re-enter Phase 1 scoped to the failed criteria only, seeded by the gap + the protocol (do not re-tread). Increment the Gate-log iteration **and record its severity signal — a P0/P1-weighted score when the gate ranked findings, else the open-`Done-when`-FAIL count**. Default cap: 3. *(A non-decreasing signal is not progress → it falls through to the escalate below, never another repair.)*
-- **Cap reached · the same criterion fails two iterations running · OR the severity signal is non-decreasing across 2 consecutive iterations** (rising or flat ⇒ **premise suspect**: re-examine the premise — is the source current? does the bar measure the right thing? — not another repair pass) → **STOP + escalate** with the residual gap (name which trigger fired); write the Gate-log verdict line `escalated` with `Closed: escalated` mirroring it in the same edit. Never self-certify; never silently quit. Under `run!!`/`proceed!!`, this escalation is the one wait autonomy cannot drop.
+- **Cap reached · the same criterion fails two iterations running · OR the severity signal is non-decreasing across 2 consecutive iterations** (rising or flat ⇒ **premise suspect**: re-examine the premise — is the source current? does the bar measure the right thing? — not another repair pass) → **STOP + escalate** with the residual gap (name which trigger fired); write the Gate-log verdict line `- iter N: escalated` with `Closed: escalated` mirroring it in the same edit. Never self-certify; never silently quit. Under `run!!`/`proceed!!`, this escalation is the one wait autonomy cannot drop.
 
 ## Anti-patterns
 

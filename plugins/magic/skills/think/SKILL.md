@@ -28,7 +28,7 @@ run-set, resume a run, clean up, and bridge one across sessions.
   `magic:think-*` family). `list`/`status`/`resume`/`export` read **existing** ids (filenames); `continue`
   gets a fresh id by handing off to `magic:think-deep`, which mints it — `magic:think` never derives an id,
   no forked id scheme.
-- **Closure** (`magic:think-deep`'s rule, restated for reference; never redefine) = the run's Gate-log verdict line (`all PASS` / `escalated`): a run with one is terminal (closed); its `Closed:` header is a mirror that may lag, never the source. "Un-closed" below means no verdict line.
+- **Closure** (`magic:think-deep`'s rule, restated for reference; never redefine) = the run's Gate-log verdict line (`all PASS` / `escalated`): a run with one is terminal (closed); its `Closed:` header is a mirror that may lag, never the source when a verdict line exists. Legacy shape: a file with `Closed: done|escalated` and no Gate-log verdict line was written by an older version and is terminal too. "Un-closed" below means: no verdict line and `Closed: no`.
 - **Live leaf** = the un-closed run no other un-closed run names as `Parent` — `magic:think-deep`'s rule;
   never author a second definition. **Several un-closed leaves** (parallel runs) ⇒ `status` / bare
   `resume` **ASK which**, never guess.
@@ -41,7 +41,7 @@ Outline the **unfinished** runs only (no Gate-log verdict line; `Closed: no`). G
 - **lineage** — its `Parent` chain
 - mark the **live leaf**.
 
-Terminal runs (a Gate-log verdict line; `Closed: done|escalated` mirrors it) are omitted unless `all` is given.
+Terminal runs (a Gate-log verdict line, or the legacy header-only `Closed: done|escalated`) are omitted unless `all` is given.
 
 ## status
 Show the **current think tree** — the live leaf and its `Parent` lineage, root → leaf, each node with its
@@ -50,7 +50,7 @@ at `list all`).
 
 ## clear [all]
 Delete protocol files, safety-scoped:
-- **default** — remove only **terminal** runs (a Gate-log verdict line, `Closed:` mirroring it); print a manifest of what was removed.
+- **default** — remove only **terminal** runs (a Gate-log verdict line, or the legacy header-only `Closed: done|escalated`); print a manifest of what was removed.
 - **`clear all`** — remove every `think-*.md`, behind an explicit confirm.
 - **never** delete an un-closed **live leaf** without an explicit confirm.
 

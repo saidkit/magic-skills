@@ -10,6 +10,30 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## 0.11.0 — 2026-09-27
+
+**Changed — think-deep pays for work, not bookkeeping; closure is the Gate-log verdict.** The protocol skeleton
+rides on the plan message; ticks and Results ride on the next work call (never a call whose only tool use is the
+protocol file, so at most one step's Results are unwritten at any moment); a run is closed when its Gate-log verdict
+line (`all PASS` / `escalated`) is written, in the same edit as the last check's result, with `Closed:` as a mirror
+— the one legal lone write is that Phase 4 Gate-log write for a text-only deliverable. A `/clear` rotates the
+scratchpad: `export` before a planned clear, else `continue <path>` from the path a session-start re-anchor lists.
+Guards `docs/evaluation/magic/think-deep/harness.sh` T1..T9 (RED-first).
+
+**Changed — critic's review exit is bounded.** One reviewer per target, at most 3 passes; a target that changes
+mid-review is a new target; P0/P1 still open after pass 3 ⇒ stop and escalate, never a 4th pass. Guards K1..K2.
+
+**Changed — think manager reads closure from the verdict.** `list`/`status`/`clear`/live-leaf key on the Gate-log
+verdict line; `Closed:` is a mirror that may lag; a legacy file (`Closed: done|escalated`, no verdict line, written by
+an older version) is terminal too; `export` is recommended before a planned `/clear`. Guards M17..M20.
+
+**Changed — operator macros (`guides/CLAUDE.md`).** `said!!` / `flow!!` Drive: a `goal: stop -- CONTEXT-CHECKPOINT`
+is a planned stop, not a failure and not an owed decision (`/clear`, then re-issue the same directive). `run!!` Drive:
+on that stop, `/clear` then `think!! continue <path>` — never a new `run!!`; `think!! export` before a long pause.
+`drive!!`: the critic's pass cap ends the review through the escalate branch. Guard:
+`docs/evaluation/macros/checkpoint/harness.sh` (characterization X1..X13 GREEN before the edit; C1..C6 RED-first;
+parity with the private copy). Mirror the four blocks into your private `CLAUDE.md`.
+
 ## 0.10.0 — 2026-09-22
 
 **Changed — the grant-reading fuse carries an explicit counter-framing (defense-in-depth).** The
