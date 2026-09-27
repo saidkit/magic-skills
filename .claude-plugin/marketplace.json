@@ -11,7 +11,7 @@
     {
       "name": "magic",
       "source": "./plugins/magic",
-      "version": "0.10.0",
+      "version": "0.11.0",
       "description": "Operator macros: refresh (context refresh), audit (scope/status audit), session (handoff), think-deep (structured task orchestrator), think (run manager for think-deep's protocol files), prompt (few-shot prompt generator + curator). Skills that keep a long session honest about what it knows, what it already decided, and what it still owes you.",
       "author": {
         "name": "Viktor Shpak",
@@ -32,7 +32,7 @@
     {
       "name": "think",
       "source": "./plugins/think",
-      "version": "0.4.2",
+      "version": "0.5.1",
       "description": "Front-door thinking skills: smart (sharpen a vague goal into a measurable + convergent statement — the IFR builder), ideate (generate diverse ideas, adversarially select the best), and reflect (distil the working method from the current dialogue into a reusable instruction; propose reconciling it with the project KB). Compose magic's critic; feed think!! / run!! / gauntlet!!.",
       "author": {
         "name": "Viktor Shpak",
