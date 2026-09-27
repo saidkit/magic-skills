@@ -31,7 +31,8 @@ Emulating a named capability is the primary failure this skill prevents.
 2. **Loop-shaped `via:`.** If a `via:` names a re-entrant loop skill (reconstruct → act → re-enter until its own stop condition), the step reads **"drive X to its stop condition via repeated invocation"**, never "invoke X"; the plan carries a **final step** that re-invokes X and records its stop-condition output verbatim. Invoking a loop once demotes it to a subroutine and drops every rule it enforces on later passes.
 3. **Protocol file — a carried run-id + a disk fallback.** Track steps in a markdown protocol file in the **session scratchpad / temp dir** (keep the project repo clean). Write it into a project working dir (`docs/working/<feature>/`, `notes/`, `planning/`) ONLY on operator request, or when the run's deliverable itself is a durable plan. Never a hardcoded path; state the resolved path in chat.
    - **Carry your run-id (fast path).** Your **id** names your file `think-<id>.md`; **announce `▶ think-deep <id>` on the launch turn** (which also leads with the `[think] <id>` Marker), and resume by opening `think-<id>.md` directly (no scan). **Id derivation + minting follow the canonical rule in `references/run-id.md`** — the single source shared across the `magic:think-*` family. Nested runs each carry their own id; when a child returns, resume your own.
-   - **Disk fallback (survives a full compaction).** Each file stamps `Parent: <parent-id|none>` and flips `Closed:` to `done`/`escalated` at its terminal outcome. **If you are mid-run but cannot open your carried id's file** (a full compaction dropped it), reconstruct from disk instead of re-minting: glob `think-*.md`, read `Parent`/`Closed`; the **live leaf** is the un-`Closed` run that no other un-`Closed` run names as `Parent` — resume it. **Several un-closed leaves, or none matching the task ⇒ ASK which to resume; if you cannot ask (a subagent, no operator), resume the best task-match, else start fresh — never fork blindly.**
+   - **Disk fallback (survives a full compaction).** Each file stamps `Parent: <parent-id|none>` and flips `Closed:` to `done`/`escalated` at its terminal outcome. **If you are mid-run but cannot open your carried id's file** (a full compaction dropped it), reconstruct from disk instead of re-minting: glob `think-*.md`, read `Parent`/`Closed`; a run is closed when its Gate log carries a verdict line (`all PASS`/`escalated`), even if its `Closed:` mirror lags; the **live leaf** is the un-closed run that no other un-closed run names as `Parent` — resume it. **Several un-closed leaves, or none matching the task ⇒ ASK which to resume; if you cannot ask (a subagent, no operator), resume the best task-match, else start fresh — never fork blindly.**
+   - **Across a `/clear`.** A `/clear` rotates the session and its scratchpad (a new session id); compaction keeps it. Run `/magic:think export` before a planned clear, else continue from the path a session-start re-anchor lists (`/magic:think continue <path>`).
    - **Write only your own.** Read any `think-*.md` to relate runs; write only `think-<id>.md`, never a file you did not create. On converge you may delete your own file.
   ```
   Path: <protocol-dir>/think-<id>.md
@@ -47,7 +48,7 @@ Emulating a named capability is the primary failure this skill prevents.
   ## Gate log
   (per-iteration verdicts + severity signal)
   ```
-4. **Output the step list to chat.** Self-check: a named pipeline/skill absent from the `via:` bindings ⇒ rebind before executing.
+4. **Output the step list to chat** -- the protocol skeleton Write rides on the plan message (same call as the step list). Self-check: a named pipeline/skill absent from the `via:` bindings ⇒ rebind before executing.
 
 ## Phase 2 — Execute
 
@@ -58,7 +59,7 @@ Per step, in order:
    > **Self-check [N]** — **Good:** <specifics> · **Issues:** <numbered> · **Verdict:** PASS / FIX
    Test: completeness · correctness · consistency with prior steps · traceability (each claim → a source) · bloat. Nothing wrong ⇒ look harder; name one improvable thing.
 3. **FIX before advancing.** No forward move on a FIX verdict; re-check after fixing.
-4. **Update the protocol:** tick the step, write its Results. **Checkbox + Closed integrity** — no `[x]` while its Results read pending/blocked/not-started (untick on conflict); set `Closed: done`/`escalated` at the terminal outcome, never leave an ended run un-`Closed`. Plan changed ⇒ say so in chat, never silently.
+4. **Update the protocol:** tick the step, write its Results -- riding on the next work call (or a report/deliverable message), never alone: never a call whose only tool use is `think-<id>.md`. The one exception is Phase 4's Gate-log write, which carries the verdict and the closure together. **Checkbox + Closed integrity** — no `[x]` while its Results read pending/blocked/not-started (untick on conflict); `Closed:` is written only by Phase 4, with the Gate-log verdict; never leave an ended run un-`Closed`. Plan changed ⇒ say so in chat, never silently.
 5. **Report** ≤3 sentences + remaining steps.
 
 ## Phase 3 — Acceptance gate (independent, depth-safe)
@@ -73,9 +74,9 @@ Per criterion → **PASS** / **FAIL** (+ evidence, gap). Confirm coherence: the 
 
 ## Phase 4 — Converge or escalate
 
-- **All PASS** → assemble and present the deliverable + a ≤3-sentence summary (done · key decisions · caveats); record the verdicts in the Gate log; **set `Closed: done`** (you may delete your own protocol file); close. Do not replay the step history.
+- **All PASS** → assemble and present the deliverable + a ≤3-sentence summary (done · key decisions · caveats); record the verdicts in the Gate log and, in the same edit as the last check's result, its verdict line `all PASS` -- closure is that Gate-log verdict line; `Closed: done` mirrors it in the same edit; no separate close call (you may delete your own protocol file). Do not replay the step history.
 - **Any FAIL · iterations < cap · progress since last pass (the severity signal fell)** → **repair iteration**: re-enter Phase 1 scoped to the failed criteria only, seeded by the gap + the protocol (do not re-tread). Increment the Gate-log iteration **and record its severity signal — a P0/P1-weighted score when the gate ranked findings, else the open-`Done-when`-FAIL count**. Default cap: 3. *(A non-decreasing signal is not progress → it falls through to the escalate below, never another repair.)*
-- **Cap reached · the same criterion fails two iterations running · OR the severity signal is non-decreasing across 2 consecutive iterations** (rising or flat ⇒ **premise suspect**: re-examine the premise — is the source current? does the bar measure the right thing? — not another repair pass) → **STOP + escalate** with the residual gap (name which trigger fired); **set `Closed: escalated`**. Never self-certify; never silently quit. Under `run!!`/`proceed!!`, this escalation is the one wait autonomy cannot drop.
+- **Cap reached · the same criterion fails two iterations running · OR the severity signal is non-decreasing across 2 consecutive iterations** (rising or flat ⇒ **premise suspect**: re-examine the premise — is the source current? does the bar measure the right thing? — not another repair pass) → **STOP + escalate** with the residual gap (name which trigger fired); write the Gate-log verdict line `escalated` with `Closed: escalated` mirroring it in the same edit. Never self-certify; never silently quit. Under `run!!`/`proceed!!`, this escalation is the one wait autonomy cannot drop.
 
 ## Anti-patterns
 

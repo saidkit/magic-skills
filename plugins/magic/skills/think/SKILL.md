@@ -28,30 +28,31 @@ run-set, resume a run, clean up, and bridge one across sessions.
   `magic:think-*` family). `list`/`status`/`resume`/`export` read **existing** ids (filenames); `continue`
   gets a fresh id by handing off to `magic:think-deep`, which mints it — `magic:think` never derives an id,
   no forked id scheme.
-- **Live leaf** = the un-`Closed` run no other un-`Closed` run names as `Parent` — `magic:think-deep`'s rule;
-  never author a second definition. **Several un-`Closed` leaves** (parallel runs) ⇒ `status` / bare
+- **Closure** (`magic:think-deep`'s rule, restated for reference; never redefine) = the run's Gate-log verdict line (`all PASS` / `escalated`): a run with one is terminal (closed); its `Closed:` header is a mirror that may lag, never the source. "Un-closed" below means no verdict line.
+- **Live leaf** = the un-closed run no other un-closed run names as `Parent` — `magic:think-deep`'s rule;
+  never author a second definition. **Several un-closed leaves** (parallel runs) ⇒ `status` / bare
   `resume` **ASK which**, never guess.
-- **Destructive-op safety.** `clear` never deletes an un-`Closed` live leaf without an explicit confirm.
+- **Destructive-op safety.** `clear` never deletes an un-closed live leaf without an explicit confirm.
 
 ## list [all]
-Outline the **unfinished** (`Closed: no`) runs only. Glob `think-*.md` in the scratchpad; per un-`Closed` run:
+Outline the **unfinished** runs only (no Gate-log verdict line; `Closed: no`). Glob `think-*.md` in the scratchpad; per un-closed run:
 - **id** (filename stem) · task (`# Execution Protocol:` line)
 - **steps** — ticked / total from `## Steps`
 - **lineage** — its `Parent` chain
 - mark the **live leaf**.
 
-Terminal runs (`Closed: done|escalated`) are omitted unless `all` is given.
+Terminal runs (a Gate-log verdict line; `Closed: done|escalated` mirrors it) are omitted unless `all` is given.
 
 ## status
 Show the **current think tree** — the live leaf and its `Parent` lineage, root → leaf, each node with its
-step `k/total` and `Closed` state, the live leaf marked. No un-`Closed` run ⇒ report **no live tree** (point
+step `k/total` and `Closed` state, the live leaf marked. No un-closed run ⇒ report **no live tree** (point
 at `list all`).
 
 ## clear [all]
 Delete protocol files, safety-scoped:
-- **default** — remove only **terminal** runs (`Closed: done|escalated`); print a manifest of what was removed.
+- **default** — remove only **terminal** runs (a Gate-log verdict line, `Closed:` mirroring it); print a manifest of what was removed.
 - **`clear all`** — remove every `think-*.md`, behind an explicit confirm.
-- **never** delete an un-`Closed` **live leaf** without an explicit confirm.
+- **never** delete an un-closed **live leaf** without an explicit confirm.
 
 ## resume [<id>]
 Re-enter a run — `resume <id>` (named) or bare `resume` (the live leaf). Re-establish the `[think] <id>`
@@ -61,7 +62,7 @@ reconstruct logic.
 
 ## export [<id>] [<dir>]
 **Copy** (never move) `think-<id>.md` to a durable dir (default `docs/working/<feature>/`). Keep the
-filename; version-suffix on a clash; leave the scratchpad original for the live run.
+filename; version-suffix on a clash; leave the scratchpad original for the live run. Run export before a planned `/clear`: a clear rotates the scratchpad.
 
 ## continue <path>
 Re-enter think-deep on an **externally exported** protocol file by **explicit path** (no auto-discovery).
