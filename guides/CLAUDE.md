@@ -31,14 +31,14 @@ Single-feature SAID orchestrator — full cycle (skill: `said:said`) — 3 slots
 1. **Invoke.** FIRST action = `Skill(said:said)` + the task — as `said!! <directive>` or `<directive> as said!!`. Hand-rolling stages = emulation (under `/goal`: no skill → no `goal:` line → spin).
 2. **Compose.** Under `run!!`/`proceed!!`: the checklist-confirm relaxes to report-and-proceed — every stage/gate still runs; an unconfirmed omission is a wait autonomy can't drop (as is an owed operator decision, per `proceed!!`). `task-comments!!` during impl.
 3. **Drive.** The skill prints a `goal:` line every turn (`done` = debrief footer + gates passed / `continue` / `stop`). Under `/goal` that IS the completion condition — write a plain directive, never hand-write it. `continue` re-invokes `said:said`; `done`/`stop` end it. `run!!`: think-deep loop-shaped `via:` step.
-   A `goal: stop -- CONTEXT-CHECKPOINT` is a planned stop, not a failure and not an owed decision: `/clear`, then re-issue the same directive (the skill resumes by inspection).
+A `goal: stop -- CONTEXT-CHECKPOINT` is a planned stop, not a failure and not an owed decision: `/clear`, then re-issue the same directive (the skill resumes by inspection).
 
 ## `flow!!`
 Multi-lane SAID orchestrator (skill: `said:flow`) — 3 slots, Invoke · Compose · Drive:
 1. **Invoke.** FIRST action = `Skill(said:flow)` + feature id — as `flow!! <directive>` or `<directive> as flow!!`. Hand-rolling lanes = emulation (under `/goal`: no skill → no `goal:` line → the loop spins).
 2. **Compose.** Under `run!!`/`proceed!!`: report replaces the wait — every gate still runs. `task-comments!!` during impl.
 3. **Drive.** The skill prints a `goal:` line every turn (`done`/`continue`/`stop`). Under `/goal` that line IS the completion condition — write a plain directive, never hand-write it. `continue` re-invokes `/said:flow`; `done`/`stop` end it. `run!!`: think-deep drives it as a loop-shaped `via:` step.
-   A `goal: stop -- CONTEXT-CHECKPOINT` is a planned stop, not a failure and not an owed decision: `/clear`, then re-issue the same directive (the skill resumes by inspection).
+A `goal: stop -- CONTEXT-CHECKPOINT` is a planned stop, not a failure and not an owed decision: `/clear`, then re-issue the same directive (the skill resumes by inspection).
 
 ## `resume!!`
 Run `refresh!!`, then proceed through its next-actions list autonomously until a full completion, as if operator typed `proceed!!` — same hard-blocker rules, same no-carry-across-invocations, same no-new-stages constraint. Operator may interrupt between phases by sending a new message; otherwise both phases run in one response.
