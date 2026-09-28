@@ -1,7 +1,7 @@
 ---
 name: prompt
 description: |
-  Generate a new prompt from the project's curated prompt library — in the operator's own terse voice — or `add` a good prompt back to that library. Reads the house corpus (the `MAGIC.prompts` key in CLAUDE.md → default `docs/prompts.md`), picks the most-relevant saved examples, and emits the prompt only. Activates ONLY on "/magic:prompt <…>" or "prompt!! <…>" — a generate `<ask>`, or the `add` capture verb — AND NOTHING ELSE. 
+  Generate a new prompt from the project's curated prompt library — in the operator's own terse voice — or `add` a good prompt back to that library. Reads the house corpus (the `MAGIC.prompts` key in CLAUDE.md → default `docs/prompts.md`), picks the most-relevant saved examples, and emits the prompt only. Activates ONLY on "/magic:prompt <…>" or "prompt!! <…>" — a generate `<ask>`, or the `add` capture verb — AND NOTHING ELSE. NOT for a build-to-a-bar prompt (that's gauntlet!!), a prompt-as-acceptance-contract (critic!!), or shaping a fuzzy goal (smart!!).
 ---
 
 Read the project's prompt library, find the closest good examples, and write a new prompt in the operator's own voice — or `add` a good prompt to the library. Two verbs; report and STOP.
