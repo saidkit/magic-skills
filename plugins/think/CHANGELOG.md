@@ -1,5 +1,21 @@
 # Changelog — think plugin
 
+## 0.6.0 — 2026-09-28
+
+**Changed — `advise!!` prints a short form and keeps the full brief in a file.** When a run did an experiment (one
+check, or a build-and-run), the whole brief is written to the evidence record and the console shows only
+`### Advise` (the stop state), `### Record` (the file's path), `### You Asked` and `### Explained`. A run with no
+experiment still prints the whole brief and writes no file. The stop state is still the first thing printed, so a
+driver reads it unchanged, and nothing is lost — every field is in the record. Guards: a static check for the
+record/console split, and a mechanical check that the record carries every field and matches the console.
+
+## 0.5.2 — 2026-09-28
+
+**Changed — `advise!!` brief ends on its own.** The brief now re-prints the question as `### You Asked` immediately
+before `### Explained`, so the last two fields read "what you asked · the plain answer" without scrolling back to the
+top. Nothing else is removed or reordered; the stop state is still the first field. Guard: a static check that the
+re-print sits right before `### Explained`.
+
 ## 0.5.1 — 2026-09-23
 
 **Changed — `advise!!` brief reads without a second pass.** The brief's headings are now Title Case with a blank line

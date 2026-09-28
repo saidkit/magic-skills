@@ -55,9 +55,10 @@ question back untested.
 - **One decision, then STOP** — never implement it, never walk on to the next question.
 
 ## The brief — the last thing you print
-Flush-left, Title Case `###` headings, a blank line between fields, each value on its own line, stop state first,
-`### Explained` last (print the fields, not the code fence). A field the run never reached prints `n/a` — never
-invent one.
+Flush-left, Title Case `###` headings, a blank line between fields, values on their own lines, stop state first,
+`### You Asked` then `### Explained` last (the fields, not the fence); a field never reached prints `n/a` — never
+invent one. If step 4 ran anything, write this whole brief to the evidence record (step 4's, else a new one) and
+print only `### Advise`, `### Record` (path), `### You Asked`, `### Explained`; no experiment: print all, write no file.
 
 ```
 ### Advise
@@ -87,6 +88,9 @@ none (<the record or fact that settled it>) | one-check: <command> — <result> 
 ### Owner Decides
 <the choice that is the owner's> | n/a (reversible detail, settled)
 
+### You Asked
+<the question again, one line — so the end reads on its own>
+
 ### Explained
 <the run explained in plain human language to the owner — see below>
 ```
@@ -99,7 +103,6 @@ no jargon, command or path; say only what the fields say, each verdict and decis
 "every" into "some", never "one" into "all"; leave details to the fields rather than blur them. Before printing,
 reread it against the fields and fix every quantity, verdict and option name that differs.
 
-Stop states: **already-decided** a held record answers it · **decided** a fact answers it, or a reversible detail you
-settled · **recommend** briefed, the owner rules, no decision recorded · **escalated** the experiment ran and no
-candidate meets the criteria, evidence attached · **blocked** it cannot be grounded from this project — name who or
-what can, in `### Conclusion`.
+Stop states: **already-decided** a held record answers it · **decided** a fact or a settled reversible detail
+answers it · **recommend** briefed, the owner rules, no decision recorded · **escalated** no candidate met the
+criteria, evidence attached · **blocked** not groundable here — name who or what can, in `### Conclusion`.
