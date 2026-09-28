@@ -10,6 +10,12 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## 0.12.0 — 2026-09-28
+
+**Fixed — prompt routes its near-misses again.** The `prompt` skill's description once more names what it is not for:
+a build-to-a-bar prompt (`gauntlet!!`), a prompt-as-acceptance-contract (`critic!!`), or shaping a fuzzy goal
+(`smart!!`). The skill-contract rule requires that negative routing; a description trim had dropped it.
+
 ## 0.11.0 — 2026-09-27
 
 **Changed — think-deep pays for work, not bookkeeping; closure is the Gate-log verdict.** The protocol skeleton
