@@ -6,3 +6,4 @@ node_modules/
 /docs
 # CLAUDE.md — a symlink into the gitignored docs/; the dev guide is private, keep it untracked
 CLAUDE.md
+__pycache__/

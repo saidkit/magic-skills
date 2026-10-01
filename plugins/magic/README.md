@@ -1,10 +1,10 @@
 # `magic` — plain-language guide to the operator skills
 
-Eight small, stack-agnostic skills for staying on top of a long working session: refresh your context, audit your progress, explain things simply, hand off cleanly, run a multi-step job carefully, manage its run files, hold work to a quality bar, and generate a build prompt. You invoke each by typing a short word — no setup, no config. Part of [MagicKit](https://github.com/saidkit/magic-skills).
+Ten small, stack-agnostic skills for staying on top of a long working session: refresh your context, audit your progress, explain things simply, hand off cleanly, run a multi-step job carefully, manage its run files, hold work to a quality bar, and generate a build prompt. You invoke each by typing a short word - no setup, no config. Part of [MagicKit](https://github.com/saidkit/magic-skills).
 
-Every skill below has its own fuller guide at `skills/<name>/README.md`. This page is the tour, with a couple of real "you type → you get" samples each.
+Every skill below has its full instructions in `skills/<name>/SKILL.md`. This page is the tour, with a couple of real "you type -> you get" samples each.
 
-## The eight at a glance
+## At a glance
 
 | Skill | What it does | You type |
 |---|---|---|
@@ -16,6 +16,8 @@ Every skill below has its own fuller guide at `skills/<name>/README.md`. This pa
 | **think** | Manages think-deep's run files — list, resume, clean up, move | `think!! list` · `/magic:think` |
 | **critic** | Turns "make it good" into a finish line, then reviews | `critic!!` / `criticize!!` |
 | **gauntlet** | Prints a ready-to-paste "build-to-a-bar" prompt | `gauntlet!!` |
+| **prompt** | Writes a new prompt in your own voice from your saved prompt library | `prompt!!` |
+| **ruled** | Records your rulings in your own words, quotes looked up in the session transcript | `ruled!!` / `/magic:ruled` |
 
 The first three **just report and stop** — they show you where things stand and hand the decision back. The rest **do work.**
 
@@ -93,6 +95,22 @@ Writes (does **not** run) a strong copy-paste prompt that tells an AI to split t
 *Full guide: `skills/gauntlet/README.md`*
 
 ---
+
+## ruled - record what you ruled
+
+- **You type:** `ruled!! use the short form` -> one line in the work's `rulings.md`, in your words, with an id taken from
+  the time of your message.
+- **You type:** `ruled!! sweep` -> the calls you made this session, shown as candidates; nothing is written until you confirm.
+- An answer to a question you were shown gets a ruling document that quotes the question and your message word for
+  word, filled from the session transcript by the bundled script (`scripts/rulings.py`), never typed by the assistant.
+  `ruled!! check` validates the list; it runs with no git and no transcript.
+- The script reads only Claude Code's own transcript store for the project (this session by default, another session
+  of the project by name) and refuses a file anywhere else. It reads Claude Code's record but is not tamper-proof: a
+  process that can write into the store can still plant a transcript there. The store is always
+  `~/.claude/projects` of the user running it: a config folder relocated with `CLAUDE_CONFIG_DIR` is not supported. Quotes are checked against the
+  transcript when the document is filled; `check` later reads the list and documents, not the store.
+  A question-dialog answer is taken as the operator's pick; a host program or hook that answers the dialog itself
+  would be read the same way.
 
 ## How they fit together
 - **Lost the thread?** `refresh!!` (quick recap) · `audit!!` (full audit) · `explain!!` (plain-English explainer). All three report and stop.
