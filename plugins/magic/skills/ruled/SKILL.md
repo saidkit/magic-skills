@@ -2,9 +2,9 @@
 name: ruled
 description: >
   Records the operator's rulings - the calls the operator made while working - in the operator's own words, one line
-  each in the work's rulings.md, with a ruling document that quotes the question and the operator's message word for
-  word, looked up in the session transcript by a bundled script. Forms: record, +doc, doc <id>, sweep, list, pending,
-  check, mark. Records only what the operator consciously ruled, never an assistant proposal.
+  each in the work's rulings.md, with a ruling document that quotes the question (or the operator's ask) and the
+  operator's message word for word, looked up in the session transcript by a bundled script. Forms: record, +doc,
+  doc <id>, sweep, list, pending, check, mark, tidy <id>. Records only what the operator consciously ruled, never an assistant proposal.
   Activates ONLY on "/magic:ruled" or "ruled!!" (with or without a form after it) AND NOTHING ELSE.
   NOT for: a message that merely states a preference without the trigger; an assistant's own proposal or default;
   a message from another session or agent; writing another tool's own records; a project's decision log or ADRs.
@@ -21,9 +21,13 @@ Write what the operator ruled, in the operator's words, into the `rulings.md` of
    document skeleton you started, write no line. The one exception is a ruling stated outside a recorded session
    (see Provenance).
 3. The list holds an optional title, then entry lines only. `landed` comes only from `mark`. A document is never
-   rewritten.
+   rewritten, except by `tidy <id>`: the one exception to "a document is never rewritten".
 4. After every write, run `check` on the list and print its output. When it fails on a line you wrote this turn, fix
    that line and run it again; never touch any other line.
+5. Write a ruling only on the marker (`ruled!! <text>`, `/magic:ruled <text>`), on the operator's explicit ask to
+   record it, or on an option the operator picked in a question dialog and then asked to record. Anything else that
+   looks like a ruling gets one line proposing to record it (`ruled!! <text>`) or to amend an earlier ruling
+   (`<id>`), and nothing is written. The kinds under Not a ruling draw no proposal; propose each candidate once.
 
 ## Invocation
 
@@ -102,24 +106,33 @@ ruling in one sentence of at most 50 characters, from the operator's words where
   among the folder's ruling documents (1 when none); `<topic>` two to five lowercase words joined by hyphens.
 - Write the skeleton with these parts, in this order:
   1. `# Ruling <number>: <title>`
-  2. A header of bullets: Question (what was asked and where; "none, stated unasked" for an unasked ruling), Ruled by
+  2. A header of bullets, read later by someone else, so with no session-bound words ("this session", "here"):
+     Question (the topic asked, in a few words; "none, stated unasked" for an unasked ruling), Ruled by
      (the person, `{{time}}`, the id, session `{{session}}`), Provenance (`typed`, `dialog` or `stated-outside`)
      written as `{{provenance}}`, Replaces (the id it supersedes, or "nothing"), Standing (`final` or `assumed`):
      `assumed` when the operator's own words make the ruling provisional ("for now", "until", "unless"), else `final`.
   3. `## The question`: a block quote of the question as the assistant showed it, word for word: the placeholder
      line `{{question}}`. For an unasked ruling write "Stated by the operator, unasked." instead of the placeholder.
+     When the operator asked, the assistant proposed and the operator ruled, this part is `## The operator's ask`
+     instead: the placeholder line `{{ask}}`, a block quote of the operator's earlier message that asked for the
+     proposal. Keep `## The question` as well only when the assistant also asked one. A lookup line
+     `ask: <id>` is a hint: use the ask part with `--ask <id>` only when that message asked for what the assistant
+     then proposed; when the assistant's text asks the operator something, even without `?`, quote it as the question;
+     otherwise the ruling is unasked.
   4. `## The operator's message`: a block quote of the operator's message, word for word: the placeholder line
      `{{message}}`.
-  5. `## The ruling`: numbered points, one point each, each at most 100 characters, with no parenthetical.
+  5. `## The ruling`: numbered points, one point each, each at most 100 characters, with no parenthetical. For an
+     adopted proposal: what is decided, one line each, no reasons, never a copy of the assistant's text. A reader who
+     wants the proposal itself runs `rulings.py find --at <id>`.
   6. `## Evidence`: one line of paths only (`path` or `path:line`, separated by commas), or "None."
   7. `## If it turns out wrong`: one line of at most 12 words: what is redone.
   8. `## Not settled`: one line of at most 10 words, or "Nothing."
-- Then fill it: `rulings.py find --at <id> --fill <document>`. Take the question and the operator's message only from the lookup; never type a quote. The script replaces the placeholders in one pass. A refusal (no single operator
+- Then fill it: `rulings.py find --at <id> --fill <document>`, adding `--ask <id of the ask>` for an ask part. Take
+  the question, the ask and the operator's message only from the lookup; never type a quote. Check that the quoted ask is the one that asked for the proposal; if it is not, write the document in the unasked or question shape instead. The script replaces the placeholders in one pass. A refusal (no single operator
   message at that id): Contract rule 2. Check that the quoted
   question is the one the operator answered; if it is not, delete the document and say so.
 - It holds the ruling only. No part tells how it was reached, what was weighed, or what was proposed and not taken.
-  Outside its block quotes it is at most 150 words. `check` warns
-  on each part over its limit.
+  Each part has its own cap (above); a document has no total. `check` warns on each part over its cap.
 - A correction is a new ruling with a new document: its Replaces names the old id, the new line is written, then the
   old line becomes `superseded -> <new id>` through `mark`. A document is never rewritten.
 
@@ -131,7 +144,7 @@ ruling in one sentence of at most 50 characters, from the operator's words where
 - `stated-outside`: a ruling stated outside a recorded session (a call, another tool, a session with no transcript).
   A ruling stated outside a recorded session always gets a document. If the operator relays it here with
   `ruled!!`, use that message's id and fill the quotes from the lookup as usual, then write Provenance as
-  `stated-outside` and say in Question where it was stated. With no transcript at all, use the time the operator
+  `stated-outside` and say in Question how it was stated (a call, another tool). With no transcript at all, use the time the operator
   gives (else now) for the id and quote the operator's words as given in this conversation. Either way it is
   recorded but it is not evidence a lift may cite (a lift: the record a tool writes when the operator's answer ends
   its wait); ask the operator to restate it in a recorded session for that.
@@ -142,15 +155,23 @@ ruling in one sentence of at most 50 characters, from the operator's words where
 - A finding or an experiment result: the work's notes.
 - An implementation choice the builder made: the builder's own work log.
 - A message from another session or agent is not the operator's ruling, whatever it quotes or relays.
-- An answer to a question a hold waits on is a ruling (a hold: a tool keeping work waiting until the operator
-  answers). Record it with its document like any answer to a shown question. The tool that holds the work records
+- A line per table row or per file. One approval of a set is one ruling with a document
+  whose points name the rows the operator chose.
+- "kept", "kept as an open question", "stands", "as built", unless it answers a shown question about that point.
+- A go-ahead on the assistant's step: approve the record, proceed, commit, land as stated, add the task.
+- A fact, a status or a date.
+- A wording edit of a document.
+- A restatement of a ruling already in a list.
+- An answer to a question a hold waits on (a hold: a tool keeping work waiting until the operator answers)
+  is a ruling once the operator asks to record it (Contract rule 5). Record it with its document like any answer to
+  a shown question. The tool that holds the work records
   its own lift; this skill never writes that record. After the lift is written, `mark <id> landed <its log path>`.
 
 ## Forms
 
 ### Record: `ruled!! <text>` or `ruled!! +doc <text>`
 
-1. Take the ruling text from the operator's message. One message is one ruling, asked or unasked: one line.
+1. Take the ruling text from the operator's message. One message is one ruling, whether or not the assistant asked a question first: one line.
    An answer to one shown question is one ruling: one line, one document,
    one point per proposal it settles, however the answer settles each.
    Any other message gets a document only when a document test holds; its document has one point per rule it states.
@@ -178,15 +199,25 @@ ruling in one sentence of at most 50 characters, from the operator's words where
    `sweep since <WR-id | date>` is `find --since <WR-id | date>`, which reads every transcript written since then;
    `sweep <transcript path>` adds `--session <path>`. Never read an earlier session unless the operator names it.
    Report the window line the script prints.
-2. Keep a message where the operator chose, approved or rejected something that outlasts the turn.
+2. Keep a message where the operator chose or rejected something that outlasts the turn: a behaviour or a durable
+   working rule.
 3. Drop: questions, requests to explain, instructions carried out in the same turn (move, commit, rename),
    assistant proposals the operator did not answer, what Not a ruling lists, and anything already in the list.
 4. When the operator ruled A and later B in its place, offer B only.
-5. Show the candidate lines as a numbered list with their ids. Write nothing yet.
+5. Show the candidate lines as a numbered list with their ids. The sweep writes nothing until the operator picks.
 6. The operator confirms, corrects or strikes lines. Write only the confirmed lines, each with its document when the
    document tests hold, marking any `pending` line it replaces as superseded; then run `check` on the list and print
    its output.
 7. Nothing to add: reply `nothing to add` and write nothing.
+
+### `ruled!! tidy <id>`
+
+1. Find the line with `<id>` and the ruling document it links. None: say so and write nothing.
+2. Write a draft beside the document, named `<document>.tidy`, in the current shape and caps: the same id and
+   meaning, every block quote copied byte for byte, the `Ruled by:` and `Provenance:` bullets unchanged.
+3. Run `rulings.py tidy <document> <draft>`. It replaces the document only when those lines are byte-identical;
+   otherwise it refuses: delete the draft and say why.
+4. Run `check` on the list and print its output.
 
 ### `ruled!! list`
 
@@ -223,5 +254,6 @@ list, pending, check and mark work as usual.
 - Add a reason, a summary or a heading to the list.
 - Settle the home at capture; `landed` comes only from `mark`.
 - Edit or remove a line, except its status, its arrow, and the document path `doc <id>` adds.
-- Rewrite lines already in a list to the document shape, or rewrite a document already written.
+- Rewrite lines already in a list to the document shape, or rewrite a document already written, except through
+  `tidy <id>`.
 - Write into a task log's hold record, or any other tool's own record.

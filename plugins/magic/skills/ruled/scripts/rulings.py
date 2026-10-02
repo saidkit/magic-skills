@@ -28,16 +28,19 @@ import argparse
 import json
 import os
 import subprocess
+import tempfile
 import sys
 
 LIST_NAME = "rulings.md"
 IGNORE_MARK = ".rulings-ignore"
 STATUSES = ("pending", "landed", "rejected", "superseded")
 TEXT_LIMIT = 160
-WORD_LIMIT = 150
 TITLE_LIMIT = 50
 POINT_LIMIT = 100
 SECTION_WORDS = (("If it turns out wrong", 12), ("Not settled", 10))
+QUESTION_WORDS = 12
+DOC_PARTS = ("The question", "The operator's ask", "The operator's message", "The ruling", "Evidence",
+             "If it turns out wrong", "Not settled")
 ROLE_WORDS = ("operator", "pm", "assistant", "user")  # <who> names a person; these name a role
 DOC_TAG = "-ruling-"
 
@@ -312,6 +315,8 @@ def in_folder(root, list_path, link):
 
 
 UNASKED = "Stated by the operator, unasked."
+ASK_PART = "The operator's ask"  # the operator asked, the assistant proposed, the operator ruled
+ATTRIBUTION_PARTS = ("The question", ASK_PART, "The operator's message")
 # Rulings recorded before 2026-10-02 (UTC) predate the rule that a document's two attribution parts hold only quotes;
 # their documents are never rewritten, so text outside those quotes only warns. Later rulings FAIL on it.
 ATTRIBUTION_FROM = 1790899200
@@ -328,7 +333,7 @@ def heading2(ln):
 def attribution_errors(path):
     """Text written outside the block quotes of the two attribution parts (the unasked line excepted), or a part
     missing."""
-    out, cur, seen = [], None, set()
+    out, cur, seen, quoted = [], None, set(), set()
     for ln in read_lines(path) or []:
         h = heading2(ln)
         if h is not None:
@@ -336,14 +341,21 @@ def attribution_errors(path):
             seen.add(h)
             continue
         s = ln.strip()
-        if not s or s.startswith(">") or cur not in ("The question", "The operator's message"):
+        if cur in ATTRIBUTION_PARTS and ln.lstrip(" \t").startswith(">"):
+            quoted.add(cur)
+            continue
+        if not s or cur not in ATTRIBUTION_PARTS:
             continue
         if cur == "The question" and s == UNASKED:
+            quoted.add(cur)
             continue
         out.append("%s holds text outside a quote: %s" % (cur, s[:60]))
-    for part in ("The question", "The operator's message"):
-        if part not in seen:
-            out.append("%s is missing" % part)
+    if "The operator's message" not in seen:
+        out.append("The operator's message is missing")
+    if "The question" not in seen and ASK_PART not in seen:
+        out.append("The question (or The operator's ask) is missing")
+    for part in sorted(seen & set(ATTRIBUTION_PARTS) - quoted):
+        out.append("%s has no quote" % part)
     return out
 
 
@@ -361,14 +373,6 @@ def unfilled(path):
             if ph in ln:
                 return ph
     return None
-
-
-def words_outside_quotes(path):
-    n = 0
-    for ln in read_lines(path) or []:
-        if not ln.lstrip().startswith(">"):
-            n += len(ln.split())
-    return n
 
 
 def sections(lines):
@@ -405,9 +409,22 @@ def terse_warnings(path):
                 out.append("the title is %d characters, over %d" % (len(title), TITLE_LIMIT))
             break
     secs = sections(lines)
+    for name in secs:
+        if name not in DOC_PARTS:
+            out.append("a section outside the document shape: %s" % name[:40])
+    for ln in lines:
+        if ln.startswith("## "):
+            break
+        low = ln.lower()
+        if ln.startswith("- ") and ("this session" in low or "in session" in low.split(":", 1)[-1] and not ln.startswith("- Ruled by:")):
+            out.append("the header names the session: %s" % ln[:60])
+        if ln.startswith("- Question:") and len(ln.split()) - 2 > QUESTION_WORDS:
+            out.append("the Question bullet is %d words, over %d" % (len(ln.split()) - 2, QUESTION_WORDS))
     for ln in secs.get("The ruling", []):
         head, dot, rest = ln.partition(". ")
         if not dot or not head.isdigit() or not head.isascii():
+            if ln.strip():
+                out.append("The ruling holds a line that is not a numbered point: %s" % ln.strip()[:50])
             continue
         if len(rest.strip()) > POINT_LIMIT:
             out.append("ruling point %s is %d characters, over %d" % (head, len(rest.strip()), POINT_LIMIT))
@@ -660,6 +677,30 @@ def question_before(rows_, idx):
     return "\n".join(parts)
 
 
+def ask_row(rows_, idx, by_uuid):
+    """The row of the typed operator message before the assistant's last text before idx, when that text asks no
+    question; None otherwise (a question, no text, or a dialog answer in that place)."""
+    main = [(i, r) for i, r in enumerate(rows_[:idx]) if not r.get("isSidechain") and not r.get("isMeta")]
+    mid = None
+    for _, r in reversed(main):
+        if r.get("type") == "assistant" and message_text(r):
+            mid = (r.get("message") or {}).get("id")
+            break
+    if mid is None:
+        return None
+    first = next(i for i, r in main if r.get("type") == "assistant" and (r.get("message") or {}).get("id") == mid)
+    text = "\n".join(message_text(r) or "" for _, r in main
+                     if r.get("type") == "assistant" and (r.get("message") or {}).get("id") == mid)
+    if "?" in text:
+        return None
+    for i, r in reversed([(i, r) for i, r in main if i < first]):
+        if safe(operator_text, r) is not None:
+            return i
+        if safe(dialog_answer, r, by_uuid):
+            return None
+    return None
+
+
 def candidates(path):
     rows_ = load(path)
     stem = os.path.basename(path)[:-len(".jsonl")]
@@ -678,7 +719,8 @@ def candidates(path):
                 "uuid": r.get("uuid") if isinstance(r.get("uuid"), str) else None}
         t = safe(operator_text, r)
         if t is not None:
-            out.append(dict(base, provenance="typed", message=t, question=safe(question_before, rows_, i) or ""))
+            out.append(dict(base, provenance="typed", message=t, question=safe(question_before, rows_, i) or "",
+                            ask_row=safe(ask_row, rows_, i, by_uuid)))
             continue
         d = safe(dialog_answer, r, by_uuid)
         if d:
@@ -780,22 +822,24 @@ def quote(text):
     return "\n".join("> " + ln if ln else ">" for ln in text.splitlines()) or ">"
 
 
-def show(c):
+def show(c, ask=None):
     print("id: %s" % c.get("id", "WR-%d" % c["seconds"]))
     print("session: %s" % c["session"])
     print("time: %s" % c["time"])
     print("provenance: %s" % c["provenance"])
     print("transcript: %s" % c["transcript"])
+    if ask:
+        print("ask: %s" % ask)
     print("### question")
     print(quote(c["question"]) if c["question"] else "(none)")
     print("### message")
     print(quote(c["message"]))
 
 
-PLACEHOLDERS = ("{{question}}", "{{message}}", "{{session}}", "{{provenance}}", "{{time}}")
+PLACEHOLDERS = ("{{question}}", "{{message}}", "{{ask}}", "{{session}}", "{{provenance}}", "{{time}}")
 
 
-def fill(doc, c):
+def fill(doc, c, ask=None):
     try:
         with open(doc, encoding="utf-8") as f:
             body = f.read()
@@ -803,8 +847,11 @@ def fill(doc, c):
         raise Refused("cannot read %s: %s" % (doc, e))
     if "{{message}}" not in body:
         raise Refused("%s has no {{message}} placeholder" % doc)
+    if ("{{ask}}" in body) != (ask is not None):
+        raise Refused("%s: an {{ask}} placeholder needs --ask <id of the ask>, and --ask needs the placeholder" % doc)
     values = {"{{question}}": quote(c["question"]) if c["question"] else "> (no question shown)",
-              "{{message}}": quote(c["message"]), "{{session}}": c["session"],
+              "{{message}}": quote(c["message"]), "{{ask}}": quote(ask["message"]) if ask else "",
+              "{{session}}": c["session"],
               "{{provenance}}": c["provenance"], "{{time}}": c["time"]}
     out, i = [], 0
     while i < len(body):  # one pass: text put in is never scanned again
@@ -904,9 +951,28 @@ def cmd_find(root, args):
                           % (what, "; %d transcript(s) not read (no labels, or another session's rows)" % unread if unread else ""))
         if len(hits) > 1:
             raise Refused("%d operator messages %s: %s; name one" % (len(hits), what, ", ".join(c["id"] for c in hits)))
+        ask = None
+        if args.ask is not None:
+            if args.at is None:
+                raise Refused("--ask needs --at")
+            s2, suf2 = parse_when(args.ask)
+            asks = [c for c in found if c["seconds"] == s2 and c["session"] == hits[0]["session"]
+                    and (suf2 is None or c["id"] == "WR-%d-%d" % (s2, suf2))]
+            if len(asks) != 1:
+                raise Refused("%d operator messages at %s in the ruling's session; the ask must be one" % (len(asks), args.ask))
+            ask = asks[0]
+            if ask["provenance"] == "dialog":
+                raise Refused("the ask %s is a dialog answer, not a message that asked for a proposal" % ask["id"])
+            if time_key(ask["time"]) >= time_key(hits[0]["time"]):
+                raise Refused("the ask %s is not before the ruling %s" % (ask["id"], hits[0]["id"]))
         if args.fill:
-            fill(args.fill, hits[0])
-        show(hits[0])
+            fill(args.fill, hits[0], ask)
+        elif ask is not None:
+            raise Refused("--ask fills a document: pass --fill")
+        h = hits[0]
+        named_ask = next((c["id"] for c in found if h.get("ask_row") is not None and c["transcript"] == h["transcript"]
+                          and c["row"] == h["ask_row"] and c["provenance"] == "typed"), None)
+        show(h, named_ask)
         return 0
     except Refused as e:
         print("refused: %s" % e)
@@ -965,9 +1031,6 @@ def cmd_check(root, target):
                 continue
             full = resolve(root, p, link)
             if DOC_TAG in os.path.basename(link) and os.path.dirname(os.path.realpath(full)) == os.path.realpath(folder):
-                w = words_outside_quotes(full)
-                if w > WORD_LIMIT:
-                    warns.append("%s: %s has %d words outside block quotes (limit %d)" % (where, link, w, WORD_LIMIT))
                 for tw in terse_warnings(full):
                     warns.append("%s: %s: %s" % (where, link, tw))
                 aes = attribution_errors(full)
@@ -1035,6 +1098,84 @@ def cmd_home(root, home):
     return 1
 
 
+def kept_parts(text):
+    """What a tidy may not change: every line of an attribution part, every quote-looking line anywhere, and the
+    Ruled by / Provenance / Replaces / Standing bullets. Lines are compared exactly, end of line included."""
+    out, cur = [], None
+    for ln in text.split("\n"):
+        h = heading2(ln)
+        if h is not None:
+            cur = h
+            if h in ATTRIBUTION_PARTS:
+                out.append(("heading", ln))
+            continue
+        if cur in ATTRIBUTION_PARTS or ln.lstrip().startswith(">"):
+            out.append((cur, ln))
+        elif ln.startswith(("- Ruled by:", "- Provenance:", "- Replaces:", "- Standing:")):
+            out.append(("header", ln))
+    while out and out[-1][1].strip() == "" and out[-1][0] != "heading":  # trailing blank lines of the last part
+        out.pop()
+    return [(c, l) for c, l in out if l.strip() or c in ATTRIBUTION_PARTS]
+
+
+def listed_in_folder(root, doc):
+    """True when an entry line of the rulings.md in the document's own folder links it (its parsed links, not text)."""
+    lst = os.path.join(os.path.dirname(os.path.abspath(doc)), LIST_NAME)
+    want = os.path.realpath(doc)
+    for ln in read_lines(lst) or []:
+        try:
+            m = parse_entry(ln)
+        except Malformed:
+            continue
+        for link in (m or {}).get("links", []):
+            full = resolve(root, lst, link)
+            if full and os.path.realpath(full) == want:
+                return True
+    return False
+
+
+def cmd_tidy(root, doc, draft):
+    """Replace a ruling document with a form-only rewrite: refused unless its quotes and attribution are unchanged."""
+    def refuse(why, code=1):
+        print("tidy: refused -- %s; the document is unchanged" % why)
+        return code
+    if os.path.normpath(draft) != os.path.normpath(doc) + ".tidy":
+        return refuse("the draft must be named %s.tidy" % shown(doc))
+    if DOC_TAG not in os.path.basename(doc):
+        return refuse("%s is not a ruling document" % shown(doc))
+    if os.path.islink(doc) or os.path.islink(draft) or not os.path.isfile(doc) or not os.path.isfile(draft):
+        return refuse("the document and its draft must be plain files, not links")
+    if not listed_in_folder(root, doc):
+        return refuse("no rulings.md in the document's folder links %s" % shown(doc))
+    try:
+        with open(doc, "rb") as f:
+            old = f.read().decode("utf-8")
+        with open(draft, "rb") as f:
+            new = f.read().decode("utf-8")
+    except (OSError, UnicodeDecodeError) as err:
+        return refuse("a file does not read as UTF-8 (%s)" % type(err).__name__)
+    a, b = kept_parts(old), kept_parts(new)
+    if a != b:
+        i = next((k for k, (x, y) in enumerate(zip(a, b)) if x != y), min(len(a), len(b)))
+        line = (a[i] if i < len(a) else b[i])[1]
+        return refuse("a quote or the attribution changed or moved (%d kept lines before, %d after; first at: %s)"
+                      % (len(a), len(b), line.strip()[:60]))
+    folder = os.path.dirname(os.path.abspath(doc))
+    fd, tmp = tempfile.mkstemp(prefix=".tidy-", dir=folder)
+    try:
+        with os.fdopen(fd, "wb") as f:
+            f.write(new.encode("utf-8"))
+        os.chmod(tmp, os.stat(doc).st_mode & 0o7777)  # the document keeps its mode
+        os.replace(tmp, doc)
+    except OSError as err:
+        if os.path.exists(tmp):
+            os.remove(tmp)
+        return refuse("cannot write (%s)" % err, 2)
+    os.remove(draft)
+    print("tidy: %s rewritten; %d quote and attribution lines unchanged" % (shown(doc), len(a)))
+    return 0
+
+
 def main(argv=None):
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument("--root", default=argparse.SUPPRESS, help="folder that paths in a list resolve from")
@@ -1044,6 +1185,9 @@ def main(argv=None):
     sub.add_parser("pending", parents=[common]).add_argument("target", nargs="?")
     sub.add_parser("check", parents=[common]).add_argument("target", nargs="?")
     sub.add_parser("home", parents=[common]).add_argument("home")
+    tp = sub.add_parser("tidy", parents=[common], help="replace a ruling document with a form-only rewrite")
+    tp.add_argument("document")
+    tp.add_argument("draft")
     fp = sub.add_parser("find", parents=[common], help="the operator's message and the question before it")
     g = fp.add_mutually_exclusive_group(required=True)
     g.add_argument("--at", help="WR-id, unix seconds: the operator message at that second")
@@ -1053,6 +1197,7 @@ def main(argv=None):
     fp.add_argument("--session", help="a transcript file or session id to read instead")
     fp.add_argument("--project-dir", help="the folder holding the transcripts")
     fp.add_argument("--fill", help="a ruling document whose placeholders take the quotes")
+    fp.add_argument("--ask", help="WR-id of the operator's earlier ask, quoted into {{ask}} (with --at and --fill)")
     args = ap.parse_args(argv)
     root = root_dir(getattr(args, "root", None))
     if args.cmd == "list":
@@ -1063,6 +1208,8 @@ def main(argv=None):
         return cmd_home(root, args.home)
     if args.cmd == "find":
         return cmd_find(root, args)
+    if args.cmd == "tidy":
+        return cmd_tidy(root, args.document, args.draft)
     return cmd_check(root, args.target)
 
 

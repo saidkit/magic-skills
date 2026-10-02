@@ -48,7 +48,7 @@ Run `refresh!!`, then proceed through its next-actions list autonomously until a
 
 ## `ruled!!`
 Record an operator ruling (skill: `magic:ruled`). FIRST action = `Skill(magic:ruled)` + the text; by hand = emulation.
-Compose: a sweep writes only lines the operator confirmed; an assistant choice under a grant is never a ruling.
+Compose: a sweep writes only lines the operator confirmed; an assistant choice under a grant is never a ruling; no ruling is written without the marker or the operator's ask to record.
 
 ## `precedent!!`
 execute /said:retrieval skill
