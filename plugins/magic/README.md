@@ -101,6 +101,11 @@ Writes (does **not** run) a strong copy-paste prompt that tells an AI to split t
 - **You type:** `ruled!! use the short form` -> one line in the work's `rulings.md`, in your words, with an id taken from
   the time of your message.
 - **You type:** `ruled!! sweep` -> the calls you made this session, shown as candidates; nothing is written until you confirm.
+- Nothing is recorded unasked: without `ruled!!` or your ask to record, a message that looks like a ruling gets one
+  line proposing to record it. A go-ahead on a step, a fact, a wording edit or a restatement is not a ruling.
+- When you asked, the assistant proposed and you ruled, the document quotes your ask and your message; the adopted
+  proposal goes in as short points, never as a copy. Caps apply per point. `ruled!! tidy <id>` rewrites an old
+  document to the current form and keeps the id and the quotes byte-identical.
 - An answer to a question you were shown gets a ruling document that quotes the question and your message word for
   word, filled from the session transcript by the bundled script (`scripts/rulings.py`), never typed by the assistant.
   `ruled!! check` validates the list; it runs with no git and no transcript.

@@ -10,7 +10,7 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
-## Unreleased
+## 0.13.0 — 2026-10-02
 
 **Added - `ruled` (`ruled!!`, `/magic:ruled`).** Records the operator's rulings in the operator's own words: one line per
 ruling in the work's `rulings.md`, and a ruling document for an answer to a shown question, a long or multi-point
@@ -18,6 +18,11 @@ ruling, or `+doc`. The question and the operator's message are quoted word for w
 `scripts/rulings.py`, which reads only operator-typed prompts and question-dialog answers from Claude Code's transcripts of the
 project (this session by default, another session by name) and refuses rather than guesses. The same script lists and checks the lists (a sealed line grammar;
 runs with no git and no transcript). The macro block gains a `ruled!!` entry.
+Nothing is recorded unasked: a ruling is written only on `ruled!!`, `/magic:ruled` or the operator's ask to record;
+anything else that looks like a ruling gets one proposal line, and a sweep proposes candidates and writes none by
+itself. When the operator asked, the assistant proposed and the operator ruled, the document quotes the operator's ask
+and message, with the adopted proposal as short points. Caps apply per point. `tidy <id>` rewrites one document to the
+current form with the id and quotes byte-identical.
 
 **Changed - the macro block says "operator question".** The phrase "owed operator decision" in the shipped block is
 now "operator question" (the open item a blanket grant never settles). Re-sync your copy of the block.
