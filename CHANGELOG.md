@@ -10,6 +10,18 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## 0.14.0 — 2026-10-12
+
+**Added - `worklog` (`/magic:worklog on <note>`, `off`, `status`).** A work log kept in a note, one step per request.
+Hooks live in the skill's frontmatter; no settings edit. While on: every typed request is queued; at the end of a turn
+the assistant is held once until it writes one step - `# Step N`, the request quoted word for word (several requests
+in one step; a short reply such as "ok" is carried into the next), then a compressed result: what changed, what was
+checked, what stays unchecked. The step goes before the note's closing data section, in the note's language; the note
+is re-read before every write and nothing outside the new step is touched. Requests from subagents and task
+notifications are never quoted. State: `~/.claude/worklog/<session id>/`, removed by `off`; the switch does not
+survive `/clear` - type the command again. The first edit of the note asks for permission once ("always allow"
+covers the session). No `!!` form.
+
 ## 0.13.0 — 2026-10-02
 
 **Added - `ruled` (`ruled!!`, `/magic:ruled`).** Records the operator's rulings in the operator's own words: one line per
