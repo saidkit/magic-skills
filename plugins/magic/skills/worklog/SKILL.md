@@ -29,16 +29,16 @@ you to write one step into the note.
 - **The hook has already applied the switch.** For `on`, `off` and `status` print its result line and do nothing
   else: no shell command, no file edit, no state of your own.
 - **Write a step only when the hook's message asks for it.** It starts
-  `worklog: N request(s) from the operator are not in the work log yet. Read <path>`. No such message, no step; a
-  request that is not in the requests file gets no step.
-- **The quote comes only from the requests file.** Copy it; never type it from memory; never retell, trim or correct
-  it.
+  `worklog: N request(s) from the operator are not in the work log yet. Note: <path>` and carries the requests. No
+  such message, no step; a request that is not in that message gets no step.
+- **The quote comes only from the hook's message.** Copy it; never type it from memory; never retell, trim or
+  correct it.
 - **Change nothing outside the new step.** The operator's own sections and every existing step stay byte for byte,
   except the one link line of step 7.
 - **End every reply to that message with exactly one closing line**, spelled as in "The closing line"; the hook
   matches it.
-- **Never clear, edit or delete anything under `~/.claude/worklog/`** (`state.json`, `requests.txt`), and never run a
-  shell command for the queue.
+- **Never read, edit or delete anything under `~/.claude/worklog/`**; it is the hook's own state. Never run a shell
+  command for the queue.
 
 ## Invocation
 
@@ -51,8 +51,8 @@ For each form:
 1. Print the `worklog:` result line the hook added to your context, word for word and flush-left. For `status`
    while on the result is four lines (one per line, no table, no padding);
    while off it is the one line `worklog: off`. Print exactly what the hook gave, nothing more.
-2. If no `worklog:` line was added to your context, read `~/.claude/worklog/${CLAUDE_SESSION_ID}/state.json` and
-   report from it (a missing file means the log is off). Say that the switch could not be confirmed.
+2. If no `worklog:` line was added to your context, say that the switch could not be confirmed and ask the operator
+   to type `/magic:worklog status`.
 3. After a successful `on` (the result starts `worklog: on - note`), tell the operator once: the first edit of the
    note asks for permission (answering "always allow" covers the session), and after `/clear` the command has to be
    typed again. A refused `on` gets its result line only.
@@ -61,12 +61,12 @@ For each form:
 
 When the hook's message arrives:
 
-1. Read the requests file it names. The file names the note and holds each request between delimiter lines. If the
-   requests file cannot be read, write nothing and close with `worklog: failed - <why>`.
+1. Take the note's path from the message's first line (`Note: <path>`) and the requests from its body: each request
+   sits between its delimiter lines, exactly as sent; one marked `carried` was sent in an earlier turn.
 2. Re-read the note before every write; never assume it ends with the last step.
 3. A short reply that earns no step (a "no", a one-word clarification, a thanks) is carried: when every request in
-   the file is one, write nothing and close with `worklog: carried`. Its quote opens the next step.
-4. Otherwise write ONE step for ALL requests in the file, short replies included; never drop one. A request that is
+   the message is one, write nothing and close with `worklog: carried`. Its quote opens the next step.
+4. Otherwise write ONE step for ALL requests in the message, short replies included; never drop one. A request that is
    already quoted in an existing step is not quoted again; when every request is, write nothing and close with
    `worklog: written`. The shape:
 
@@ -80,9 +80,9 @@ what changed, with the numbers; what was checked and how; what stays unchecked
 
    - `N` is one more than the highest step number in the note; 1 when the note has no step.
    - The underline is that line of 39 equals signs.
-   - Copy each request from the requests file, every line prefixed `> `, an empty line as `>`. Several requests are
-     separate quote blocks split by a blank line, in the file's order (carried ones come first). Keep typos, spacing
-     and every word; no cap on length.
+   - Copy each request from the hook's message, every line prefixed `> `, an empty line as `>`. Several requests are
+     separate quote blocks split by a blank line, in the message's order (carried ones come first). Keep typos,
+     spacing and every word; no cap on length. The delimiter lines are not part of a request.
    - The body is a compressed result, never a copy of your chat reply: what changed, the numbers, what was checked
      and how, what stays unchecked.
    - Write the step in the note's language.
@@ -96,6 +96,7 @@ what changed, with the numbers; what was checked and how; what stays unchecked
 
 The last line of your reply, on its own:
 
-- `worklog: written` - the step is in the note. Use it only after the edit succeeded.
+- `worklog: written` - every request of the message is quoted in the note: the step was just written and the edit
+  succeeded, or all of them were already there.
 - `worklog: carried` - every request was a short reply; nothing was written.
 - `worklog: failed - <why>` - the note could not be written (a denied edit, a missing folder).

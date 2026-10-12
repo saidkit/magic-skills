@@ -2,10 +2,9 @@
 """Hook script of the worklog skill: the switch, the request queue and the end-of-turn reminder.
 
 It reads one hook JSON object on stdin (event UserPromptSubmit or Stop), acts on it, and always exits 0.
-State is kept per session in <root>/<session_id>/, where <root> is $WORKLOG_HOME or ~/.claude/worklog:
-  state.json    the script's own record
-  requests.txt  the queued requests, exactly as sent, for the assistant to read
-The script never opens the note. While the log is off it creates nothing.
+State is kept per session in <root>/<session_id>/state.json, where <root> is $WORKLOG_HOME or ~/.claude/worklog.
+The queued requests reach the assistant inside the Stop hook's own message, exactly as sent; the assistant reads no
+file of this script. The script never opens the note. While the log is off it creates nothing.
 """
 import json
 import os
@@ -16,14 +15,14 @@ import time
 LIMIT = 2                      # holds in one turn; the CLI itself ends a turn after more than 8
 RETENTION_SECONDS = 7 * 86400
 COMMANDS = ("/magic:worklog", "/worklog")
-OUR_FILES = {"state.json", "requests.txt"}
+OUR_FILES = {"state.json"}
 WORDS = ("written", "carried", "failed")
 RULE = "-----8<-----"
-REASON = ("worklog: %d request(s) from the operator are not in the work log yet. Read %s (it names the note "
-          "and holds each request exactly as sent), then follow the worklog skill's step rules: write the step into "
-          "that note, copying each quote from the file. End your reply with one of these lines on its own: "
-          "`worklog: written` once the step is in the note; `worklog: carried` if every request is a short reply "
-          "that earns no step yet; `worklog: failed - <why>` if the note could not be written.")
+REASON = ("worklog: %d request(s) from the operator are not in the work log yet. Note: %s\n"
+          "Follow the worklog skill's step rules: write the step into that note, copying each quote from the requests "
+          "below. End your reply with one of these lines on its own: `worklog: written` once the step is in the note; "
+          "`worklog: carried` if every request is a short reply that earns no step yet; `worklog: failed - <why>` if "
+          "the note could not be written.\n")
 UNKNOWN = "worklog: unknown form - use on <note>, off or status"
 NO_NOTE = "worklog: no note named - type /magic:worklog on <note>"
 
@@ -77,8 +76,9 @@ def load(folder):
     return state
 
 
-def requests_text(state):
-    parts = ["worklog requests\nnote: %s\ncount: %d\n" % (state["note"], len(state["requests"]))]
+def requests_block(state):
+    """Every queued request between its delimiter lines, byte for byte, as it goes into the hook's message."""
+    parts = []
     for r in state["requests"]:
         mark = ", carried" if r["carried"] else ""
         parts.append("\n%s request %d (%s%s) %s\n%s\n%s end of request %d %s\n"
@@ -114,11 +114,6 @@ def save(folder, state):
             os.mkdir(folder, 0o700)
             os.chmod(folder, 0o700)
         write_private(os.path.join(folder, "state.json"), json.dumps(state, indent=1).encode("ascii"))
-        listing = os.path.join(folder, "requests.txt")
-        if state["requests"]:
-            write_private(listing, requests_text(state).encode("utf-8", "replace"))
-        elif os.path.exists(listing):
-            os.unlink(listing)
         return True
     except OSError:
         return False
@@ -250,7 +245,7 @@ def hold(folder, state):
     state["awaiting"] = True
     if save(folder, state):       # an unsaved hold could repeat forever, so it is never printed
         emit({"decision": "block",
-              "reason": REASON % (len(state["requests"]), os.path.join(folder, "requests.txt"))})
+              "reason": REASON % (len(state["requests"]), state["note"]) + requests_block(state)})
 
 
 def on_stop(folder, data):
