@@ -206,13 +206,16 @@ def on_prompt(folder, data):
     # not the operator's: a prompt raised inside a subagent, and the notice a finished background task sends
     if "agent_id" in data or prompt.startswith("<task-notification>") or not prompt:
         return
-    prompt_id = data.get("prompt_id")
-    if isinstance(prompt_id, str) and prompt_id and state.get("last_id") == prompt_id:
+    prompt_id = data.get("prompt_id") if isinstance(data.get("prompt_id"), str) else None
+    # a message sent while a turn is running arrives with the running turn's prompt id
+    same_turn = bool(prompt_id) and state.get("turn_id") == prompt_id
+    if same_turn and state.get("last_text") == prompt:
         return                    # the same prompt delivered a second time
-    state["last_id"] = prompt_id if isinstance(prompt_id, str) else None
+    state["turn_id"], state["last_text"] = prompt_id, prompt
     state["seq"] += 1
     state["requests"].append({"n": state["seq"], "at": now(), "text": prompt, "carried": False})
-    state["holds"], state["awaiting"], state["quiet"] = 0, False, False   # a new request starts a new turn
+    if not same_turn:             # a new turn; a hold in flight is left alone by a mid-turn message
+        state["holds"], state["awaiting"], state["quiet"] = 0, False, False
     if not save(folder, state):
         say("worklog: the state could not be saved under %s" % os.path.dirname(folder))
 
@@ -243,6 +246,7 @@ def running(data):
 def hold(folder, state):
     state["holds"] += 1
     state["awaiting"] = True
+    state["held_upto"] = state["seq"]          # the closing line will act on what this message shows
     if save(folder, state):       # an unsaved hold could repeat forever, so it is never printed
         emit({"decision": "block",
               "reason": REASON % (len(state["requests"]), state["note"]) + requests_block(state)})
@@ -254,25 +258,30 @@ def on_stop(folder, data):
         return
     if state["awaiting"]:
         word = closing_word(data.get("last_assistant_message"))
+        shown = state["held_upto"] if isinstance(state.get("held_upto"), int) else state["seq"]
         if word == "written":
-            state["requests"] = []
+            state["requests"] = [r for r in state["requests"] if r["n"] > shown]
         elif word == "carried":
             for r in state["requests"]:
-                r["carried"] = True
+                if r["n"] <= shown:
+                    r["carried"] = True
         elif word is None and running(data):
             return                # still waiting for the closing line; no reminder while a task runs
         elif word is None and state["holds"] < LIMIT:
             return hold(folder, state)
         state["awaiting"] = False
+        late = any(not r["carried"] for r in state["requests"])   # requests that arrived during the hold
         if word in ("written", "carried"):
-            state["holds"] = 0
+            if not late:
+                state["holds"] = 0
         else:                     # failed, or the limit was reached: release, keep the requests, stay quiet
             state["quiet"] = True
         saved = save(folder, state)
         if word is None and saved:
             emit({"systemMessage": "worklog: the step was not written after %d reminders; %d request(s) kept "
                                    "for the next step" % (LIMIT, len(state["requests"]))})
-        return
+        if not (late and word in ("written", "carried") and saved):
+            return                # otherwise fall through: the late requests get a hold of their own
     if state["quiet"] or all(r["carried"] for r in state["requests"]):
         return
     if running(data):             # the result is not in yet; the requests wait for it
