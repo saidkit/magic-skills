@@ -1,6 +1,6 @@
 # `magic` — plain-language guide to the operator skills
 
-Ten small, stack-agnostic skills for staying on top of a long working session: refresh your context, audit your progress, explain things simply, hand off cleanly, run a multi-step job carefully, manage its run files, hold work to a quality bar, and generate a build prompt. You invoke each by typing a short word - no setup, no config. Part of [MagicKit](https://github.com/saidkit/magic-skills).
+Eleven small, stack-agnostic skills for staying on top of a long working session: refresh your context, audit your progress, explain things simply, hand off cleanly, run a multi-step job carefully, manage its run files, hold work to a quality bar, generate a build prompt, record your rulings, and keep a work log in a note. You invoke each by typing a short word - no setup, no config. Part of [MagicKit](https://github.com/saidkit/magic-skills).
 
 Every skill below has its full instructions in `skills/<name>/SKILL.md`. This page is the tour, with a couple of real "you type -> you get" samples each.
 
@@ -18,6 +18,7 @@ Every skill below has its full instructions in `skills/<name>/SKILL.md`. This pa
 | **gauntlet** | Prints a ready-to-paste "build-to-a-bar" prompt | `gauntlet!!` |
 | **prompt** | Writes a new prompt in your own voice from your saved prompt library | `prompt!!` |
 | **ruled** | Records your rulings in your own words, quotes looked up in the session transcript | `ruled!!` / `/magic:ruled` |
+| **worklog** | Keeps a work log in a note: one step per request, your words quoted exactly | `/magic:worklog on <note>` |
 
 The first three **just report and stop** — they show you where things stand and hand the decision back. The rest **do work.**
 
@@ -117,6 +118,24 @@ Writes (does **not** run) a strong copy-paste prompt that tells an AI to split t
   A question-dialog answer is taken as the operator's pick; a host program or hook that answers the dialog itself
   would be read the same way.
 
+## worklog - a work log kept in a note
+
+- **You type:** `/magic:worklog on notes/task-log.md` -> the log is on for this session. From now on every request you
+  send is queued, exactly as you typed it.
+- At the end of a turn the assistant adds one step to the note: a `# Step N` heading, your request quoted word for
+  word, then a short result (what changed, the numbers, what was checked, what was not). A short reply such as "no"
+  or "thanks" gets no step of its own; its quote opens the next step.
+- The step goes before the note's closing data section (`# Data`), or at the end when the note has none. Your own
+  sections and the existing steps are left as they are.
+- **You type:** `/magic:worklog status` -> on or off, the note, how many requests wait. `/magic:worklog off` -> the
+  log is off; requests still queued are dropped and counted.
+- The first edit of the note asks for permission once; answering "always allow" covers the session. The skill grants
+  itself nothing.
+- The switch lasts for the session. After `/clear` the session is new: type the command again. The queue is kept in
+  `~/.claude/worklog/<session id>/`, removed by `off`; folders of old sessions are removed after 7 days.
+- The log starts only when you type the command; it has no macro form, and a session that never typed it runs
+  nothing of this skill.
+
 ## How they fit together
 - **Lost the thread?** `refresh!!` (quick recap) · `audit!!` (full audit) · `explain!!` (plain-English explainer). All three report and stop.
 - **Stepping away?** `session!!` saves a handoff for a fresh chat.
@@ -125,5 +144,5 @@ Writes (does **not** run) a strong copy-paste prompt that tells an AI to split t
 ## Good to know
 - **The diagnostics stop by contract.** `refresh!!` / `audit!!` / `explain!!` report and hand the decision back to you. To refresh *and then* keep going, use the `resume!!` macro (see [operator-macros.md](../../guides/operator-macros.md)).
 - **Autonomy never green-lights an outward action.** A blanket `proceed!!` / `run!!` grant relaxes routine waits — never a decision reserved for you, and never an outward, hard-to-reverse operation (sending, publishing, deleting). These skills ship no tool-level fuse for that; consent for such an operation stays your own tool-permission configuration (allow / deny rules, approval prompts).
-- **Nothing carries across calls.** Each invocation is a fresh sweep scoped to the message that triggered it — call again whenever you need another look.
+- **Nothing carries across calls.** Each invocation is a fresh sweep scoped to the message that triggered it — call again whenever you need another look. `worklog` is the exception: its switch lasts for the session, until `/magic:worklog off` or `/clear`.
 - **No project files, no config.** These skills read whatever layout your project already has and adapt (`docs/adr/` vs `decision-log/`, `docs/working/` vs `notes/`, and so on).
