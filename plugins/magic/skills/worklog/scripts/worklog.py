@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Hook script of the worklog skill: the switch, the request queue and the end-of-turn reminder.
+"""Hook script of the worklog skill: the switch, the request queue, the step head and the end-of-turn hold.
 
 It reads one hook JSON object on stdin (event UserPromptSubmit or Stop), acts on it, and always exits 0.
 State is kept per session in <root>/<session_id>/state.json, where <root> is $WORKLOG_HOME or ~/.claude/worklog.
-The queued requests reach the assistant inside the Stop hook's own message, exactly as sent; the assistant reads no
-file of this script. The script never opens the note. While the log is off it creates nothing.
+At the end of a turn the script itself adds the step head to the note (the heading, its underline and every queued
+request as a quote), then holds the turn once with one line that names the step; the assistant writes the body.
+The script only ever inserts text into the note; it reads no reply of the assistant. While the log is off it
+creates nothing.
 """
 import json
 import os
@@ -16,13 +18,12 @@ LIMIT = 2                      # holds in one turn; the CLI itself ends a turn a
 RETENTION_SECONDS = 7 * 86400
 COMMANDS = ("/magic:worklog", "/worklog")
 OUR_FILES = {"state.json"}
-WORDS = ("written", "carried", "failed")
-RULE = "-----8<-----"
-REASON = ("worklog: %d request(s) from the operator are not in the work log yet. Note: %s\n"
-          "Follow the worklog skill's step rules: write the step into that note, copying each quote from the requests "
-          "below. End your reply with one of these lines on its own: `worklog: written` once the step is in the note; "
-          "`worklog: carried` if every request is a short reply that earns no step yet; `worklog: failed - <why>` if "
-          "the note could not be written.\n")
+NOT_OPERATOR = ("<task-notification>", "<cross-session-message ", "[Cross-session ")   # matched at the start only
+HEADING = "# Step "
+UNDERLINE = "=" * 39
+PASTE_OPEN, PASTE_CLOSE = "<pasted_content", "</pasted_content"
+HOLD = "worklog: fill the body of Step %d in %s"
+UNWRITABLE = "worklog: the note could not be written (%s); %d request(s) kept for the next step"
 UNKNOWN = "worklog: unknown form - use on <note>, off or status"
 NO_NOTE = "worklog: no note named - type /magic:worklog on <note>"
 
@@ -66,24 +67,14 @@ def load(folder):
         return None
     for r in requests:
         if not (isinstance(r, dict) and isinstance(r.get("n"), int) and isinstance(r.get("text"), str)
-                and isinstance(r.get("at"), str) and isinstance(r.get("carried"), bool)):
+                and isinstance(r.get("at"), str)):
             return None
     state["seq"] = state["seq"] if isinstance(state.get("seq"), int) else max([r["n"] for r in requests] or [0])
     state["holds"] = state["holds"] if isinstance(state.get("holds"), int) else 0
-    state["awaiting"] = state.get("awaiting") is True
     state["quiet"] = state.get("quiet") is True
+    state["open"] = state["open"] if isinstance(state.get("open"), int) else 0
     state["since"] = state["since"] if isinstance(state.get("since"), str) else now()
     return state
-
-
-def requests_block(state):
-    """Every queued request between its delimiter lines, byte for byte, as it goes into the hook's message."""
-    parts = []
-    for r in state["requests"]:
-        mark = ", carried" if r["carried"] else ""
-        parts.append("\n%s request %d (%s%s) %s\n%s\n%s end of request %d %s\n"
-                     % (RULE, r["n"], r["at"], mark, RULE, r["text"], RULE, r["n"], RULE))
-    return "".join(parts)
 
 
 def write_private(path, data):
@@ -166,9 +157,8 @@ def switch(folder, data, args):
         state = load(folder)
         if state is None:
             return say("worklog: off")
-        carried = sum(1 for r in state["requests"] if r["carried"])
-        return say("worklog: on\nnote: %s\nqueued: %d (%d carried)\nsince: %s"
-                   % (state["note"], len(state["requests"]), carried, state["since"]))
+        return say("worklog: on\nnote: %s\nqueued: %d\nsince: %s"
+                   % (state["note"], len(state["requests"]), state["since"]))
     if args != "on" and not (args.startswith("on") and args[2] in " \t"):
         return say(UNKNOWN)
     note = args[2:].strip()
@@ -183,9 +173,11 @@ def switch(folder, data, args):
     note = os.path.normpath(note)
     if os.path.isdir(note):
         return say("worklog: %s is a folder - name a note file" % note)
-    state = load(folder) or {"version": 1, "since": now(), "seq": 0, "holds": 0, "awaiting": False,
-                             "quiet": False, "requests": []}
-    state["note"] = note
+    state = load(folder) or {"version": 1, "since": now(), "seq": 0, "holds": 0, "quiet": False, "open": 0,
+                             "requests": []}
+    if state.get("note") != note:          # a step opened in another note is not this note's open step
+        state["open"] = 0
+    state["note"], state["quiet"] = note, False
     if not save(folder, state):
         return say("worklog: the state could not be saved under %s" % os.path.dirname(folder))
     prune(os.path.dirname(folder), os.path.basename(folder))
@@ -195,7 +187,7 @@ def switch(folder, data, args):
 
 def on_prompt(folder, data):
     prompt = data.get("prompt")
-    if not isinstance(prompt, str):
+    if not isinstance(prompt, str) or "agent_id" in data:   # a prompt raised inside a subagent is the model's own
         return
     args = command_args(prompt)
     if args is not None:          # the skill's own command is the switch and is never a request
@@ -203,8 +195,8 @@ def on_prompt(folder, data):
     state = load(folder)
     if state is None:
         return
-    # not the operator's: a prompt raised inside a subagent, and the notice a finished background task sends
-    if "agent_id" in data or prompt.startswith("<task-notification>") or not prompt:
+    # not the operator's: the notice a finished background task sends, a message or a notice from another session
+    if not prompt or prompt.startswith(NOT_OPERATOR):
         return
     prompt_id = data.get("prompt_id") if isinstance(data.get("prompt_id"), str) else None
     # a message sent while a turn is running arrives with the running turn's prompt id
@@ -213,29 +205,174 @@ def on_prompt(folder, data):
         return                    # the same prompt delivered a second time
     state["turn_id"], state["last_text"] = prompt_id, prompt
     state["seq"] += 1
-    state["requests"].append({"n": state["seq"], "at": now(), "text": prompt, "carried": False})
-    if not same_turn:             # a new turn; a hold in flight is left alone by a mid-turn message
-        state["holds"], state["awaiting"], state["quiet"] = 0, False, False
+    state["requests"].append({"n": state["seq"], "at": now(), "text": prompt})
+    if not same_turn:             # a new turn has its own holds
+        state["holds"] = 0
     if not save(folder, state):
         say("worklog: the state could not be saved under %s" % os.path.dirname(folder))
 
 
-# -- Stop: the reminder ------------------------------------------------------------------------------------------------
+# -- the note: the step head -------------------------------------------------------------------------------------------
 
-def closing_word(message):
-    """The word of the assistant's closing line (`worklog: written` and so on), or None."""
-    if not isinstance(message, str):
-        return None
-    for line in reversed(message.splitlines()):
-        text = line.strip(" \t`*").lower()
-        if not text.startswith("worklog:"):
+def split_lines(text):
+    """The text as a list of (line, line end); the ends are kept, so the pieces add up to the text again."""
+    out, start, i = [], 0, 0
+    while i < len(text):
+        if text[i] in "\r\n":
+            end = "\r\n" if text[i:i + 2] == "\r\n" else text[i]
+            out.append((text[start:i], end))
+            i += len(end)
+            start = i
+        else:
+            i += 1
+    if start < len(text):
+        out.append((text[start:], ""))
+    return out
+
+
+def paste_tag(line, name):
+    """True when the line is one tag of a pasted block and nothing else: the name, then attributes, then `>`."""
+    if not (line.startswith(name) and line.endswith(">")):
+        return False
+    inner = line[len(name):-1]
+    return (inner == "" or inner[0] == " ") and "<" not in inner and ">" not in inner
+
+
+def quote(text):
+    """A request as quote lines: `> ` before every line, `>` for an empty one. A pasted block is quoted one level
+    deeper and loses its two tag lines; a tag with no partner is quoted as the text it is."""
+    lines = text.replace("\r\n", "\n").replace("\r", "\n").split("\n")
+    out, i = [], 0
+    while i < len(lines):
+        end = None
+        if paste_tag(lines[i], PASTE_OPEN):
+            attrs = lines[i][len(PASTE_OPEN):]
+            for j in range(i + 1, len(lines)):
+                if lines[j] in (PASTE_CLOSE + attrs, PASTE_CLOSE + ">"):
+                    end = j
+                    break
+        if end is None:
+            out.append("> " + lines[i] if lines[i] else ">")
+            i += 1
             continue
-        rest = text[len("worklog:"):].lstrip(" \t")
-        for word in WORDS:
-            if rest.startswith(word) and (rest[len(word):] == "" or rest[len(word)] in " \t.,:!-"):
-                return word
-    return None
+        out.extend("> > " + line if line else "> >" for line in lines[i + 1:end])
+        i = end + 1
+    return out
 
+
+def fence_of(line):
+    """(character, length, the rest) when the line opens or closes a fenced code block, else None."""
+    text = line.lstrip(" ")
+    if len(line) - len(text) > 3 or text[:3] not in ("```", "~~~"):
+        return None
+    run = len(text) - len(text.lstrip(text[0]))
+    return text[0], run, text[run:].strip()
+
+
+def outline(lines):
+    """The top-level headings of a note: a list of (line index, step number or None). A line inside a fenced code
+    block or inside the front matter is never a heading."""
+    found, fence, i = [], None, 0
+    if lines and lines[0] == "---":                    # front matter: up to the next line of three dashes
+        closing = [k for k in range(1, len(lines)) if lines[k] in ("---", "...")]
+        i = closing[0] + 1 if closing else 0
+    for i in range(i, len(lines)):
+        line = lines[i]
+        mark = fence_of(line)
+        if fence:
+            if mark and mark[0] == fence[0] and mark[1] >= fence[1] and not mark[2]:
+                fence = None
+            continue
+        if mark:
+            fence = mark
+            continue
+        if not line.startswith("# "):
+            continue
+        title = line[2:].strip()
+        digits = title[len("Step "):] if title.startswith("Step ") else ""
+        found.append((i, int(digits) if digits.isascii() and digits.isdigit() and len(digits) <= 9 else None))
+    return found
+
+
+def is_list_of_links(body):
+    """True when a section holds at least one line and every line of it is a list item that carries a link."""
+    rows = [line.strip() for line in body if line.strip()]
+    return bool(rows) and all(r[:2] in ("- ", "* ", "+ ") and ("](" in r or "[[" in r or "://" in r) for r in rows)
+
+
+def plan(text, requests, opened):
+    """Where the quotes go and what is inserted there: (offset in the text, the insertion, the step's number).
+
+    A step this script opened whose body is still empty takes the quotes under its heading. Otherwise a new step is
+    numbered after the highest one and placed before the closing data section: the first top-level section after
+    the last step, or, in a note without steps, a last top-level section that is titled Data or is a list of links.
+    Without one the step goes to the end of the note.
+    """
+    nl = "\r\n" if "\r\n" in text else "\n"
+    pieces = split_lines(text[1:] if text.startswith("\ufeff") else text)
+    shift = 1 if text.startswith("\ufeff") else 0
+    lines = [line for line, _ in pieces]
+    starts, pos = [], shift                 # the offset of every line, and of the end of the text
+    for line, end in pieces:
+        starts.append(pos)
+        pos += len(line) + len(end)
+    starts.append(pos)
+    heads = outline(lines)
+    blocks = (nl + nl).join(nl.join(quote(r["text"])) for r in requests)
+    ragged = bool(pieces) and pieces[-1][1] == ""      # the text does not end with a line end
+
+    at = [k for k, (_, number) in enumerate(heads) if opened and number == opened]
+    if at:
+        first = heads[at[-1]][0] + 1
+        last = heads[at[-1] + 1][0] if at[-1] + 1 < len(heads) else len(lines)
+        if first < last and lines[first].strip() and not lines[first].strip().strip("="):
+            first += 1                      # the underline
+        body = lines[first:last]
+        if all(not line.strip() or line.startswith(">") for line in body):
+            quoted = [k for k, line in enumerate(body) if line.startswith(">")]
+            after = first + (quoted[-1] + 1 if quoted else 0)
+            lead = (nl if ragged and after == len(lines) else "") + (nl if quoted else "")
+            tail = nl if after == len(lines) or lines[after].strip() else ""
+            return starts[after], lead + blocks + nl + tail, opened
+
+    steps = [k for k, (_, number) in enumerate(heads) if number is not None]
+    number = max([heads[k][1] for k in steps] or [0]) + 1
+    target = len(lines)
+    if steps and steps[-1] + 1 < len(heads):
+        target = heads[steps[-1] + 1][0]
+    elif not steps and heads:
+        index = heads[-1][0]
+        if lines[index][2:].strip().lower() == "data" or is_list_of_links(lines[index + 1:]):
+            target = index
+    lead = nl if ragged and target == len(lines) else ""
+    if target and lines[target - 1].strip():
+        lead += nl                          # an empty line between the text above and the heading
+    return starts[target], lead + HEADING + str(number) + nl + UNDERLINE + nl + blocks + nl + nl, number
+
+
+def write_step(state):
+    """Insert the step head into the note. Returns (the step's number, None) or (None, why it could not be done)."""
+    path = state["note"]
+    try:
+        exists = os.path.lexists(path)
+        if exists and not os.path.isfile(path):
+            return None, "it is not a file"
+        if not exists and not os.path.isdir(os.path.dirname(path)):
+            return None, "its folder does not exist"
+        with open(path, "r+b" if exists else "x+b") as fh:
+            try:
+                text = fh.read().decode("utf-8")
+            except UnicodeDecodeError:
+                return None, "it is not UTF-8 text"
+            where, insertion, number = plan(text, state["requests"], state["open"])
+            fh.seek(len(text[:where].encode("utf-8")))
+            fh.write((insertion + text[where:]).encode("utf-8"))
+        return number, None
+    except OSError as err:
+        return None, (err.strerror or "it could not be opened").lower()
+
+
+# -- Stop: the step head and the hold ----------------------------------------------------------------------------------
 
 def running(data):
     """True while a background task of this session is still at work."""
@@ -243,54 +380,29 @@ def running(data):
     return isinstance(background, list) and bool(background)
 
 
-def hold(folder, state):
-    state["holds"] += 1
-    state["awaiting"] = True
-    state["held_upto"] = state["seq"]          # the closing line will act on what this message shows
-    if save(folder, state):       # an unsaved hold could repeat forever, so it is never printed
-        emit({"decision": "block",
-              "reason": REASON % (len(state["requests"]), state["note"]) + requests_block(state)})
-
-
 def on_stop(folder, data):
     state = load(folder)
-    if state is None or "agent_id" in data:
-        return
-    if state["awaiting"]:
-        word = closing_word(data.get("last_assistant_message"))
-        shown = state["held_upto"] if isinstance(state.get("held_upto"), int) else state["seq"]
-        if word == "written":
-            state["requests"] = [r for r in state["requests"] if r["n"] > shown]
-        elif word == "carried":
-            for r in state["requests"]:
-                if r["n"] <= shown:
-                    r["carried"] = True
-        elif word is None and running(data):
-            return                # still waiting for the closing line; no reminder while a task runs
-        elif word is None and state["holds"] < LIMIT:
-            return hold(folder, state)
-        state["awaiting"] = False
-        late = any(not r["carried"] for r in state["requests"])   # requests that arrived during the hold
-        if word in ("written", "carried"):
-            if not late:
-                state["holds"] = 0
-        else:                     # failed, or the limit was reached: release, keep the requests, stay quiet
-            state["quiet"] = True
-        saved = save(folder, state)
-        if word is None and saved:
-            emit({"systemMessage": "worklog: the step was not written after %d reminders; %d request(s) kept "
-                                   "for the next step" % (LIMIT, len(state["requests"]))})
-        if not (late and word in ("written", "carried") and saved):
-            return                # otherwise fall through: the late requests get a hold of their own
-    if state["quiet"] or all(r["carried"] for r in state["requests"]):
+    if state is None or "agent_id" in data or not state["requests"]:
         return
     if running(data):             # the result is not in yet; the requests wait for it
         return
-    if data.get("stop_hook_active") is True:          # another hook already forced this turn to continue
+    if data.get("stop_hook_active") is True:          # a hold already ran in this turn, ours or another hook's
         state["holds"] = max(state["holds"], 1)
-    if state["holds"] >= LIMIT:
+    if not save(folder, state):   # a state that cannot be saved would quote the same requests again
         return
-    hold(folder, state)
+    number, why = write_step(state)
+    if number is None:
+        said = state["quiet"]
+        state["quiet"] = True
+        if save(folder, state) and not said:
+            emit({"systemMessage": UNWRITABLE % (why, len(state["requests"]))})
+        return
+    state["requests"], state["open"], state["quiet"] = [], number, False
+    hold = state["holds"] < LIMIT
+    if hold:
+        state["holds"] += 1
+    if save(folder, state) and hold:
+        emit({"decision": "block", "reason": HOLD % (number, state["note"])})
 
 
 def main():

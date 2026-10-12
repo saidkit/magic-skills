@@ -122,14 +122,18 @@ Writes (does **not** run) a strong copy-paste prompt that tells an AI to split t
 
 - **You type:** `/magic:worklog on notes/task-log.md` -> the log is on for this session. From now on every request you
   send is queued, exactly as you typed it.
-- At the end of a turn the assistant adds one step to the note: a `# Step N` heading, your request quoted word for
-  word, then a short result (what changed, the numbers, what was checked, what was not). A short reply such as "no"
-  or "thanks" gets no step of its own; its quote opens the next step.
-- The step goes before the note's closing data section (`# Data`), or at the end when the note has none. Your own
-  sections and the existing steps are left as they are.
+- At the end of a turn the skill's hook adds a step to the note by itself: a `# Step N` heading and your request
+  quoted word for word (a block you pasted is quoted one level deeper). The assistant then writes a short result
+  under it (what changed, the numbers, what was checked, what was not). A short reply such as "no" or "thanks" is
+  quoted and gets no result of its own; the next request is quoted under the same step.
+- The step goes before the note's closing section (the first top-level section after the last step, usually the
+  list of data files), or at the end when the note has none. Your own sections and the existing steps are left as
+  they are.
+- You see one line when the hook asks for the result (`worklog: fill the body of Step N in <note>`); beyond it
+  nothing about the log is said in chat. If the note cannot be written, one line says so once.
 - **You type:** `/magic:worklog status` -> on or off, the note, how many requests wait. `/magic:worklog off` -> the
   log is off; requests still queued are dropped and counted.
-- The first edit of the note asks for permission once; answering "always allow" covers the session. The skill grants
+- The assistant's first edit of the note asks for permission once; answering "always allow" covers the session. The skill grants
   itself nothing.
 - The switch lasts for the session. After `/clear` the session is new: type the command again. The queue is kept in
   `~/.claude/worklog/<session id>/`, removed by `off`; folders of old sessions are removed after 7 days.

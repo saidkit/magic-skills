@@ -10,6 +10,16 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## 0.14.1 — 2026-10-12
+
+**Fixed - `worklog`.** The log is kept without chat output: the Stop hook itself writes the step heading, the
+underline and the quotes into the note (a pasted block is quoted one level deeper, its wrapper tags dropped), then
+holds the turn once with one short line; the assistant adds the result under that heading and says nothing about the
+log. The closing line is gone. A short reply is quoted and gets no result; the next request is quoted under the same
+step. A message from another session and a cross-session notice are not requests and are not queued. `status` line 3
+reads `queued: <n>`. A switch typed inside a subagent is ignored. If the note cannot be written, one line says so
+once.
+
 ## 0.14.0 — 2026-10-12
 
 **Added - `worklog` (`/magic:worklog on <note>`, `off`, `status`).** A work log kept in a note, one step per request.

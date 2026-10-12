@@ -3,7 +3,8 @@ name: worklog
 description: >
   Keeps the work log of a task in a note: after each significant request of the operator, one step is added to the
   note with the request quoted word for word and a compressed result. Forms: on <note>, off, status. The log is
-  switched on per session; the skill's own hooks queue the requests and remind at the end of a turn.
+  switched on per session; the skill's own hooks quote the requests into the note and ask for the result at the end
+  of a turn.
   Activates ONLY on "/magic:worklog" (with a form after it) AND NOTHING ELSE.
   NOT for: a request to "keep a log" or "write this down" typed without the command; a call the assistant makes on
   its own; recording decisions or rulings (that is /magic:ruled); meeting notes, changelogs, commit messages;
@@ -25,16 +26,16 @@ hooks:
 
 - **The hook has already applied the switch.** For `on`, `off` and `status` print its result line and do nothing
   else: no shell command, no file edit, no state of your own.
-- **Write a step only when the hook's message asks for it.** It starts
-  `worklog: N request(s) from the operator are not in the work log yet. Note: <path>` and carries the requests.
-  A request that is not in that message gets no step.
-- **The quote comes only from the hook's message.** Copy it; never type it from memory; never retell, trim or
-  correct it.
-- **Change nothing outside the new step.** The operator's own sections and every existing step stay byte for byte,
-  except the one link line of step 7.
-- **End every reply to that message with exactly one closing line**, spelled as in "The closing line". No other
-  reply ends with a closing line, the reply to the switch command included.
-- **Never read, edit or delete anything under `~/.claude/worklog/`.** Never run a shell command for the queue.
+- **The hook writes the step's head; you write its body.** At the end of a turn the hook itself adds the heading, the
+  underline and every request as a quote to the note, then asks with one line:
+  `worklog: fill the body of Step N in <note>`. Write a body only when that line asks for it.
+- **Never edit the heading, the underline or the quotes.** Never add a quote, a heading or a step of your own.
+- **Change nothing outside the body of that step.** The operator's own sections and every other step stay byte for
+  byte, except the one link line of step 5.
+- **Say nothing about the log in chat.** Beyond the switch's own result (Invocation), no reply mentions the step,
+  the note or the hook's line; after the edit of a body, end the turn without further text. The one exception is
+  step 6.
+- **Never read, edit or delete anything under `~/.claude/worklog/`.** Never run a shell command for the log.
 
 ## Invocation
 
@@ -52,46 +53,29 @@ For each form:
    note asks for permission (answering "always allow" covers the session), and after `/clear` the command has to be
    typed again. A refused `on` gets its result line only.
 
-## Writing a step
+## Writing the body
 
-When the hook's message arrives:
+When the hook's line arrives:
 
-1. Take the note's path from the message's first line (`Note: <path>`) and the requests from its body: each request
-   sits between its delimiter lines, exactly as sent; one marked `carried` was sent in an earlier turn.
-2. Re-read the note before every write; never assume it ends with the last step.
-3. A short reply that earns no step (a "no", a one-word clarification, a thanks) is carried: when every request in
-   the message is one, write nothing and close with `worklog: carried`. Its quote opens the next step.
-4. Otherwise write ONE step for ALL requests in the message, short replies included; never drop one. A request that is
-   already quoted in an existing step is not quoted again; when every request is, write nothing and close with
-   `worklog: written`. The shape:
+1. Take the step's number and the note's path from the line.
+2. Re-read the note before every write and find that step. The hook wrote this much of it:
 
 ```
 # Step N
 =======================================
 > the operator's request, exactly as sent
 
-what changed, with the numbers; what was checked and how; what stays unchecked
 ```
 
-   - `N` is one more than the highest step number in the note; 1 when the note has no step.
-   - The underline is that line of 39 equals signs.
-   - Every line of a request prefixed `> `, an empty line as `>`. Several requests are separate quote blocks split
-     by a blank line, in the message's order (carried ones first). Keep typos, spacing and every word; no cap on
-     length. The delimiter lines are not part of a request.
+3. Add the body below the step's last quote, with an edit that adds text; never rewrite the whole note. The hook
+   left one empty line after the last quote: the body starts on the line after it and ends with one empty line.
    - The body is a compressed result, never a copy of your chat reply: what changed, the numbers, what was checked
      and how, what stays unchecked. A few lines. For a turn that only answered a question, say what was answered;
      do not restate the answer.
-   - Write the step in the note's language.
-5. Put the step before the note's closing data section: the top-level section after the steps that lists links to
-   data files (`# Data` is the usual name). When the note has no such section, put it at the end of the file. A note
-   that does not exist yet is created with the step as its content.
-6. Insert the step with an edit that adds text; never rewrite the whole note.
-7. A data file produced in this turn gets one link line in the closing data section, when the note has one.
-
-## The closing line
-
-Only in a reply to the hook's message; the last line of that reply, on its own:
-
-- `worklog: written` - every request of the message is quoted in the note.
-- `worklog: carried` - every request was a short reply; nothing was written.
-- `worklog: failed - <why>` - the note could not be written (a denied edit, a missing folder).
+   - One body covers every quote under the step.
+   - Write the body in the note's language.
+4. When every quote under the step is a short reply that earns no body yet (a "no", a one-word clarification, a
+   thanks), leave the body empty and make no edit. The hook puts the next request's quote under the same step, and
+   the body is written then.
+5. A data file produced in this turn gets one link line in the note's closing data section, when the note has one.
+6. If the edit cannot be made (it was denied, the step is not in the note), say why in one line and do not retry.
