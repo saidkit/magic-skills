@@ -36,7 +36,7 @@ you to write one step into the note.
 - **Change nothing outside the new step.** The operator's own sections and every existing step stay byte for byte,
   except the one link line of step 7.
 - **End every reply to that message with exactly one closing line**, spelled as in "The closing line"; the hook
-  matches it.
+  matches it. An ordinary reply never ends with a closing line, and neither does the reply to the switch command.
 - **Never read, edit or delete anything under `~/.claude/worklog/`**; it is the hook's own state. Never run a shell
   command for the queue.
 
@@ -94,7 +94,7 @@ what changed, with the numbers; what was checked and how; what stays unchecked
 
 ## The closing line
 
-The last line of your reply, on its own:
+Only in a reply to the hook's message; the last line of that reply, on its own:
 
 - `worklog: written` - every request of the message is quoted in the note: the step was just written and the edit
   succeeded, or all of them were already there.
