@@ -21,24 +21,20 @@ hooks:
 
 # worklog - a work log kept in a note
 
-The operator switches the log on for a session; this skill's hooks queue every request and, at the end of a turn, ask
-you to write one step into the note.
-
 ## Contract
 
 - **The hook has already applied the switch.** For `on`, `off` and `status` print its result line and do nothing
   else: no shell command, no file edit, no state of your own.
 - **Write a step only when the hook's message asks for it.** It starts
-  `worklog: N request(s) from the operator are not in the work log yet. Note: <path>` and carries the requests. No
-  such message, no step; a request that is not in that message gets no step.
+  `worklog: N request(s) from the operator are not in the work log yet. Note: <path>` and carries the requests.
+  A request that is not in that message gets no step.
 - **The quote comes only from the hook's message.** Copy it; never type it from memory; never retell, trim or
   correct it.
 - **Change nothing outside the new step.** The operator's own sections and every existing step stay byte for byte,
   except the one link line of step 7.
-- **End every reply to that message with exactly one closing line**, spelled as in "The closing line"; the hook
-  matches it. An ordinary reply never ends with a closing line, and neither does the reply to the switch command.
-- **Never read, edit or delete anything under `~/.claude/worklog/`**; it is the hook's own state. Never run a shell
-  command for the queue.
+- **End every reply to that message with exactly one closing line**, spelled as in "The closing line". No other
+  reply ends with a closing line, the reply to the switch command included.
+- **Never read, edit or delete anything under `~/.claude/worklog/`.** Never run a shell command for the queue.
 
 ## Invocation
 
@@ -48,9 +44,8 @@ you to write one step into the note.
 
 For each form:
 
-1. Print the `worklog:` result line the hook added to your context, word for word and flush-left. For `status`
-   while on the result is four lines (one per line, no table, no padding);
-   while off it is the one line `worklog: off`. Print exactly what the hook gave, nothing more.
+1. Print the `worklog:` result line the hook added to your context, word for word and flush-left: for `status`
+   while on, four lines (one per line, no table, no padding); while off, the one line `worklog: off`. Nothing more.
 2. If no `worklog:` line was added to your context, say that the switch could not be confirmed and ask the operator
    to type `/magic:worklog status`.
 3. After a successful `on` (the result starts `worklog: on - note`), tell the operator once: the first edit of the
@@ -80,12 +75,12 @@ what changed, with the numbers; what was checked and how; what stays unchecked
 
    - `N` is one more than the highest step number in the note; 1 when the note has no step.
    - The underline is that line of 39 equals signs.
-   - Copy each request from the hook's message, every line prefixed `> `, an empty line as `>`. Several requests are
-     separate quote blocks split by a blank line, in the message's order (carried ones come first). Keep typos,
-     spacing and every word; no cap on length. The delimiter lines are not part of a request.
+   - Every line of a request prefixed `> `, an empty line as `>`. Several requests are separate quote blocks split
+     by a blank line, in the message's order (carried ones first). Keep typos, spacing and every word; no cap on
+     length. The delimiter lines are not part of a request.
    - The body is a compressed result, never a copy of your chat reply: what changed, the numbers, what was checked
-     and how, what stays unchecked. Keep it to a few lines. For a turn that only answered a question, say what was
-     answered; do not restate the answer.
+     and how, what stays unchecked. A few lines. For a turn that only answered a question, say what was answered;
+     do not restate the answer.
    - Write the step in the note's language.
 5. Put the step before the note's closing data section: the top-level section after the steps that lists links to
    data files (`# Data` is the usual name). When the note has no such section, put it at the end of the file. A note
@@ -97,7 +92,6 @@ what changed, with the numbers; what was checked and how; what stays unchecked
 
 Only in a reply to the hook's message; the last line of that reply, on its own:
 
-- `worklog: written` - every request of the message is quoted in the note: the step was just written and the edit
-  succeeded, or all of them were already there.
+- `worklog: written` - every request of the message is quoted in the note.
 - `worklog: carried` - every request was a short reply; nothing was written.
 - `worklog: failed - <why>` - the note could not be written (a denied edit, a missing folder).
