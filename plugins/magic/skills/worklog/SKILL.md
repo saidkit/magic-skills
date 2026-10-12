@@ -84,7 +84,8 @@ what changed, with the numbers; what was checked and how; what stays unchecked
      separate quote blocks split by a blank line, in the message's order (carried ones come first). Keep typos,
      spacing and every word; no cap on length. The delimiter lines are not part of a request.
    - The body is a compressed result, never a copy of your chat reply: what changed, the numbers, what was checked
-     and how, what stays unchecked.
+     and how, what stays unchecked. Keep it to a few lines. For a turn that only answered a question, say what was
+     answered; do not restate the answer.
    - Write the step in the note's language.
 5. Put the step before the note's closing data section: the top-level section after the steps that lists links to
    data files (`# Data` is the usual name). When the note has no such section, put it at the end of the file. A note
