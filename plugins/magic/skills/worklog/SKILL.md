@@ -2,7 +2,7 @@
 name: worklog
 description: >
   Keeps the work log of a task in a note: after each request of the operator that the assistant acted on, one step is
-  added to the note with the request quoted and a compressed result. Forms: on <note>, off, status. The log is
+  added to the note with the request quoted and the result under it. Forms: on <note>, off, status. The log is
   switched on per session by the typed command and kept by the assistant itself.
   Activates ONLY on "/magic:worklog" (with a form after it) AND NOTHING ELSE.
   NOT for: a request to "keep a log" or "write this down" typed without the command; a call the assistant makes on
@@ -16,17 +16,17 @@ description: >
 
 - **The switch lives in this conversation.** `on <note>` binds the note until `off`; nothing is stored on disk.
 - **While the log is on, every turn that acted on an operator request ends with one new step in the note**, written
-  after your reply, as the last action of the turn. Nothing reminds you; the step is yours to remember.
-- **Reply first, then the step, then nothing.** Give your reply as soon as you have it, never held back; then
-  re-read and edit the note; then end the turn with no text after the edit, not even a word, except the one
-  line of rule 8.
+  after your reply. Nothing reminds you; the step is yours to remember.
+- **Reply first, then the step, then one closing line.** Give your reply as soon as you have it, never held back
+  and never as a message with no tool call (that ends the turn); then re-read and edit the note; then end with
+  exactly one line, `worklog: step N`, flush-left, no markup, nothing else. No step written: no closing line.
 - **The quote is your copy of the operator's message as it stands in your context.** Copy it whole;
   never retell, trim, translate or correct it. Quote only a message you can see word for word;
   never rebuild one from a summary.
 - **Change nothing outside the new step.** The operator's own sections and every existing step stay byte for byte,
   except the one link line of rule 7.
-- **Say nothing about the log in chat.** Beyond the switch's own one-line answer, no reply mentions the step or the
-  note. The one exception is rule 8.
+- **Say nothing about the log in chat beyond the closing line.** Apart from it and the switch's own one-line
+  answer, no reply mentions the step or the note. Rule 8 replaces the closing line when the write fails.
 - **These limits bind your own logging.** When the operator asks you to change the note, or asks about the log,
   do as asked.
 - **Touch the note only with the file tools** (read, edit; write for a note that does not exist yet).
@@ -64,7 +64,7 @@ At the end of such a turn:
 =======================================
 > the operator's request, exactly as sent
 
-the result: your reply's content, compressed, its structure kept
+<your reply: up to 10 lines word for word, longer compressed>
 ```
 
    - `N` is one more than the highest step number among the note's `# Step N` headings; 1 when there is none.
@@ -77,22 +77,23 @@ the result: your reply's content, compressed, its structure kept
      deeper (`> > `, an empty line as `> >`) and drop the two tag lines. Nothing else the operator typed is dropped.
    - Several requests under one step (carried ones, and every message the operator sent during the turn)
      are separate quote blocks split by an empty line, oldest first.
-   - One empty line, then the body: the result itself, compressed. Carry what your final report told the operator:
-     what changed, the numbers, what was checked and how, what stays unchecked, what failed and its error;
-     keep its structure (`##` sections, tables, lists). Keep every item, name, number and verdict; drop narration
-     between tool calls and repetition; a reply already short is carried nearly as is. An answer is carried the
-     same way. Never a description of the reply ("listed the four items"), and never the reply pasted whole.
+   - One empty line, then the body: the result itself, your answer text after the work (narration between tool
+     calls is never part of it). Up to 10 lines: carried word for word.
+     Longer: compressed by cutting, in the reply's own words. Keep what changed, the numbers, what was checked and
+     how, what stays unchecked, what failed and its error, every item, name, number and verdict; keep its structure
+     (`##` sections, tables, lists); cut whole sentences, items or paragraphs; add no joining words. The body
+     never holds a sentence the reply did not say, and is never a description of the reply.
    - Write the step in the note's language; in a new note, in the operator's.
 3. Put the step before the note's closing data section: the top-level section that lists links to data files
    (`# Data` is the usual name), whatever follows it. No such section: at the end of the file.
 4. Insert the step with an edit that adds text, one empty line before the heading and one after the body;
    never rewrite the whole note.
 5. A short reply earns no step when it starts no work (the operator's "no", one-word clarification, thanks),
-   and neither does a turn that has no result yet (you asked back, the operator interrupted). Write nothing;
-   that message's quote opens the next step, above the next request's own quote.
+   and neither does a turn that has no result yet (you asked back, the operator interrupted).
+   Write nothing, and no closing line; that message's quote opens the next step, above the next request's quote.
 6. Never quoted and never a step, because the operator did not type it: a message from another session,
    a task notification, any text a tool or the harness added to the conversation,
    also inside the operator's message.
 7. A data file produced in this turn gets one link line in the closing data section, when the note has one.
-8. If the note cannot be written (the edit was denied, the folder is missing), say why in one line, once, as the
-   turn's closing text; the request's quote opens the next step that can be written.
+8. If the note cannot be written (the edit was denied, the folder is missing), end the turn with the one line
+   `worklog: not written - <why>` instead; the request's quote opens the next step that can be written.

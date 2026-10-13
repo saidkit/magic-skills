@@ -123,15 +123,17 @@ Writes (does **not** run) a strong copy-paste prompt that tells an AI to split t
 - **You type:** `/magic:worklog on notes/task-log.md` -> the log is on for this session, kept in that note.
 - From then on, every turn that acted on a request of yours ends with a new step in the note, written by the
   assistant after its reply: a `# Step N` heading, your request quoted as you typed it (a block you pasted is quoted
-  one level deeper), and under it the result itself, compressed: the content of the reply (what changed, the numbers,
-  what was checked, what was not) with its sections, tables and lists kept. A short reply such as "no" or "thanks"
-  gets no step; its quote opens the next step.
+  one level deeper), and under it the result itself: a reply of up to 10 lines word for word, a longer one cut down
+  in its own words (what changed, the numbers, what was checked, what was not) with its sections, tables and lists
+  kept. A short message of yours such as "no" or "thanks" gets no step; its quote opens the next step.
 - The step goes before the note's closing section that lists data files, or at the end when the note has none. Your
   own sections and the existing steps are left as they are; the note is re-read before every write.
-- Nothing about the log is said in chat: no reminder, no confirmation of a step, no text after the edit. The one
-  exception is a single line when the note cannot be written.
+- After writing a step the assistant ends the turn with one line, `worklog: step N`; nothing else about the log is said
+  in chat. When the note cannot be written, the line reads `worklog: not written - <why>` instead. The line is
+  there because the terminal's host asks for visible text when a turn ends on a file edit; it also shows you that
+  the log is working. A turn that writes no step has no such line.
 - What you do see: your terminal prints every file edit as a block with its diff, and the edit of the note is one.
-  The skill cannot hide it; it comes after the reply, at the bottom of the turn.
+  The skill cannot hide it; it comes after the reply, above the closing line.
 - **You type:** `/magic:worklog status` -> on or off, and the note. `/magic:worklog off` -> the log is off.
 - The assistant's first edit of the note asks for permission once; answering "always allow" covers the session. The
   skill grants itself nothing.

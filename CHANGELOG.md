@@ -10,6 +10,14 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## 0.15.2 — 2026-10-13
+
+**Fixed - `worklog`.** After the edit the turn ends with exactly one closing line, `worklog: step N` (the host
+asks for a visible response when a turn ends on a tool call, so a silent end is not possible; the line also shows
+the log is being kept). No step written, no line; a failed write ends with `worklog: not written - <why>`. The body
+is the reply itself: up to 10 lines carried word for word, longer cut in the reply's own words; never a sentence
+the reply did not say.
+
 ## 0.15.1 — 2026-10-13
 
 **Fixed - `worklog`.** The step is written after the reply, as the last action of the turn, and nothing is said
