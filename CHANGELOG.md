@@ -10,6 +10,11 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## 0.15.3 — 2026-10-13
+
+**Changed - `worklog` skill text tidied.** Rules unchanged; the always-true invariants are stated once in the
+Contract, three explanatory asides moved to the plugin's design record, 94 lines.
+
 ## 0.15.2 — 2026-10-13
 
 **Fixed - `worklog`.** After the edit the turn ends with exactly one closing line, `worklog: step N` (the host

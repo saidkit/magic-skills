@@ -12,27 +12,26 @@ description: >
 
 # worklog - a work log kept in a note
 
-## Contract
+## Contract - holds every run
 
 - **The switch lives in this conversation.** `on <note>` binds the note until `off`; nothing is stored on disk.
-- **While the log is on, every turn that acted on an operator request ends with one new step in the note**, written
-  after your reply. Nothing reminds you; the step is yours to remember.
+  When the command is gone from your context (after `/clear`, or when you know of the log only from a summary),
+  the log is off: write no step until the operator types the command again.
+- **Every turn that acted on an operator request ends with one new step in the note.** A turn acted on a request
+  when it did work or answered a question; a failed attempt is a result too.
 - **Reply first, then the step, then one closing line.** Give your reply as soon as you have it, never held back
-  and never as a message with no tool call (that ends the turn); then re-read and edit the note; then end with
-  exactly one line, `worklog: step N`, flush-left, no markup, nothing else. No step written: no closing line.
-- **The quote is your copy of the operator's message as it stands in your context.** Copy it whole;
-  never retell, trim, translate or correct it. Quote only a message you can see word for word;
-  never rebuild one from a summary.
+  and never as a message with no tool call; then re-read and edit the note; then end with exactly one line,
+  `worklog: step N`, flush-left, no markup, nothing else. No step written: no closing line. A failed write ends
+  with `worklog: not written - <why>` instead (rule 8).
+- **The quote is your copy of the operator's message as it stands in your context.** Copy it whole; never retell,
+  trim, translate or correct it. Quote only a message you can see word for word; never rebuild one from a summary.
 - **Change nothing outside the new step.** The operator's own sections and every existing step stay byte for byte,
   except the one link line of rule 7.
-- **Say nothing about the log in chat beyond the closing line.** Apart from it and the switch's own one-line
-  answer, no reply mentions the step or the note. Rule 8 replaces the closing line when the write fails.
+- **Say nothing about the log in chat** beyond the closing line and the switch's own one-line answer.
 - **These limits bind your own logging.** When the operator asks you to change the note, or asks about the log,
   do as asked.
-- **Touch the note only with the file tools** (read, edit; write for a note that does not exist yet).
-  Run no shell command for the log; keep no other file for it.
-- **When the command is gone from your context, the log is off.** After `/clear`, or when you know of the log only
-  from a summary, write no step until the operator types the command again.
+- **Touch the note only with the file tools** (read, edit; write for a note that does not exist yet). Run no shell
+  command for the log; keep no other file for it.
 
 ## Invocation
 
@@ -52,9 +51,6 @@ The command itself is never a request and never gets a step.
 
 ## Writing a step
 
-A turn acted on a request when it did work or answered a question; a failed attempt is a result too.
-At the end of such a turn:
-
 1. Re-read the note before every write; never assume it ends with the last step. A note that does not exist yet is
    created with the step as its content.
 2. Write ONE step for the turn, in this shape:
@@ -71,29 +67,28 @@ At the end of such a turn:
    - The underline is that line of 39 equals signs.
    - The quote: every line of the request prefixed `> `, an empty line as `>`. Keep typos, spacing and every word;
      no cap on length.
-   - A request typed as a slash command is quoted as the typed line with its arguments,
-     never the text it expanded to.
+   - A request typed as a slash command is quoted as the typed line with its arguments, never the text it
+     expanded to.
    - A block the operator pasted arrives between two `<pasted_content ...>` tag lines: quote its lines one level
      deeper (`> > `, an empty line as `> >`) and drop the two tag lines. Nothing else the operator typed is dropped.
-   - Several requests under one step (carried ones, and every message the operator sent during the turn)
-     are separate quote blocks split by an empty line, oldest first.
-   - One empty line, then the body: the result itself, your answer text after the work (narration between tool
-     calls is never part of it). Up to 10 lines: carried word for word.
-     Longer: compressed by cutting, in the reply's own words. Keep what changed, the numbers, what was checked and
-     how, what stays unchecked, what failed and its error, every item, name, number and verdict; keep its structure
-     (`##` sections, tables, lists); cut whole sentences, items or paragraphs; add no joining words. The body
-     never holds a sentence the reply did not say, and is never a description of the reply.
+   - Several requests under one step (carried ones, and every message the operator sent during the turn) are
+     separate quote blocks split by an empty line, oldest first.
+   - One empty line, then the body: the result itself, your answer text after the work; narration between tool
+     calls is never part of it. Up to 10 lines: carried word for word. Longer: compressed by cutting, in the
+     reply's own words - keep what changed, the numbers, what was checked and how, what stays unchecked, what
+     failed and its error, every item, name, number and verdict; keep its structure (`##` sections, tables,
+     lists); cut whole sentences, items or paragraphs; add no joining words. The body never holds a sentence the
+     reply did not say, and is never a description of the reply.
    - Write the step in the note's language; in a new note, in the operator's.
 3. Put the step before the note's closing data section: the top-level section that lists links to data files
    (`# Data` is the usual name), whatever follows it. No such section: at the end of the file.
-4. Insert the step with an edit that adds text, one empty line before the heading and one after the body;
-   never rewrite the whole note.
-5. A short reply earns no step when it starts no work (the operator's "no", one-word clarification, thanks),
-   and neither does a turn that has no result yet (you asked back, the operator interrupted).
-   Write nothing, and no closing line; that message's quote opens the next step, above the next request's quote.
-6. Never quoted and never a step, because the operator did not type it: a message from another session,
-   a task notification, any text a tool or the harness added to the conversation,
-   also inside the operator's message.
+4. Insert the step with an edit that adds text, one empty line before the heading and one after the body; never
+   rewrite the whole note.
+5. A short reply earns no step when it starts no work (the operator's "no", one-word clarification, thanks), and
+   neither does a turn that has no result yet (you asked back, the operator interrupted). Write nothing; that
+   message's quote opens the next step, above the next request's quote.
+6. Never quoted and never a step: a message from another session, a task notification, any text a tool or the
+   harness added to the conversation, also inside the operator's message.
 7. A data file produced in this turn gets one link line in the closing data section, when the note has one.
 8. If the note cannot be written (the edit was denied, the folder is missing), end the turn with the one line
-   `worklog: not written - <why>` instead; the request's quote opens the next step that can be written.
+   `worklog: not written - <why>`; the request's quote opens the next step that can be written.
