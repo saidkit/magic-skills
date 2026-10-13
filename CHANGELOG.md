@@ -10,6 +10,13 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## 0.15.1 — 2026-10-13
+
+**Fixed - `worklog`.** The step is written after the reply, as the last action of the turn, and nothing is said
+after the edit. The step's body is the result itself, compressed: what changed, the numbers, what was checked and
+how, what stays unchecked, with the reply's structure kept; never a description of the reply. Known limit: the
+terminal prints every file edit as a block with its diff; after the reply it sits at the bottom of the turn.
+
 ## 0.15.0 — 2026-10-13
 
 **Changed - `worklog` is hook-free.** The skill is an instruction only: no hooks, no script, no queue, no state

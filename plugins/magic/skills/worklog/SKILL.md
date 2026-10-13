@@ -16,7 +16,10 @@ description: >
 
 - **The switch lives in this conversation.** `on <note>` binds the note until `off`; nothing is stored on disk.
 - **While the log is on, every turn that acted on an operator request ends with one new step in the note**, written
-  before your reply. Nothing reminds you; the step is yours to remember.
+  after your reply, as the last action of the turn. Nothing reminds you; the step is yours to remember.
+- **Reply first, then the step, then nothing.** Give your reply as soon as you have it, never held back; then
+  re-read and edit the note; then end the turn with no text after the edit, not even a word, except the one
+  line of rule 8.
 - **The quote is your copy of the operator's message as it stands in your context.** Copy it whole;
   never retell, trim, translate or correct it. Quote only a message you can see word for word;
   never rebuild one from a summary.
@@ -61,7 +64,7 @@ At the end of such a turn:
 =======================================
 > the operator's request, exactly as sent
 
-what changed, with the numbers; what was checked and how; what stays unchecked
+the result: your reply's content, compressed, its structure kept
 ```
 
    - `N` is one more than the highest step number among the note's `# Step N` headings; 1 when there is none.
@@ -74,20 +77,22 @@ what changed, with the numbers; what was checked and how; what stays unchecked
      deeper (`> > `, an empty line as `> >`) and drop the two tag lines. Nothing else the operator typed is dropped.
    - Several requests under one step (carried ones, and every message the operator sent during the turn)
      are separate quote blocks split by an empty line, oldest first.
-   - One empty line, then the body: a compressed result, never a copy of your chat reply. What changed, the
-     numbers, what was checked and how, what stays unchecked; `##` sections and tables when the result needs them.
-     For a turn that only answered a question, say what was answered; do not restate the answer.
+   - One empty line, then the body: the result itself, compressed. Carry what your final report told the operator:
+     what changed, the numbers, what was checked and how, what stays unchecked, what failed and its error;
+     keep its structure (`##` sections, tables, lists). Keep every item, name, number and verdict; drop narration
+     between tool calls and repetition; a reply already short is carried nearly as is. An answer is carried the
+     same way. Never a description of the reply ("listed the four items"), and never the reply pasted whole.
    - Write the step in the note's language; in a new note, in the operator's.
 3. Put the step before the note's closing data section: the top-level section that lists links to data files
    (`# Data` is the usual name), whatever follows it. No such section: at the end of the file.
 4. Insert the step with an edit that adds text, one empty line before the heading and one after the body;
    never rewrite the whole note.
-5. A short reply earns no step when it starts no work (a "no", a one-word clarification, a thanks), and neither
-   does a turn that has no result yet (you asked back, the operator interrupted). Write nothing; that message's
-   quote opens the next step, above the next request's own quote.
+5. A short reply earns no step when it starts no work (the operator's "no", one-word clarification, thanks),
+   and neither does a turn that has no result yet (you asked back, the operator interrupted). Write nothing;
+   that message's quote opens the next step, above the next request's own quote.
 6. Never quoted and never a step, because the operator did not type it: a message from another session,
    a task notification, any text a tool or the harness added to the conversation,
    also inside the operator's message.
 7. A data file produced in this turn gets one link line in the closing data section, when the note has one.
-8. If the note cannot be written (the edit was denied, the folder is missing), say why in one line, once, and go
-   on with your reply; the request's quote opens the next step that can be written.
+8. If the note cannot be written (the edit was denied, the folder is missing), say why in one line, once, as the
+   turn's closing text; the request's quote opens the next step that can be written.
