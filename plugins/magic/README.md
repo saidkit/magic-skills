@@ -18,7 +18,7 @@ Every skill below has its full instructions in `skills/<name>/SKILL.md`. This pa
 | **gauntlet** | Prints a ready-to-paste "build-to-a-bar" prompt | `gauntlet!!` |
 | **prompt** | Writes a new prompt in your own voice from your saved prompt library | `prompt!!` |
 | **ruled** | Records your rulings in your own words, quotes looked up in the session transcript | `ruled!!` / `/magic:ruled` |
-| **worklog** | Keeps a work log in a note: one step per request, your words quoted exactly | `/magic:worklog on <note>` |
+| **worklog** | Keeps a work log in a note: one step per request, your request quoted with a short result | `/magic:worklog on <note>` |
 
 The first three **just report and stop** — they show you where things stand and hand the decision back. The rest **do work.**
 
@@ -120,25 +120,22 @@ Writes (does **not** run) a strong copy-paste prompt that tells an AI to split t
 
 ## worklog - a work log kept in a note
 
-- **You type:** `/magic:worklog on notes/task-log.md` -> the log is on for this session. From now on every request you
-  send is queued, exactly as you typed it.
-- At the end of a turn the skill's hook adds a step to the note by itself: a `# Step N` heading and your request
-  quoted word for word (a block you pasted is quoted one level deeper). The assistant then writes a short result
-  under it (what changed, the numbers, what was checked, what was not). A short reply such as "no" or "thanks" is
-  quoted and gets no result of its own; the next request is quoted under the same step.
-- The step goes before the note's closing section (the first top-level section after the last step, usually the
-  list of data files), or at the end when the note has none. Your own sections and the existing steps are left as
-  they are.
-- You see one line when the hook asks for the result (`worklog: fill the body of Step N in <note>`); beyond it
-  nothing about the log is said in chat. If the note cannot be written, one line says so once.
-- **You type:** `/magic:worklog status` -> on or off, the note, how many requests wait. `/magic:worklog off` -> the
-  log is off; requests still queued are dropped and counted.
-- The assistant's first edit of the note asks for permission once; answering "always allow" covers the session. The skill grants
-  itself nothing.
-- The switch lasts for the session. After `/clear` the session is new: type the command again. The queue is kept in
-  `~/.claude/worklog/<session id>/`, removed by `off`; folders of old sessions are removed after 7 days.
-- The log starts only when you type the command; it has no macro form, and a session that never typed it runs
-  nothing of this skill.
+- **You type:** `/magic:worklog on notes/task-log.md` -> the log is on for this session, kept in that note.
+- From then on, at the end of every turn that acted on a request of yours, the assistant adds a step to the note
+  before it replies: a `# Step N` heading, your request quoted as you typed it (a block you pasted is quoted one
+  level deeper), and a compressed result under it (what changed, the numbers, what was checked, what was not). A
+  short reply such as "no" or "thanks" gets no step; its quote opens the next step.
+- The step goes before the note's closing section that lists data files, or at the end when the note has none. Your
+  own sections and the existing steps are left as they are; the note is re-read before every write.
+- Nothing about the log is said in chat: no reminder, no confirmation of a step. The one exception is a single
+  line when the note cannot be written.
+- **You type:** `/magic:worklog status` -> on or off, and the note. `/magic:worklog off` -> the log is off.
+- The assistant's first edit of the note asks for permission once; answering "always allow" covers the session. The
+  skill grants itself nothing.
+- **What it rests on.** The skill is an instruction and nothing else: it runs no script and keeps no file of its
+  own. The quote is the assistant's copy of your message, and the step is the assistant's to remember;
+  nothing checks either. After `/clear`, or in a long session whose context was compacted, type the command again.
+- The log starts only when you type the command; it has no macro form.
 
 ## How they fit together
 - **Lost the thread?** `refresh!!` (quick recap) · `audit!!` (full audit) · `explain!!` (plain-English explainer). All three report and stop.
@@ -148,5 +145,5 @@ Writes (does **not** run) a strong copy-paste prompt that tells an AI to split t
 ## Good to know
 - **The diagnostics stop by contract.** `refresh!!` / `audit!!` / `explain!!` report and hand the decision back to you. To refresh *and then* keep going, use the `resume!!` macro (see [operator-macros.md](../../guides/operator-macros.md)).
 - **Autonomy never green-lights an outward action.** A blanket `proceed!!` / `run!!` grant relaxes routine waits — never a decision reserved for you, and never an outward, hard-to-reverse operation (sending, publishing, deleting). These skills ship no tool-level fuse for that; consent for such an operation stays your own tool-permission configuration (allow / deny rules, approval prompts).
-- **Nothing carries across calls.** Each invocation is a fresh sweep scoped to the message that triggered it — call again whenever you need another look. `worklog` is the exception: its switch lasts for the session, until `/magic:worklog off` or `/clear`.
+- **Nothing carries across calls.** Each invocation is a fresh sweep scoped to the message that triggered it — call again whenever you need another look. `worklog` is the exception: its switch lasts for the session, until `/magic:worklog off`, `/clear`, or a compaction that drops the command from the context.
 - **No project files, no config.** These skills read whatever layout your project already has and adapt (`docs/adr/` vs `decision-log/`, `docs/working/` vs `notes/`, and so on).

@@ -10,6 +10,17 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## 0.15.0 — 2026-10-13
+
+**Changed - `worklog` is hook-free.** The skill is an instruction only: no hooks, no script, no queue, no state
+folder, nothing printed in chat. `/magic:worklog on <note>` binds the note for the session; from then on the
+assistant itself ends every turn that acted on a request with one new step in the note (heading, underline, the
+request quoted as typed - a pasted block one level deeper - and a compressed result), written before its reply. A
+short reply that starts no work gets no step; its quote opens the next one. A message from another session or a
+tool's text is never quoted. After `/clear`, or when the assistant knows of the log only from a summary, the log is
+off until the command is typed again. The first edit of the note asks for permission once. Breaking: the hooks of
+0.14.0 and 0.14.1 are gone; the `~/.claude/worklog/` state folder is no longer used and can be deleted.
+
 ## 0.14.1 — 2026-10-12
 
 **Fixed - `worklog`.** The log is kept without chat output: the Stop hook itself writes the step heading, the
