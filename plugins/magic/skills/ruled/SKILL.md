@@ -25,9 +25,8 @@ Write what the operator ruled, in the operator's words, into the `rulings.md` of
 4. After every write, run `check` on the list and print its output. When it fails on a line you wrote this turn, fix
    that line and run it again; never touch any other line.
 5. Write a ruling only on the marker (`ruled!! <text>`, `/magic:ruled <text>`), on the operator's explicit ask to
-   record it, or on an option the operator picked in a question dialog and then asked to record. Anything else that
-   looks like a ruling gets one line proposing to record it (`ruled!! <text>`) or to amend an earlier ruling
-   (`<id>`), and nothing is written. The kinds under Not a ruling draw no proposal; propose each candidate once.
+   record it, or on an option the operator picked in a question dialog and then asked to record. Anything else,
+   a plain instruction included, is acted on: nothing is proposed and nothing is written.
 
 ## Invocation
 
@@ -232,7 +231,7 @@ project top. Print only the lines of the current work's `rulings.md`, or all of 
 
 Run `rulings.py check <the work's folder>`, or, for `all`, `rulings.py check` with the current folder at the project
 top, and print its output. Write nothing, and fix nothing it reports. `warn: no rulings list for <folder>` means
-nothing was recorded for that work: say so, and offer `ruled!! sweep`.
+nothing was recorded for that work: say so.
 
 ### `ruled!! mark <id> landed <home>[, <home>] | rejected | superseded <new-id>`
 

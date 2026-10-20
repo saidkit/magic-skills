@@ -10,6 +10,13 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## Unreleased
+
+**Changed - `ruled` proposes nothing.** A message that carries no marker, no explicit ask to record and no picked
+dialog option is acted on: nothing is proposed and nothing is written. The skill no longer answers a message that
+looks like a ruling with a line proposing `ruled!! <text>`; that line printed after plain instructions and drew
+attention from the real rulings. Recording still happens only on the marker, the operator's ask, or a dialog pick.
+
 ## 0.15.3 — 2026-10-13
 
 **Changed - `worklog` skill text tidied.** Rules unchanged; the always-true invariants are stated once in the
