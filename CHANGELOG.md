@@ -10,7 +10,7 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
-## Unreleased
+## 0.15.4 — 2026-10-20
 
 **Changed - `ruled` proposes nothing.** A message that carries no marker, no explicit ask to record and no picked
 dialog option is acted on: nothing is proposed and nothing is written. The skill no longer answers a message that
