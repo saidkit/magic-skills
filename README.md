@@ -18,6 +18,7 @@ Long sessions rot in predictable ways: constraints from turn 12 stop being appli
 ```bash
 claude plugin marketplace add saidkit/magic-skills
 claude plugin install magic@magickit
+claude plugin install think@magickit
 ```
 
 Or in an active session: `/plugin marketplace add saidkit/magic-skills` → `/plugin install magic@magickit` → `/reload-plugins`.
