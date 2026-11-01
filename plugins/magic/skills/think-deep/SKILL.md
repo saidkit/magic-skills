@@ -1,7 +1,7 @@
 ---
 name: think-deep
 description: >
-  Structured task orchestrator — decompose into steps, self-check each, then verify the whole against explicit acceptance criteria and loop until they pass. 
+  Deep focused thinking — decompose task into steps, self-check each, then verify the whole against explicit acceptance criteria and loop until they pass. 
   Triggered ONLY by the explicit command "/magic:think-deep" invocation AND NOTHING ELSE.
 
 ---
