@@ -1,5 +1,11 @@
 # Changelog — think plugin
 
+## 0.6.1 - 2026-11-05
+
+**Changed - `advise` text reflowed.** The skill's paragraphs are now one line each. The plain-language summary
+(`### Explained`) is restated as a shape with one part per line, its decision line marked optional, and the stop
+states are separated by semicolons. Nothing else in `think` changes.
+
 ## 0.6.0 — 2026-09-28
 
 **Changed — `advise!!` prints a short form and keeps the full brief in a file.** When a run did an experiment (one
