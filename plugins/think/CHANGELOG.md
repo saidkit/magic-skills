@@ -1,5 +1,10 @@
 # Changelog — think plugin
 
+## 0.6.2 - 2026-11-05
+
+**Fixed - `advise` step 4 line rejoined.** A line break inside step 4 had split off "5." so it read as a second
+step 5; the line is rejoined. Nothing else in `think` changes.
+
 ## 0.6.1 - 2026-11-05
 
 **Changed - `advise` text reflowed.** The skill's paragraphs are now one line each. The plain-language summary
