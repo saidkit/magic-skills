@@ -10,6 +10,11 @@
 > select top-N; composes `magic:critic`). Its history lives in `plugins/think/CHANGELOG.md`. Entries below
 > are the `magic` plugin.
 
+## 0.15.5 - 2026-11-05
+
+**Changed - `think-deep` description reworded.** The frontmatter description now opens "Deep focused thinking"
+instead of "Structured task orchestrator"; the trigger and the body are unchanged. Nothing else in `magic` changes.
+
 ## 0.15.4 — 2026-10-20
 
 **Changed - `ruled` proposes nothing.** A message that carries no marker, no explicit ask to record and no picked
